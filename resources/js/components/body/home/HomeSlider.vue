@@ -42,6 +42,6 @@
 </template>
 
 <script setup>
-import heroBg1 from '@images/hero_bg_1.jpg'
-import heroBg2 from '@images/hero_bg_2.jpg'
+  import heroBg1 from '@images/hero_bg_1.jpg'
+  import heroBg2 from '@images/hero_bg_2.jpg'
 </script>

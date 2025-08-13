@@ -1,10 +1,10 @@
 <template>
   <HomeSlider />
   <SearchForm />
-  <ViewOptions />
+  <!-- <ViewOptions /> -->
   <PropertyList />
   <WhyChooseUs />
-  <RecentBlog />
+  <!-- <RecentBlog /> -->
   <AgentsList />
   <Testimonials />
 </template>
@@ -12,10 +12,10 @@
 <script setup>
   import HomeSlider from './HomeSlider.vue'
   import SearchForm from './SearchForm.vue'
-  import ViewOptions from './ViewOptions.vue'
+  // import ViewOptions from './ViewOptions.vue'
   import PropertyList from './PropertyList.vue'
   import WhyChooseUs from './WhyChooseUs.vue'
-  import RecentBlog from './RecentBlog.vue'
+  // import RecentBlog from './RecentBlog.vue'
   import AgentsList from './AgentsList.vue'
   import Testimonials from './Testimonials.vue'
 </script>

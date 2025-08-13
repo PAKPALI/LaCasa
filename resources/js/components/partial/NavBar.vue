@@ -3,23 +3,22 @@
     <h5 class="mb-0">Mon Application Vue</h5>
   </nav> -->
     <div class="site-mobile-menu">
-        <div class="site-mobile-menu-header">
-            <div class="site-mobile-menu-close mt-3">
-                <span class="icon-close2 js-menu-toggle"></span>
+        <div class="site-mobile-menu-header bg-dark ">
+            <div class="site-mobile-menu-close mt-3 bg-dark">
+                <span class="icon-close2 js-menu-toggle text-light"></span>
             </div>
         </div>
-        <div class="site-mobile-menu-body"></div>
+        <div class="site-mobile-menu-body bg-light"></div>
     </div> <!-- .site-mobile-menu -->
 
-    <div class="site-navbar mt-4">
+    <div class="site-navbar fixed-top bg-dark mt-0">
         <div class="container py-1">
             <div class="row align-items-center">
                 <div class="col-8 col-md-8 col-lg-4">
-                    <h1 class="mb-0 text-light">LaCasa<a href="index.html" class="text-white h2 mb-0">
-                        
-                        <!-- <img :src="logo" alt="logo" class="img-fluid mb-4" /> -->
+                    <!-- <h1 class="mb-0 text-light">LaCasa<a href="index.html" class="text-white h2 mb-0">
                         <strong><span class="text-danger">.</span></strong></a>
-                    </h1>
+                    </h1> -->
+                    <img :src="logo2" alt="logo2" class="img-fluid w-50 mb-4" />
                 </div>
                 <div class="col-4 col-md-4 col-lg-8">
                     <nav class="site-navigation text-right text-md-right" role="navigation">
@@ -62,6 +61,7 @@
 
 <script setup>
     import logo from '@images/logo.jpeg'
+    import logo2 from '@images/logo2.png'
 
 </script>
 

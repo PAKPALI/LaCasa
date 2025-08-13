@@ -48,10 +48,7 @@
 <script setup>
 const props = defineProps({
   image: String,
-  offerTypes: {
-    type: Array,
-    default: () => []
-  },
+  offerTypes: { type: Array,default: () => []},
   title: String,
   location: String,
   price: String,

@@ -1,5 +1,5 @@
 <template>
-  <div class="team-member">
+  <div class="team-member border p-4">
     <img :src="image" alt="Image" class="img-fluid rounded mb-4" />
     <div class="text">
       <h2 class="mb-2 font-weight-light text-black h4">{{ name }}</h2>

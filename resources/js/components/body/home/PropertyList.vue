@@ -1,23 +1,23 @@
 <!-- components/PropertyList.vue -->
 <template>
-  <div class="row mb-5">
-    <div
-      class="col-md-3 col-lg-4 mb-4"
-      v-for="(property, idx) in properties"
-      :key="idx"
-    >
-      <PropertyCard
-        :image="property.image"
-        :offerTypes="property.offerTypes"
-        :title="property.title"
-        :location="property.location"
-        :price="property.price"
-        :beds="property.beds"
-        :baths="property.baths"
-        :sqft="property.sqft"
-        :favorite="property.favorite"
-      />
-    </div>
+  <div class="site-section site-section-sm bg-light">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-6 col-lg-4 col-sm-6 col-xs-6 mb-4" v-for="(property, idx) in properties" :key="idx">
+            <PropertyCard
+              :image="property.image"
+              :offerTypes="property.offerTypes"
+              :title="property.title"
+              :location="property.location"
+              :price="property.price"
+              :beds="property.beds"
+              :baths="property.baths"
+              :sqft="property.sqft"
+              :favorite="property.favorite"
+            />
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 

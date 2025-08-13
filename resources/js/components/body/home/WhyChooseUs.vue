@@ -12,12 +12,14 @@
 
       <div class="row">
         <div class="col-md-6 col-lg-4" v-for="(service, i) in services" :key="i">
-          <a href="#" class="service text-center">
+          <div class="service text-center">
             <span :class="service.icon"></span>
             <h2 class="service-heading">{{ service.title }}</h2>
             <p>{{ service.description }}</p>
-            <p><span class="read-more">Read More</span></p>
-          </a>
+            <a href="#" >
+              <p><span class="read-more">Read More</span></p>
+            </a>
+            </div>
         </div>
       </div>
     </div>
