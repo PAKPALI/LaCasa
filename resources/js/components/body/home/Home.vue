@@ -7,6 +7,7 @@
   <!-- <RecentBlog /> -->
   <AgentsList />
   <Testimonials />
+  <Footer />
 </template>
 
 <script setup>
@@ -18,6 +19,7 @@
   // import RecentBlog from './RecentBlog.vue'
   import AgentsList from './AgentsList.vue'
   import Testimonials from './Testimonials.vue'
+  import Footer from './Footer.vue' 
 </script>
 
 <!-- <template>
