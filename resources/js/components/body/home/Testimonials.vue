@@ -27,77 +27,77 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+  import { ref } from 'vue'
 
-const testimonials = [
-  {
-    text: "Great experience! The agents were professional and very helpful throughout the process.",
-    name: "Alice Johnson",
-    position: "Homeowner"
-  },
-  {
-    text: "I found my dream apartment thanks to this team. Highly recommended!",
-    name: "Mark Thompson",
-    position: "Renter"
-  },
-  {
-    text: "Excellent service and fantastic listings. Made buying a home easy and stress-free.",
-    name: "Sara Lee",
-    position: "Buyer"
+  const testimonials = [
+    {
+      text: "Great experience! The agents were professional and very helpful throughout the process.",
+      name: "Alice Johnson",
+      position: "Homeowner"
+    },
+    {
+      text: "I found my dream apartment thanks to this team. Highly recommended!",
+      name: "Mark Thompson",
+      position: "Renter"
+    },
+    {
+      text: "Excellent service and fantastic listings. Made buying a home easy and stress-free.",
+      name: "Sara Lee",
+      position: "Buyer"
+    }
+  ]
+
+  const currentIndex = ref(0)
+
+  function next() {
+    currentIndex.value = (currentIndex.value + 1) % testimonials.length
   }
-]
 
-const currentIndex = ref(0)
+  function prev() {
+    currentIndex.value = (currentIndex.value - 1 + testimonials.length) % testimonials.length
+  }
+  </script>
 
-function next() {
-  currentIndex.value = (currentIndex.value + 1) % testimonials.length
-}
+  <style scoped>
+  .site-section {
+    padding: 3rem 0;
+  }
 
-function prev() {
-  currentIndex.value = (currentIndex.value - 1 + testimonials.length) % testimonials.length
-}
-</script>
+  .testimonial-carousel {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-<style scoped>
-.site-section {
-  padding: 3rem 0;
-}
+  .testimonial-item blockquote {
+    font-style: italic;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
 
-.testimonial-carousel {
-  position: relative;
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
-}
+  .testimonial-author {
+    font-weight: bold;
+    color: #555;
+  }
 
-.testimonial-item blockquote {
-  font-style: italic;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
+  .testimonial-controls {
+    margin-top: 1rem;
+  }
 
-.testimonial-author {
-  font-weight: bold;
-  color: #555;
-}
+  .testimonial-controls button {
+    background: #2d995b;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
 
-.testimonial-controls {
-  margin-top: 1rem;
-}
-
-.testimonial-controls button {
-  background: #2d995b;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  padding: 0.5rem 1rem;
-  margin: 0 0.5rem;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.testimonial-controls button:hover {
-  background: #267a47;
-}
+  .testimonial-controls button:hover {
+    background: #267a47;
+  }
 </style>
