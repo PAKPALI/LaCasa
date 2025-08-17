@@ -19,6 +19,7 @@
 <script setup>
   // import SideBar from './partial/SideBar.vue'
   import NavBar from './partial/NavBar.vue'
+  import ParticleJs from './partial/Particles.vue'
   import { ref } from 'vue'
 
   const mode = ref('1')

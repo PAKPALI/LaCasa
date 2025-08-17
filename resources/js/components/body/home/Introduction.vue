@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row justify-content-center mb-5">
         <div class="col-md-7 text-center">
-          <h2 class="site-section-title">L'avis des utilisateurs</h2>
+          <h2 class="site-section-title">Plateforme immobilière moderne</h2>
         </div>
       </div>
 
@@ -14,10 +14,10 @@
             class="testimonial-item"
           >
             <blockquote>
-              <p><strong>"{{ testimonials[currentIndex].text }}"</strong></p>
+              <p><h6><strong>"{{ testimonials[currentIndex].text }}"</strong></h6></p>
             </blockquote>
             <p class="testimonial-author">
-              — {{ testimonials[currentIndex].name }},
+              {{ testimonials[currentIndex].name }}
               <em>{{ testimonials[currentIndex].position }}</em>
             </p>
           </div>
@@ -37,21 +37,15 @@ import { ref } from 'vue'
 
 const testimonials = [
   {
-    text: "Excellente expérience ! Les membres de l’équipe ont été professionnels et très serviables tout au long du processus.",
-    name: "Alice Johnson",
-    position: "Propriétaire"
+    text: "LaCasa est une plateforme web (et futur mobile) dédiée à la mise en relation entre démarcheurs immobiliers et clients au Togo, permettant la publication et la consultation d’annonces de location (pièce, chambre-salon, appartements, villas, maisons…)Notre objectif est de numériser un processus encore largement manuel et vulnérable (tableaux physiques exposés en pleine rue), en offrant un outil moderne, sécurisé, simple d’utilisation et adapté aux réalités locales.",
+    name: "1",
+    // position: "Propriétaire"
   },
   {
-    text: "J’ai trouvé l’appartement de mes rêves grâce à cette équipe. Je recommande vivement !",
-    name: "Mark Thompson",
-    position: "Locataire"
+    text: "Le nom LaCasa a été choisi car il évoque les origines et le lien fort avec la notion de « chez soi ». Il rappelle la simplicité et la chaleur d’un foyer, inspiré par les maisons traditionnelles de village où ont dormi les grands-parents. Ce nom symbolise notre engagement à faciliter la recherche rapide et fiable d’un logement adapté, pour que chacun puisse trouver facilement « sa maison », son espace de vie, en toute confiance et pouvoir bouger tout simplement.",
+    name: "2"
+    // position: "Locataire"
   },
-  {
-    text: "Service excellent et annonces fantastiques. L’achat de ma maison a été simple et sans stress.",
-    name: "Sara Lee",
-    position: "Acheteuse"
-  }
-
 ]
 
 const currentIndex = ref(0)
@@ -80,7 +74,7 @@ function prev() {
     padding: 15px 30px;
     border-radius: 12px;
     text-align: center;
-    background: linear-gradient(135deg, #122f02eb, rgb(0, 0, 0) 70%, #0e2501d9);
+    background: linear-gradient(135deg, #122f02, rgb(0, 0, 0) 70%, #0e2501d9);
     box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 15px rgba(89,165,44,0.3);
     display: inline-block;
     transition: transform 0.3s ease, box-shadow 0.3s ease;

@@ -31,8 +31,8 @@
               </div>
             </div>
             <div class="member-info">
-              <h3>{{ agent.name }}</h3>
-              <p class="position">{{ agent.position }}</p>
+              <h3 class="text-light"><strong>{{ agent.name }}</strong></h3>
+              <p class="position text-light">{{ agent.position }}</p>
               <p class="description"><strong>{{ agent.description }}</strong></p>
             </div>
           </div>
@@ -45,6 +45,7 @@
 <script setup>
 import person1 from '@images/person_1.jpg'
 import person2 from '@images/person_2.jpg'
+import dixon from '@images/dixon.jpeg'
 import person3 from '@images/person_3.jpg'
 
 const agents = [
@@ -60,10 +61,10 @@ const agents = [
     ]
   },
   {
-    image: person2,
-    name: 'Brooke Cagle',
-    position: 'Real Estate Agent',
-    description: 'Dedicated to providing top-notch real estate services with transparency.',
+    image: dixon,
+    name: 'PAKPALI Essolissam didier',
+    position: 'Développeur web',
+    description: "Développeur web full-stack avec 4 ans d'experience",
     social: [
       { class: 'icon-facebook', link: '#' },
       { class: 'icon-twitter', link: '#' },
@@ -98,7 +99,7 @@ const agents = [
   padding: 15px 30px;
   border-radius: 12px;
   text-align: center;
-   background: linear-gradient(135deg, #163603d2, rgba(0,0,0,0.9) 70%, #163603b5);
+   background: linear-gradient(135deg, #122f02, rgb(0, 0, 0) 70%, #0e2501d9);
   box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 15px rgba(89,165,44,0.3);
   display: inline-block;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -116,7 +117,7 @@ const agents = [
   display: inline-block;
   padding: 20px 30px;
   border-radius: 15px;
-  background: linear-gradient(135deg, rgba(47, 89, 23, 0.96), rgba(46, 112, 8, 0.652));
+  background: linear-gradient(135deg, rgb(22, 52, 3), rgba(46, 111, 9, 0.793));
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(5px);
   text-align: center;
@@ -131,7 +132,7 @@ const agents = [
 /* Team member card */
 .team-member {
   position: relative;
-  background: #fff;
+  background: #001f04;
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
@@ -146,7 +147,7 @@ const agents = [
   width: 200%;
   height: 200%;
   border-radius: 15px;
-  background: linear-gradient(90deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+  background: linear-gradient(90deg, rgba(0,0,0,0.1), rgba(5, 115, 38, 0.973), rgba(0,0,0,0.1));
   animation: rotateBorder 4s linear infinite;
   z-index: 0;
 }
@@ -164,9 +165,7 @@ const agents = [
 
 .team-member:hover {
   transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 0 20px rgba(89,165,44,0.6),
-              0 0 40px rgba(89,165,44,0.4),
-              0 0 60px rgba(89,165,44,0.2);
+  box-shadow: 0 0 20px rgba(89,165,44,0.6), 0 0 40px rgba(89,165,44,0.4),0 0 60px rgba(89,165,44,0.2);
 }
 
 /* Image wrapper */
@@ -239,7 +238,7 @@ const agents = [
 .member-info .description {
   font-size: 0.95rem;
   color: #fff;
-  background: linear-gradient(135deg, rgba(49, 89, 27, 0.975), rgba(55, 126, 14, 0.737));
+  background: linear-gradient(135deg, rgb(22, 52, 3), rgba(46, 111, 9, 0.793));
   padding: 15px 20px;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.2);

@@ -1,6 +1,9 @@
 <template>
+  <ParticleJs />
   <HomeSlider />
-  <SearchForm />
+  <Intro />
+  <Info />
+  <!-- <SearchForm /> -->
   <!-- <ViewOptions /> -->
   <PropertyList />
   <WhyChooseUs />
@@ -11,8 +14,11 @@
 </template>
 
 <script setup>
+  import ParticleJs from '../../partial/Particles.vue'
   import HomeSlider from './HomeSlider.vue'
-  import SearchForm from './SearchForm.vue'
+  import Intro from './Introduction.vue'
+  import Info from './Information.vue'
+  // import SearchForm from './SearchForm.vue'
   // import ViewOptions from './ViewOptions.vue'
   import PropertyList from './PropertyList.vue'
   import WhyChooseUs from './WhyChooseUs.vue'

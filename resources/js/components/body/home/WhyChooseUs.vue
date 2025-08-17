@@ -55,7 +55,8 @@
 <style scoped>
   .site-section {
     padding: 60px 0;
-    background: #f9f9f9;
+    /* background: #f9f9f9; */
+    opacity: 1; /* 1 = opaque, 0 = transparent */
   }
 
   .site-section-title h2 {
@@ -65,7 +66,7 @@
     padding: 15px 30px;
     border-radius: 12px;
     text-align: center;
-    background: linear-gradient(135deg, #163603d2, rgba(0,0,0,0.9) 70%, #163603b5);
+    background: linear-gradient(135deg, #122f02, rgb(0, 0, 0) 70%, #0e2501d9);
     box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 15px rgba(89,165,44,0.3);
     display: inline-block;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -74,7 +75,7 @@
   /* Effet au survol */
   .site-section-title h2:hover {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 20px rgba(89,165,44,0.4);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.832), 0 0 20px rgba(89,165,44,0.4);
   }
 
   .site-section-title p {
@@ -224,7 +225,8 @@
     padding: 25px 30px;
     font-size: 1.05rem;
     color: #fff;
-    background: linear-gradient(135deg, rgb(51, 96, 25), rgba(56, 131, 12, 0.793));
+    background: linear-gradient(135deg, rgb(22, 52, 3), rgba(46, 111, 9, 0.793));
+    /* background: radial-gradient(circle, rgba(89,165,44,0.15) 0%, transparent 60%); */
     border-radius: 15px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     text-align: center;

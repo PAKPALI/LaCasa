@@ -15,7 +15,8 @@ export default defineConfig({
         alias: {
             '@images': path.resolve(__dirname, 'resources/js/images'),
         },
-    }
+    },
+    
 });
 
 // Explication ligne par ligne :

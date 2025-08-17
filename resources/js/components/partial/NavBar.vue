@@ -3,15 +3,22 @@
     <h5 class="mb-0">Mon Application Vue</h5>
   </nav> -->
     <div class="site-mobile-menu">
-        <div class="site-mobile-menu-header bg-dark ">
+        
+        <div class="site-mobile-menu-header ">
+            <ParticleJs />
             <div class="site-mobile-menu-close mt-3 bg-dark">
-                <span class="icon-close2 js-menu-toggle text-light"></span>
+                <span class="icon-close2 js-menu-toggle text-success"></span>
             </div>
         </div>
-        <div class="site-mobile-menu-body bg-light"></div>
+        <div class="site-mobile-menu-body"></div>
     </div> <!-- .site-mobile-menu -->
 
     <div class="site-navbar fixed-top bg-dark mt-0">
+        <!-- Icônes flottantes -->
+        <span class="navbar-icon icon-home w-25"></span>
+        <span class="navbar-icon icon-star w-25"></span>
+        <span class="navbar-icon icon-user w-25"></span>
+        <span class="navbar-icon icon-map w-25"></span>
         <div class="container py-1">
             <div class="row align-items-center">
                 <div class="col-8 col-md-8 col-lg-4">
@@ -62,9 +69,89 @@
 <script setup>
     import logo from '@images/logo.jpeg'
     import logo2 from '@images/logo2.png'
+    import ParticleJs from '../partial/Particles.vue'
 
 </script>
 
 <style scoped>
-/* Style local pour la navbar si nécessaire */
+    .site-navbar {
+        position: fixed;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.95) 70%, rgba(53, 99, 26, 0.996));
+        border-bottom: 2px solid rgba(89,165,44,0.4);
+        overflow: hidden;
+        z-index: 999;
+        /* opacity: 0.9; */
+    }
+
+    .site-mobile-menu-body {
+        position: relative;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.98), rgba(16, 39, 3, 0.996) 70%, rgba(53, 99, 26, 0.996));
+        border-bottom: 2px solid rgba(89,165,44,0.4);
+        overflow: hidden;
+        z-index: 999;
+        opacity: 0.9;
+    }
+
+    /* Effet de glow vert */
+    .site-navbar::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(89,165,44,0.15) 0%, transparent 60%);
+        animation: glowMove 12s linear infinite;
+        z-index: 0;
+    }
+
+    @keyframes glowMove {
+        0% { transform: translate(0, 0); }
+        50% { transform: translate(30px, 20px); }
+        100% { transform: translate(0, 0); }
+    }
+
+    /* Icônes flottantes */
+    .navbar-icon {
+        position: absolute;
+        font-size: 18px;
+        color: rgba(193, 213, 181, 0.8);
+        animation: floatIcons 8s infinite ease-in-out;
+        opacity: 0.5;
+        z-index: 0;
+    }
+
+    .navbar-icon:nth-child(1) { top: 20%; left: 5%; animation-delay: 0s; }
+    .navbar-icon:nth-child(2) { top: 100%; left: 90%; animation-delay: 2s; }
+    .navbar-icon:nth-child(3) { top: 100%; left: 10%; animation-delay: 4s; }
+    .navbar-icon:nth-child(4) { top: 10%; left: 80%; animation-delay: 6s; }
+
+    @keyframes floatIcons {
+        0% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(10deg); }
+        100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* Liens navbar */
+    .site-menu a {
+        color: #fff;
+        transition: color 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+    .site-menu a:hover {
+        color: #35a516;
+    }
+
+    .site-mobile-menu-body a {
+        color: #fff;
+        transition: color 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .site-mobile-menu-body a:hover {
+        color: #35a516;
+    }
 </style>
+
