@@ -1,0 +1,89 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-CHuT-oQ8.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/js/images/dixon.jpeg": {
+    "file": "assets/dixon-Dc7eeunq.jpeg",
+    "src": "resources/js/images/dixon.jpeg"
+  },
+  "resources/js/images/goal.jpeg": {
+    "file": "assets/goal-D4N9GLGN.jpeg",
+    "src": "resources/js/images/goal.jpeg"
+  },
+  "resources/js/images/hero_bg_1.jpg": {
+    "file": "assets/hero_bg_1-VAm-BHjj.jpg",
+    "src": "resources/js/images/hero_bg_1.jpg"
+  },
+  "resources/js/images/hero_bg_2.jpg": {
+    "file": "assets/hero_bg_2-DLJdILv4.jpg",
+    "src": "resources/js/images/hero_bg_2.jpg"
+  },
+  "resources/js/images/img_1.jpg": {
+    "file": "assets/img_1-BKJwJIQs.jpg",
+    "src": "resources/js/images/img_1.jpg"
+  },
+  "resources/js/images/img_2.jpg": {
+    "file": "assets/img_2-qcMNDoij.jpg",
+    "src": "resources/js/images/img_2.jpg"
+  },
+  "resources/js/images/img_3.jpg": {
+    "file": "assets/img_3-CC9TpXmN.jpg",
+    "src": "resources/js/images/img_3.jpg"
+  },
+  "resources/js/images/logo.jpeg": {
+    "file": "assets/logo-BKP-YoEy.jpeg",
+    "src": "resources/js/images/logo.jpeg"
+  },
+  "resources/js/images/logo2.png": {
+    "file": "assets/logo2-BjkGqu9a.png",
+    "src": "resources/js/images/logo2.png"
+  },
+  "resources/js/images/person_1.jpg": {
+    "file": "assets/person_1-qaQkVqQf.jpg",
+    "src": "resources/js/images/person_1.jpg"
+  },
+  "resources/js/images/person_2.jpg": {
+    "file": "assets/person_2-Dum_nPc4.jpg",
+    "src": "resources/js/images/person_2.jpg"
+  },
+  "resources/js/images/person_3.jpg": {
+    "file": "assets/person_3-WURbUu30.jpg",
+    "src": "resources/js/images/person_3.jpg"
+  },
+  "resources/js/images/question.jpeg": {
+    "file": "assets/question-jaaOC8Sn.jpeg",
+    "src": "resources/js/images/question.jpeg"
+  },
+  "resources/js/images/solution.jpeg": {
+    "file": "assets/solution-DSXKAe-m.jpeg",
+    "src": "resources/js/images/solution.jpeg"
+  },
+  "resources/js/layouts/app.js": {
+    "file": "assets/app-JoJS8d62.js",
+    "name": "app",
+    "src": "resources/js/layouts/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-CJayQSEG.css"
+    ],
+    "assets": [
+      "assets/logo2-BjkGqu9a.png",
+      "assets/hero_bg_1-VAm-BHjj.jpg",
+      "assets/hero_bg_2-DLJdILv4.jpg",
+      "assets/question-jaaOC8Sn.jpeg",
+      "assets/solution-DSXKAe-m.jpeg",
+      "assets/goal-D4N9GLGN.jpeg",
+      "assets/dixon-Dc7eeunq.jpeg",
+      "assets/person_3-WURbUu30.jpg",
+      "assets/img_1-BKJwJIQs.jpg",
+      "assets/img_2-qcMNDoij.jpg",
+      "assets/img_3-CC9TpXmN.jpg",
+      "assets/person_1-qaQkVqQf.jpg"
+    ]
+  }
+}
