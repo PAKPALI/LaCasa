@@ -16,9 +16,6 @@ export default defineConfig({
             '@images': path.resolve(__dirname, 'resources/js/images'),
         },
     },
-    server: {
-        https: true
-    },
 });
 
 // Explication ligne par ligne :
