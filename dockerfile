@@ -3,7 +3,7 @@
 # -------------------------------
 FROM php:8.2-fpm AS build
 
-# Installer les dépendances système pour Laravel & Node
+# Installer dépendances système
 RUN apt-get update && apt-get install -y \
     git unzip libonig-dev libzip-dev curl npm && \
     docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath
@@ -13,36 +13,43 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
-# Copier les fichiers composer.json et composer.lock pour installer les dépendances PHP
+# Installer dépendances PHP
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
 
-# Copier package.json et package-lock.json pour Node
+# Installer dépendances JS
 COPY package*.json ./
 RUN npm install
+
+# Copier le reste du projet et builder les assets Vite
 COPY . .
 RUN npm run build
 
 # -------------------------------
-# Stage 2: Production
+# Stage 2: Production (Nginx + PHP-FPM)
 # -------------------------------
 FROM php:8.2-fpm
 
-# Installer uniquement les extensions PHP nécessaires
+# Installer PHP extensions + Nginx
 RUN apt-get update && apt-get install -y \
-    libonig-dev libzip-dev unzip && \
-    docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath
+    nginx libonig-dev libzip-dev unzip supervisor && \
+    docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copier les fichiers PHP et les dépendances depuis le stage 1
+# Copier projet compilé depuis le build
 COPY --from=build /app /app
 
-# Assurer les permissions sur storage et bootstrap/cache
+# Supprimer config nginx par défaut et copier la nôtre
+RUN rm /etc/nginx/sites-enabled/default
+COPY ./deploy/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-# Exposer le port utilisé par PHP-FPM
-EXPOSE 9000
+# Exposer le port HTTP
+EXPOSE 80
 
-# Commande de démarrage
-CMD ["php-fpm"]
+# Supervisord pour lancer PHP-FPM + Nginx
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
