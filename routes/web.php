@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/{any}', function () {
-    return view('index');
-})->where('any', '^(?!api).*$');
+// Route::get('/{any}', function () {
+//     return view('index');
+// })->where('any', '^(?!api).*$');
 
 Route::get('/', function () {
     return view('Welcome');
