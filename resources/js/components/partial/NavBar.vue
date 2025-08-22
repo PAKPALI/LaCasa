@@ -38,7 +38,7 @@
                             <li class="active"><router-link to='/home'> Acceuil </router-link></li>
                             <!-- <li><a href="buy.html">Buy</a></li> -->
                             <!-- <li><a href="rent.html">Rent</a></li> -->
-                            <li class="has-children">
+                            <!-- <li class="has-children">
                                 <a href="properties.html">Properties</a>
                                 <ul class="dropdown arrow-top">
                                     <li><a href="#">Condo</a></li>
@@ -53,10 +53,11 @@
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
                             <!-- <li><a href="blog.html">Blog</a></li> -->
-                            <li><a href="about.html">A propos</a></li>
-                            <li><a href="contact.html">Contact</a></li>
+                             <li><a href="#">Publications</a></li>
+                            <li><a href="#">A propos</a></li>
+                            <li><a href="#">Contact</a></li>
                         </ul>
                     </nav>
                 </div>

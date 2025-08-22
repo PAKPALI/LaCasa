@@ -43,17 +43,17 @@
 </template>
 
 <script setup>
-import person1 from '@images/person_1.jpg'
+import icon1 from '@images/icon1.jpg'
 import person2 from '@images/person_2.jpg'
 import dixon from '@images/dixon.jpeg'
 import person3 from '@images/person_3.jpg'
 
 const agents = [
   {
-    image: person1,
-    name: 'Megan Smith',
-    position: 'Real Estate Agent',
-    description: 'Professional agent with years of experience helping clients find perfect homes.',
+    image: icon1,
+    name: 'KONDJI Arafat',
+    position: 'Analyste technicien',
+    description: 'Analyste technicien avec 3 ans d\'experience',
     social: [
       { class: 'icon-facebook', link: '#' },
       { class: 'icon-twitter', link: '#' },
@@ -72,10 +72,10 @@ const agents = [
     ]
   },
   {
-    image: person3,
-    name: 'Philip Martin',
-    position: 'Real Estate Agent',
-    description: 'Expert in local markets, ensuring safe and fast property transactions.',
+    image: icon1,
+    name: 'ATTIGANE samuel',
+    position: 'Agent immobilier',
+    description: 'Agent immobilier avec 5 ans d\'experience',
     social: [
       { class: 'icon-facebook', link: '#' },
       { class: 'icon-twitter', link: '#' },
