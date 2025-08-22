@@ -1,5 +1,5 @@
 <?php
-// Vérifier qu’on reçoit un POST
+// Vérifie que la requête est POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(403);
     exit('Forbidden');
