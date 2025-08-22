@@ -23,6 +23,10 @@
     "file": "assets/hero_bg_2-DLJdILv4.jpg",
     "src": "resources/js/images/hero_bg_2.jpg"
   },
+  "resources/js/images/icon1.jpg": {
+    "file": "assets/icon1-qbiIWmXk.jpg",
+    "src": "resources/js/images/icon1.jpg"
+  },
   "resources/js/images/img_1.jpg": {
     "file": "assets/img_1-BKJwJIQs.jpg",
     "src": "resources/js/images/img_1.jpg"
@@ -43,10 +47,6 @@
     "file": "assets/logo2-BjkGqu9a.png",
     "src": "resources/js/images/logo2.png"
   },
-  "resources/js/images/person_1.jpg": {
-    "file": "assets/person_1-qaQkVqQf.jpg",
-    "src": "resources/js/images/person_1.jpg"
-  },
   "resources/js/images/person_2.jpg": {
     "file": "assets/person_2-Dum_nPc4.jpg",
     "src": "resources/js/images/person_2.jpg"
@@ -64,12 +64,12 @@
     "src": "resources/js/images/solution.jpeg"
   },
   "resources/js/layouts/app.js": {
-    "file": "assets/app-JoJS8d62.js",
+    "file": "assets/app-CkDpWEEi.js",
     "name": "app",
     "src": "resources/js/layouts/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-CJayQSEG.css"
+      "assets/app-DYpF5-2y.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
@@ -79,11 +79,10 @@
       "assets/solution-DSXKAe-m.jpeg",
       "assets/goal-D4N9GLGN.jpeg",
       "assets/dixon-Dc7eeunq.jpeg",
-      "assets/person_3-WURbUu30.jpg",
       "assets/img_1-BKJwJIQs.jpg",
       "assets/img_2-qcMNDoij.jpg",
       "assets/img_3-CC9TpXmN.jpg",
-      "assets/person_1-qaQkVqQf.jpg"
+      "assets/icon1-qbiIWmXk.jpg"
     ]
   }
 }
