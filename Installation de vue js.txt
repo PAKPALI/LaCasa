@@ -202,3 +202,4 @@ npm install vite@latest
 npm install vue-router
 npm install sweetalert2@latest
 npm install swiper
+npm install vue3-particles

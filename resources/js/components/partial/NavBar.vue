@@ -5,7 +5,7 @@
     <div class="site-mobile-menu">
         
         <div class="site-mobile-menu-header ">
-            <ParticleJs />
+            <TsParticle />
             <div class="site-mobile-menu-close mt-3 bg-dark">
                 <span class="icon-close2 js-menu-toggle text-success"></span>
             </div>
@@ -70,7 +70,8 @@
 <script setup>
     import logo from '@images/logo.jpeg'
     import logo2 from '@images/logo2.png'
-    import ParticleJs from '../partial/Particles.vue'
+    // import ParticleJs from '../partial/Particles.vue'
+    import Particles  from '../partial/TsParticle.vue'
 
 </script>
 

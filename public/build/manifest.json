@@ -1,10 +1,125 @@
 {
+  "_Particles-CX7s_8FX.css": {
+    "file": "assets/Particles-CX7s_8FX.css",
+    "src": "_Particles-CX7s_8FX.css"
+  },
   "resources/css/app.css": {
     "file": "assets/app-CHuT-oQ8.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
       "app.css"
+    ]
+  },
+  "resources/js/components/body/home/AgentsList.vue": {
+    "file": "assets/AgentsList-Q0iCRcUr.js",
+    "name": "AgentsList",
+    "src": "resources/js/components/body/home/AgentsList.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app.js"
+    ],
+    "css": [
+      "assets/AgentsList-BrgxCGmx.css"
+    ],
+    "assets": [
+      "assets/dixon-Dc7eeunq.jpeg",
+      "assets/icon1-qbiIWmXk.jpg"
+    ]
+  },
+  "resources/js/components/body/home/Footer.vue": {
+    "file": "assets/Footer-BurSrjxt.js",
+    "name": "Footer",
+    "src": "resources/js/components/body/home/Footer.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app.js"
+    ],
+    "css": [
+      "assets/Footer-r98KHKGH.css"
+    ]
+  },
+  "resources/js/components/body/home/Information.vue": {
+    "file": "assets/Information-CWd38vh8.js",
+    "name": "Information",
+    "src": "resources/js/components/body/home/Information.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app.js"
+    ],
+    "css": [
+      "assets/Information-BCzb2FKh.css",
+      "assets/Particles-CX7s_8FX.css"
+    ],
+    "assets": [
+      "assets/question-jaaOC8Sn.jpeg",
+      "assets/solution-DSXKAe-m.jpeg",
+      "assets/goal-D4N9GLGN.jpeg"
+    ]
+  },
+  "resources/js/components/body/home/Introduction.vue": {
+    "file": "assets/Introduction-DxL1T77j.js",
+    "name": "Introduction",
+    "src": "resources/js/components/body/home/Introduction.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app.js"
+    ],
+    "css": [
+      "assets/Introduction-DRBRAUS9.css"
+    ]
+  },
+  "resources/js/components/body/home/PropertyList.vue": {
+    "file": "assets/PropertyList-CM2AbKVb.js",
+    "name": "PropertyList",
+    "src": "resources/js/components/body/home/PropertyList.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app.js"
+    ],
+    "css": [
+      "assets/PropertyList-DYLhkjsq.css"
+    ],
+    "assets": [
+      "assets/img_1-BKJwJIQs.jpg",
+      "assets/img_2-qcMNDoij.jpg",
+      "assets/img_3-CC9TpXmN.jpg"
+    ]
+  },
+  "resources/js/components/body/home/Testimonials.vue": {
+    "file": "assets/Testimonials-BfPEdlJM.js",
+    "name": "Testimonials",
+    "src": "resources/js/components/body/home/Testimonials.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app.js"
+    ],
+    "css": [
+      "assets/Testimonials-BVM4f3Uy.css"
+    ]
+  },
+  "resources/js/components/body/home/WhyChooseUs.vue": {
+    "file": "assets/WhyChooseUs-B7T_fZi_.js",
+    "name": "WhyChooseUs",
+    "src": "resources/js/components/body/home/WhyChooseUs.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app.js"
+    ],
+    "css": [
+      "assets/WhyChooseUs-DykFp5ic.css"
+    ]
+  },
+  "resources/js/components/partial/Particles.vue": {
+    "file": "assets/Particles-BNmz0kX0.js",
+    "name": "Particles",
+    "src": "resources/js/components/partial/Particles.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app.js"
+    ],
+    "css": [
+      "assets/Particles-CX7s_8FX.css"
     ]
   },
   "resources/js/images/dixon.jpeg": {
@@ -64,25 +179,27 @@
     "src": "resources/js/images/solution.jpeg"
   },
   "resources/js/layouts/app.js": {
-    "file": "assets/app-CkDpWEEi.js",
+    "file": "assets/app-C7Ifesao.js",
     "name": "app",
     "src": "resources/js/layouts/app.js",
     "isEntry": true,
+    "dynamicImports": [
+      "resources/js/components/partial/Particles.vue",
+      "resources/js/components/body/home/Introduction.vue",
+      "resources/js/components/body/home/Information.vue",
+      "resources/js/components/body/home/PropertyList.vue",
+      "resources/js/components/body/home/WhyChooseUs.vue",
+      "resources/js/components/body/home/AgentsList.vue",
+      "resources/js/components/body/home/Testimonials.vue",
+      "resources/js/components/body/home/Footer.vue"
+    ],
     "css": [
-      "assets/app-DYpF5-2y.css"
+      "assets/app-C9MQrhcl.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
       "assets/hero_bg_1-VAm-BHjj.jpg",
-      "assets/hero_bg_2-DLJdILv4.jpg",
-      "assets/question-jaaOC8Sn.jpeg",
-      "assets/solution-DSXKAe-m.jpeg",
-      "assets/goal-D4N9GLGN.jpeg",
-      "assets/dixon-Dc7eeunq.jpeg",
-      "assets/img_1-BKJwJIQs.jpg",
-      "assets/img_2-qcMNDoij.jpg",
-      "assets/img_3-CC9TpXmN.jpg",
-      "assets/icon1-qbiIWmXk.jpg"
+      "assets/hero_bg_2-DLJdILv4.jpg"
     ]
   }
 }
