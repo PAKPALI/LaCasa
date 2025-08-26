@@ -30,9 +30,9 @@
                 <div class="col-4 col-md-4 col-lg-8">
                     <nav class="site-navigation text-right text-md-right" role="navigation">
 
-                        <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#"
-                                class="site-menu-toggle js-menu-toggle text-white"><span
-                                    class="icon-menu h3"></span></a></div>
+                        <div class="d-inline-block d-lg-none ml-md-0 mr-auto py-3">
+                            <a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a>
+                        </div>
 
                         <ul class="site-menu js-clone-nav d-none d-lg-block">
                             <li class="active"><router-link to='/home'> Acceuil </router-link></li>
@@ -55,7 +55,10 @@
                                 </ul>
                             </li> -->
                             <!-- <li><a href="blog.html">Blog</a></li> -->
-                             <li><a href="#">Publications</a></li>
+                            <li v-if="isLocal" class="active">
+                                <router-link to="/admin">Admin</router-link>
+                            </li>
+                            <li><a href="#">Publications</a></li>
                             <li><a href="#">A propos</a></li>
                             <li><a href="#">Contact</a></li>
                         </ul>
@@ -71,8 +74,8 @@
     import logo from '@images/logo.jpeg'
     import logo2 from '@images/logo2.png'
     // import ParticleJs from '../partial/Particles.vue'
-    import Particles  from '../partial/TsParticle.vue'
 
+    const isLocal = import.meta.env.VITE_APP_ENV === 'local'
 </script>
 
 <style scoped>

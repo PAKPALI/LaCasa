@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router' //fonction de Vue qui crée un routeur, c’est-à-dire le gestionnaire des routes côté frontend.
 //createWebHistory : indique à Vue d’utiliser l’historique du navigateur (comme Laravel le fait) au lieu du # dans l’URL (qui serait createWebHashHistory).
 import Home from '../components/body/home/Home.vue'
+import Admin from '../components/body/admin/Admin.vue'
 
 const routes = [
   { path: '/home', name: 'home', component: Home },
+  { path: '/admin', name: 'admin', component: Admin },
 ]
 
 const router = createRouter({
