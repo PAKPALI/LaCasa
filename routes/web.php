@@ -5,6 +5,7 @@ use Inertia\Inertia;
 
 Route::get('/{any}', function () {
     return view('index');
+    // return view('index2');
 })->where('any', '^(?!api).*$');
 
 // Route::get('/', function () {

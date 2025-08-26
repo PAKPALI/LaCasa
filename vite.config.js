@@ -7,6 +7,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/layouts/app.js'],
+            // input: ['resources/css/app.css', 'resources/js/layouts/app2.js'],
             refresh: true,
         }),
         vue(),
@@ -14,6 +15,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@images': path.resolve(__dirname, 'resources/js/images'),
+            '@images2': path.resolve(__dirname, 'resources/js/images/template'),
         },
     },
 });

@@ -14,7 +14,7 @@
             class="testimonial-item"
           >
             <blockquote>
-              <p><h6><strong>"{{ testimonials[currentIndex].text }}"</strong></h6></p>
+              <h6><strong>"{{ testimonials[currentIndex].text }}"</strong></h6>
             </blockquote>
             <p class="testimonial-author">
               {{ testimonials[currentIndex].name }}

@@ -36,7 +36,7 @@
 
                         <ul class="site-menu js-clone-nav d-none d-lg-block">
                             <li class="active"><router-link to='/home'> Acceuil </router-link></li>
-                            <!-- <li><a href="buy.html">Buy</a></li> -->
+                            <li><router-link to='/home2'> Acceuil2 </router-link></li>
                             <!-- <li><a href="rent.html">Rent</a></li> -->
                             <!-- <li class="has-children">
                                 <a href="properties.html">Properties</a>
@@ -55,9 +55,7 @@
                                 </ul>
                             </li> -->
                             <!-- <li><a href="blog.html">Blog</a></li> -->
-                            <li v-if="isLocal" class="active">
-                                <router-link to="/admin">Admin</router-link>
-                            </li>
+                            <router-link to="/admin">Admin</router-link>
                             <li><a href="#">Publications</a></li>
                             <li><a href="#">A propos</a></li>
                             <li><a href="#">Contact</a></li>
@@ -74,8 +72,6 @@
     import logo from '@images/logo.jpeg'
     import logo2 from '@images/logo2.png'
     // import ParticleJs from '../partial/Particles.vue'
-    console.log('ENV détecté :', import.meta.env.VITE_APP_ENV)
-    const isLocal = import.meta.env.VITE_APP_ENV === 'local'
 </script>
 
 <style scoped>
