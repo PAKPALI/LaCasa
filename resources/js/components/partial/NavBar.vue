@@ -74,7 +74,7 @@
     import logo from '@images/logo.jpeg'
     import logo2 from '@images/logo2.png'
     // import ParticleJs from '../partial/Particles.vue'
-
+    console.log('ENV détecté :', import.meta.env.VITE_APP_ENV)
     const isLocal = import.meta.env.VITE_APP_ENV === 'local'
 </script>
 
