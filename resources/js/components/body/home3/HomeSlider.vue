@@ -1,0 +1,47 @@
+<!-- components/HomeSlider.vue -->
+<template>
+  <div class="slide-one-item home-slider owl-carousel">
+
+    <div
+      class="site-blocks-cover overlay"
+      :style="{ backgroundImage: `url(${heroBg1})` }"
+      data-aos="fade"
+      data-stellar-background-ratio="0.5"
+    >
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+          <div class="col-md-10">
+            <span class="d-inline-block bg-success text-white px-3 mb-3 property-offer-type rounded">A LOUER</span>
+            <h1 class="mb-2">Villa de lux</h1>
+            <p class="mb-5"><strong class="h2 text-success font-weight-bold">50.000.000 FCFA</strong></p>
+            <p><a href="#" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">Detail</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="site-blocks-cover overlay"
+      :style="{ backgroundImage: `url(${heroBg2})` }"
+      data-aos="fade"
+      data-stellar-background-ratio="0.5"
+    >
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+          <div class="col-md-10">
+            <span class="d-inline-block bg-danger text-white px-3 mb-3 property-offer-type rounded">A vendre</span>
+            <h1 class="mb-2">Maison</h1>
+            <p class="mb-5"><strong class="h2 text-success font-weight-bold">10.000.000 FCFA</strong></p>
+            <p><a href="#" class="btn btn-white btn-outline-white py-3 px-5 rounded-0 btn-2">détail</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script setup>
+  import heroBg1 from '@images/hero_bg_1.jpg'
+  import heroBg2 from '@images/hero_bg_2.jpg'
+</script>

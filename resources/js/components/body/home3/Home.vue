@@ -1,18 +1,18 @@
 <template>
   <!-- Particles : démarre animation seulement si visible -->
-  <!-- <div ref="particleSection">
+  <div ref="particleSection">
     <ParticleJs v-if="showParticle" />
-  </div> -->
+  </div>
 
   <!-- <div ref="homeSliderSection"> -->
     <HomeSlider />
   <!-- </div> -->
 
-   <div ref="introSection">
+  <div ref="introSection">
     <Intro v-if="showIntro" />
   </div>
 
-  <!--<div ref="infoSection">
+  <div ref="infoSection">
     <Info v-if="showInfo" />
   </div>
 
@@ -34,7 +34,7 @@
 
   <div ref="footerSection">
     <Footer v-if="showFooter" />
-  </div> -->
+  </div>
 </template>
 
 <script setup>
