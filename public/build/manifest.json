@@ -1,8 +1,4 @@
 {
-  "_Particles-DsPDFc2S.css": {
-    "file": "assets/Particles-DsPDFc2S.css",
-    "src": "_Particles-DsPDFc2S.css"
-  },
   "resources/css/app.css": {
     "file": "assets/app-CHuT-oQ8.css",
     "src": "resources/css/app.css",
@@ -11,54 +7,8 @@
       "app.css"
     ]
   },
-  "resources/js/components/body/home/AgentsList.vue": {
-    "file": "assets/AgentsList-DR_mm5I7.js",
-    "name": "AgentsList",
-    "src": "resources/js/components/body/home/AgentsList.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/layouts/app.js"
-    ],
-    "css": [
-      "assets/AgentsList-BrgxCGmx.css"
-    ],
-    "assets": [
-      "assets/dixon-Dc7eeunq.jpeg",
-      "assets/icon1-qbiIWmXk.jpg"
-    ]
-  },
-  "resources/js/components/body/home/Footer.vue": {
-    "file": "assets/Footer-F3Yv3Qge.js",
-    "name": "Footer",
-    "src": "resources/js/components/body/home/Footer.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/layouts/app.js"
-    ],
-    "css": [
-      "assets/Footer-r98KHKGH.css"
-    ]
-  },
-  "resources/js/components/body/home/Information.vue": {
-    "file": "assets/Information-DHvL-r0e.js",
-    "name": "Information",
-    "src": "resources/js/components/body/home/Information.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/layouts/app.js"
-    ],
-    "css": [
-      "assets/Information-m7lFdpaT.css",
-      "assets/Particles-DsPDFc2S.css"
-    ],
-    "assets": [
-      "assets/question-jaaOC8Sn.jpeg",
-      "assets/solution-DSXKAe-m.jpeg",
-      "assets/goal-D4N9GLGN.jpeg"
-    ]
-  },
   "resources/js/components/body/home/Introduction.vue": {
-    "file": "assets/Introduction-CwoNEUaf.js",
+    "file": "assets/Introduction-tvjY_MXn.js",
     "name": "Introduction",
     "src": "resources/js/components/body/home/Introduction.vue",
     "isDynamicEntry": true,
@@ -66,60 +16,7 @@
       "resources/js/layouts/app.js"
     ],
     "css": [
-      "assets/Introduction-Khn0jLYN.css"
-    ]
-  },
-  "resources/js/components/body/home/PropertyList.vue": {
-    "file": "assets/PropertyList-CR6HQ5KI.js",
-    "name": "PropertyList",
-    "src": "resources/js/components/body/home/PropertyList.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/layouts/app.js"
-    ],
-    "css": [
-      "assets/PropertyList-DYLhkjsq.css"
-    ],
-    "assets": [
-      "assets/img_1-BKJwJIQs.jpg",
-      "assets/img_2-qcMNDoij.jpg",
-      "assets/img_3-CC9TpXmN.jpg"
-    ]
-  },
-  "resources/js/components/body/home/Testimonials.vue": {
-    "file": "assets/Testimonials-Cy-8oQ1n.js",
-    "name": "Testimonials",
-    "src": "resources/js/components/body/home/Testimonials.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/layouts/app.js"
-    ],
-    "css": [
-      "assets/Testimonials-BVM4f3Uy.css"
-    ]
-  },
-  "resources/js/components/body/home/WhyChooseUs.vue": {
-    "file": "assets/WhyChooseUs-BXlugBdN.js",
-    "name": "WhyChooseUs",
-    "src": "resources/js/components/body/home/WhyChooseUs.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/layouts/app.js"
-    ],
-    "css": [
-      "assets/WhyChooseUs-DykFp5ic.css"
-    ]
-  },
-  "resources/js/components/partial/Particles.vue": {
-    "file": "assets/Particles-DaKxFA7n.js",
-    "name": "Particles",
-    "src": "resources/js/components/partial/Particles.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/layouts/app.js"
-    ],
-    "css": [
-      "assets/Particles-DsPDFc2S.css"
+      "assets/Introduction-BhgkEmeR.css"
     ]
   },
   "resources/js/images/dixon.jpeg": {
@@ -187,27 +84,18 @@
     "src": "resources/js/images/template/carousel-2.jpg"
   },
   "resources/js/layouts/app.js": {
-    "file": "assets/app-B3myd1H1.js",
+    "file": "assets/app-CgG6D60K.js",
     "name": "app",
     "src": "resources/js/layouts/app.js",
     "isEntry": true,
     "dynamicImports": [
-      "resources/js/components/partial/Particles.vue",
-      "resources/js/components/body/home/Introduction.vue",
-      "resources/js/components/body/home/Information.vue",
-      "resources/js/components/body/home/PropertyList.vue",
-      "resources/js/components/body/home/WhyChooseUs.vue",
-      "resources/js/components/body/home/AgentsList.vue",
-      "resources/js/components/body/home/Testimonials.vue",
-      "resources/js/components/body/home/Footer.vue"
+      "resources/js/components/body/home/Introduction.vue"
     ],
     "css": [
-      "assets/app-DBqZ29o3.css"
+      "assets/app-tn0RQdqM.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
-      "assets/hero_bg_1-VAm-BHjj.jpg",
-      "assets/hero_bg_2-DLJdILv4.jpg",
       "assets/carousel-1-BEvSPtMg.jpg",
       "assets/carousel-2-DiQZ5U25.jpg"
     ]
