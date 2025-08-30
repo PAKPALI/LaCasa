@@ -7,6 +7,18 @@
       "app2.css"
     ]
   },
+  "resources/js/components/partial/Particles.vue": {
+    "file": "assets/Particles-DZKqD6bF.js",
+    "name": "Particles",
+    "src": "resources/js/components/partial/Particles.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/layouts/app2.js"
+    ],
+    "css": [
+      "assets/Particles-CX7s_8FX.css"
+    ]
+  },
   "resources/js/images/dixon.jpeg": {
     "file": "assets/dixon-Dc7eeunq.jpeg",
     "src": "resources/js/images/dixon.jpeg"
@@ -140,12 +152,15 @@
     "src": "resources/js/images/template/team-3.jpg"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-i1oHJzoF.js",
+    "file": "assets/app2-DpirmaXr.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
+    "dynamicImports": [
+      "resources/js/components/partial/Particles.vue"
+    ],
     "css": [
-      "assets/app2-BKMXetSD.css"
+      "assets/app2-CG-JOaCB.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",

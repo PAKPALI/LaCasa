@@ -13,8 +13,8 @@
 
 <script setup>
   // Lazy load des composants
-  // const ParticleJs = defineAsyncComponent(() => import('../../partial/Particles.vue'))
-  import ParticleJs from '@/components/partial/Particles.vue'
+  const ParticleJs = defineAsyncComponent(() => import('@/components/partial/Particles.vue'))
+  // import ParticleJs from '@/components/partial/Particles.vue'
   import Header from '@/components/body/home/Header.vue'
   import SearchBar from '@/components/body/home/SearchForm.vue'
   import Category from '@/components/body/home/Category.vue'
