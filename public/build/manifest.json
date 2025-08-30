@@ -1,43 +1,4 @@
 {
-  "_index-CX7s_8FX.css": {
-    "file": "assets/index-CX7s_8FX.css",
-    "src": "_index-CX7s_8FX.css"
-  },
-  "_index-DycMZ1v2.js": {
-    "file": "assets/index-DycMZ1v2.js",
-    "name": "index",
-    "css": [
-      "assets/index-CX7s_8FX.css"
-    ],
-    "assets": [
-      "assets/logo2-BjkGqu9a.png",
-      "assets/carousel-1-BEvSPtMg.jpg",
-      "assets/carousel-2-DiQZ5U25.jpg",
-      "assets/icon-apartment-CzoS5fJG.png",
-      "assets/icon-villa-BKmaxoR5.png",
-      "assets/icon-house-CTbCveku.png",
-      "assets/icon-housing-CqEGwLgX.png",
-      "assets/icon-building-DTY53NhC.png",
-      "assets/icon-condominium-Bl6drNCS.png",
-      "assets/about-cr2Rp6N1.jpg",
-      "assets/property-1-28R_myJ0.jpg",
-      "assets/property-2-B1tacECc.jpg",
-      "assets/property-3-C7tPtB-7.jpg",
-      "assets/property-4-DGEO1nxR.jpg",
-      "assets/property-5-Cq1GnElW.jpg",
-      "assets/property-6-Csj_vv0E.jpg",
-      "assets/call-to-action--rE-WJM8.jpg",
-      "assets/icon1-qbiIWmXk.jpg"
-    ]
-  },
-  "resources/css/app.css": {
-    "file": "assets/app-CHuT-oQ8.css",
-    "src": "resources/css/app.css",
-    "isEntry": true,
-    "names": [
-      "app.css"
-    ]
-  },
   "resources/css/app2.css": {
     "file": "assets/app2-Dy4W1O98.css",
     "src": "resources/css/app2.css",
@@ -178,28 +139,33 @@
     "file": "assets/team-3-Bqzcis8a.jpg",
     "src": "resources/js/images/template/team-3.jpg"
   },
-  "resources/js/layouts/app.js": {
-    "file": "assets/app-5pBIJ6AA.js",
-    "name": "app",
-    "src": "resources/js/layouts/app.js",
-    "isEntry": true,
-    "imports": [
-      "_index-DycMZ1v2.js"
-    ],
-    "css": [
-      "assets/app-tn0RQdqM.css"
-    ]
-  },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-C9rakTDt.js",
+    "file": "assets/app2-i1oHJzoF.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
-    "imports": [
-      "_index-DycMZ1v2.js"
-    ],
     "css": [
-      "assets/app2-DrFtpeQ-.css"
+      "assets/app2-BKMXetSD.css"
+    ],
+    "assets": [
+      "assets/logo2-BjkGqu9a.png",
+      "assets/property-1-28R_myJ0.jpg",
+      "assets/property-2-B1tacECc.jpg",
+      "assets/property-3-C7tPtB-7.jpg",
+      "assets/property-4-DGEO1nxR.jpg",
+      "assets/property-5-Cq1GnElW.jpg",
+      "assets/property-6-Csj_vv0E.jpg",
+      "assets/carousel-1-BEvSPtMg.jpg",
+      "assets/carousel-2-DiQZ5U25.jpg",
+      "assets/icon-apartment-CzoS5fJG.png",
+      "assets/icon-villa-BKmaxoR5.png",
+      "assets/icon-house-CTbCveku.png",
+      "assets/icon-housing-CqEGwLgX.png",
+      "assets/icon-building-DTY53NhC.png",
+      "assets/icon-condominium-Bl6drNCS.png",
+      "assets/about-cr2Rp6N1.jpg",
+      "assets/call-to-action--rE-WJM8.jpg",
+      "assets/icon1-qbiIWmXk.jpg"
     ]
   }
 }
