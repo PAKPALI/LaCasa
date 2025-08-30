@@ -1,124 +1,54 @@
 <template>
-  <div class="team-member">
-    <div class="image-wrapper">
-      <img :src="image" alt="Image" class="img-fluid rounded" />
-      <div class="social-links">
-        <a
-          v-for="(icon, i) in social"
-          :key="i"
-          :href="icon.link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span :class="icon.class"></span>
-        </a>
+  <!-- Team Start -->
+  <div class="container-xxl py-5">
+    <div class="container">
+      <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+        <h1 class="mb-3">L’Équipe LaCasa</h1>
+        <p>
+          Découvrez les talents et professionnels qui ont travaillé avec passion pour créer LaCasa et rendre la recherche de logements plus simple et sécurisée.
+        </p>
       </div>
+
+      <div class="row g-4">
+        <div
+          v-for="(m, i) in members"
+          :key="i"
+          class="col-lg-4 col-md-4 wow fadeInUp"
+          :data-wow-delay="m.delay"
+        >
+          <div class="team-item rounded overflow-hidden">
+            <div class="position-relative">
+              <img class="img-fluid" :src="m.img" :alt="m.name">
+              <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
+                <a class="btn btn-square mx-1" href="#"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-square mx-1" href="#"><i class="fab fa-twitter"></i></a>
+                <a class="btn btn-square mx-1" href="#"><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
+            <div class="text-center p-4 mt-3">
+              <h5 class="fw-bold mb-0">{{ m.name }}</h5>
+              <small>{{ m.role }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="member-info">
-      <h2>{{ name }}</h2>
-      <span class="position">{{ position }}</span>
-      <p>{{ description }}</p>
-    </div>
-  </div>
+  </div><!-- Team End -->
 </template>
 
 <script setup>
-const props = defineProps({
-  image: String,
-  name: String,
-  position: String,
-  description: String,
-  social: Array
-})
+// Import des images comme dans le premier template
+import team1 from '@images2/team-1.jpg'
+import team2 from '@images2/team-2.jpg'
+import team3 from '@images2/team-3.jpg'
+import icon1 from '@images/icon1.jpg'
+// import team4 from '@images2/team-4.jpg'
+
+const members = [
+  { name: 'KONDJI Arafat', role: 'Analyste technicien', img: icon1, delay: '0.1s' },
+  { name: 'PAKPALI Essolissam didier', role: 'Développeur web', img: icon1, delay: '0.3s' },
+  { name: 'ATTIGANE samuel', role: 'Agent immobilier', img: icon1, delay: '0.5s' },
+  // { name: 'Emily Davis', role: 'Agent immobilier', img: team4, delay: '0.7s' }
+]
 </script>
-
-<style scoped>
-.team-member {
-  background: #fff;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  position: relative;
-}
-
-.team-member:hover {
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 0 20px rgba(89,165,44,0.6),
-              0 0 40px rgba(89,165,44,0.4),
-              0 0 60px rgba(89,165,44,0.2);
-}
-
-.image-wrapper {
-  position: relative;
-  overflow: hidden;
-}
-
-.image-wrapper img {
-  width: 100%;
-  transition: transform 0.4s ease;
-}
-
-.team-member:hover img {
-  transform: scale(1.05);
-}
-
-/* Social icons */
-.social-links {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 15px;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.team-member:hover .social-links {
-  opacity: 1;
-}
-
-.social-links a span {
-  font-size: 18px;
-  color: #59A52C;
-  transition: transform 0.3s ease, color 0.3s ease;
-  animation: pulse 2s infinite;
-}
-
-.social-links a span:hover {
-  transform: scale(1.3);
-  color: #4b8d27;
-  text-shadow: 0 0 8px #59A52C, 0 0 15px #59A52C;
-}
-
-/* Animation pulsation */
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-/* Member info */
-.member-info {
-  padding: 20px;
-  text-align: center;
-}
-
-.member-info h2 {
-  font-size: 1.4rem;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-.member-info .position {
-  color: #59A52C;
-  font-weight: 600;
-  margin-bottom: 10px;
-  display: block;
-}
-
-.member-info p {
-  font-size: 0.95rem;
-  color: #555;
-}
-</style>

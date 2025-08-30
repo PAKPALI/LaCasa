@@ -1,53 +1,34 @@
 <template>
-  <div class="site-section site-section-sm pb-0">
+  <div class="container-fluid bg-primary mb-5" style="padding: 35px;">
     <div class="container">
-      <div class="row">
-        <form class="form-search col-md-12" style="margin-top: -100px;" @submit.prevent="onSubmit">
-          <div class="row align-items-end">
-            <div class="col-md-3">
-              <label for="list-types">Listing Types</label>
-              <select v-model="listingType" id="list-types" class="form-control d-block rounded-0">
-                <option value="">Condo</option>
-                <option value="">Commercial Building</option>
-                <option value="">Land Property</option>
+      <div class="row g-2">
+        <div class="col-md-10">
+          <div class="row g-2">
+            <div class="col-md-4">
+              <input type="text" class="form-control border-0 py-3" placeholder="Mot-clé (ex: chambre, villa)">
+            </div>
+            <div class="col-md-4">
+              <select class="form-select border-0 py-3">
+                <option selected>Type de logement</option>
+                <option value="1">Chambre</option>
+                <option value="2">Appartement</option>
+                <option value="3">Maison</option>
               </select>
             </div>
-            <div class="col-md-3">
-              <label for="offer-types">Offer Type</label>
-              <select v-model="offerType" id="offer-types" class="form-control d-block rounded-0">
-                <option value="">For Sale</option>
-                <option value="">For Rent</option>
-                <option value="">For Lease</option>
+            <div class="col-md-4">
+              <select class="form-select border-0 py-3">
+                <option selected>Ville</option>
+                <option value="1">Lomé</option>
+                <option value="2">Kara</option>
+                <option value="3">Sokodé</option>
               </select>
-            </div>
-            <div class="col-md-3">
-              <label for="select-city">Select City</label>
-              <select v-model="city" id="select-city" class="form-control d-block rounded-0">
-                <option value="">New York</option>
-                <option value="">Brooklyn</option>
-                <option value="">London</option>
-                <option value="">Japan</option>
-                <option value="">Philippines</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <input type="submit" class="btn btn-success text-white btn-block rounded-0" value="Search" />
             </div>
           </div>
-        </form>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-dark border-0 w-100 py-3">Rechercher</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-
-const listingType = ref('')
-const offerType = ref('')
-const city = ref('')
-
-function onSubmit() {
-  alert(`Recherche: ${listingType.value}, ${offerType.value}, ${city.value}`)
-}
-</script>

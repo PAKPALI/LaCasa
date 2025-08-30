@@ -1,4 +1,35 @@
 {
+  "_index-CX7s_8FX.css": {
+    "file": "assets/index-CX7s_8FX.css",
+    "src": "_index-CX7s_8FX.css"
+  },
+  "_index-DycMZ1v2.js": {
+    "file": "assets/index-DycMZ1v2.js",
+    "name": "index",
+    "css": [
+      "assets/index-CX7s_8FX.css"
+    ],
+    "assets": [
+      "assets/logo2-BjkGqu9a.png",
+      "assets/carousel-1-BEvSPtMg.jpg",
+      "assets/carousel-2-DiQZ5U25.jpg",
+      "assets/icon-apartment-CzoS5fJG.png",
+      "assets/icon-villa-BKmaxoR5.png",
+      "assets/icon-house-CTbCveku.png",
+      "assets/icon-housing-CqEGwLgX.png",
+      "assets/icon-building-DTY53NhC.png",
+      "assets/icon-condominium-Bl6drNCS.png",
+      "assets/about-cr2Rp6N1.jpg",
+      "assets/property-1-28R_myJ0.jpg",
+      "assets/property-2-B1tacECc.jpg",
+      "assets/property-3-C7tPtB-7.jpg",
+      "assets/property-4-DGEO1nxR.jpg",
+      "assets/property-5-Cq1GnElW.jpg",
+      "assets/property-6-Csj_vv0E.jpg",
+      "assets/call-to-action--rE-WJM8.jpg",
+      "assets/icon1-qbiIWmXk.jpg"
+    ]
+  },
   "resources/css/app.css": {
     "file": "assets/app-CHuT-oQ8.css",
     "src": "resources/css/app.css",
@@ -7,16 +38,12 @@
       "app.css"
     ]
   },
-  "resources/js/components/body/home/Introduction.vue": {
-    "file": "assets/Introduction-AgG-vC4l.js",
-    "name": "Introduction",
-    "src": "resources/js/components/body/home/Introduction.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "resources/js/layouts/app2.js"
-    ],
-    "css": [
-      "assets/Introduction-BhgkEmeR.css"
+  "resources/css/app2.css": {
+    "file": "assets/app2-Dy4W1O98.css",
+    "src": "resources/css/app2.css",
+    "isEntry": true,
+    "names": [
+      "app2.css"
     ]
   },
   "resources/js/images/dixon.jpeg": {
@@ -75,6 +102,14 @@
     "file": "assets/solution-DSXKAe-m.jpeg",
     "src": "resources/js/images/solution.jpeg"
   },
+  "resources/js/images/template/about.jpg": {
+    "file": "assets/about-cr2Rp6N1.jpg",
+    "src": "resources/js/images/template/about.jpg"
+  },
+  "resources/js/images/template/call-to-action.jpg": {
+    "file": "assets/call-to-action--rE-WJM8.jpg",
+    "src": "resources/js/images/template/call-to-action.jpg"
+  },
   "resources/js/images/template/carousel-1.jpg": {
     "file": "assets/carousel-1-BEvSPtMg.jpg",
     "src": "resources/js/images/template/carousel-1.jpg"
@@ -83,21 +118,88 @@
     "file": "assets/carousel-2-DiQZ5U25.jpg",
     "src": "resources/js/images/template/carousel-2.jpg"
   },
+  "resources/js/images/template/icon-apartment.png": {
+    "file": "assets/icon-apartment-CzoS5fJG.png",
+    "src": "resources/js/images/template/icon-apartment.png"
+  },
+  "resources/js/images/template/icon-building.png": {
+    "file": "assets/icon-building-DTY53NhC.png",
+    "src": "resources/js/images/template/icon-building.png"
+  },
+  "resources/js/images/template/icon-condominium.png": {
+    "file": "assets/icon-condominium-Bl6drNCS.png",
+    "src": "resources/js/images/template/icon-condominium.png"
+  },
+  "resources/js/images/template/icon-house.png": {
+    "file": "assets/icon-house-CTbCveku.png",
+    "src": "resources/js/images/template/icon-house.png"
+  },
+  "resources/js/images/template/icon-housing.png": {
+    "file": "assets/icon-housing-CqEGwLgX.png",
+    "src": "resources/js/images/template/icon-housing.png"
+  },
+  "resources/js/images/template/icon-villa.png": {
+    "file": "assets/icon-villa-BKmaxoR5.png",
+    "src": "resources/js/images/template/icon-villa.png"
+  },
+  "resources/js/images/template/property-1.jpg": {
+    "file": "assets/property-1-28R_myJ0.jpg",
+    "src": "resources/js/images/template/property-1.jpg"
+  },
+  "resources/js/images/template/property-2.jpg": {
+    "file": "assets/property-2-B1tacECc.jpg",
+    "src": "resources/js/images/template/property-2.jpg"
+  },
+  "resources/js/images/template/property-3.jpg": {
+    "file": "assets/property-3-C7tPtB-7.jpg",
+    "src": "resources/js/images/template/property-3.jpg"
+  },
+  "resources/js/images/template/property-4.jpg": {
+    "file": "assets/property-4-DGEO1nxR.jpg",
+    "src": "resources/js/images/template/property-4.jpg"
+  },
+  "resources/js/images/template/property-5.jpg": {
+    "file": "assets/property-5-Cq1GnElW.jpg",
+    "src": "resources/js/images/template/property-5.jpg"
+  },
+  "resources/js/images/template/property-6.jpg": {
+    "file": "assets/property-6-Csj_vv0E.jpg",
+    "src": "resources/js/images/template/property-6.jpg"
+  },
+  "resources/js/images/template/team-1.jpg": {
+    "file": "assets/team-1-DPqAy9Wv.jpg",
+    "src": "resources/js/images/template/team-1.jpg"
+  },
+  "resources/js/images/template/team-2.jpg": {
+    "file": "assets/team-2-D7vDOaiF.jpg",
+    "src": "resources/js/images/template/team-2.jpg"
+  },
+  "resources/js/images/template/team-3.jpg": {
+    "file": "assets/team-3-Bqzcis8a.jpg",
+    "src": "resources/js/images/template/team-3.jpg"
+  },
+  "resources/js/layouts/app.js": {
+    "file": "assets/app-5pBIJ6AA.js",
+    "name": "app",
+    "src": "resources/js/layouts/app.js",
+    "isEntry": true,
+    "imports": [
+      "_index-DycMZ1v2.js"
+    ],
+    "css": [
+      "assets/app-tn0RQdqM.css"
+    ]
+  },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-CQMr9nL9.js",
+    "file": "assets/app2-C9rakTDt.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
-    "dynamicImports": [
-      "resources/js/components/body/home/Introduction.vue"
+    "imports": [
+      "_index-DycMZ1v2.js"
     ],
     "css": [
-      "assets/app2-tn0RQdqM.css"
-    ],
-    "assets": [
-      "assets/logo2-BjkGqu9a.png",
-      "assets/carousel-1-BEvSPtMg.jpg",
-      "assets/carousel-2-DiQZ5U25.jpg"
+      "assets/app2-DrFtpeQ-.css"
     ]
   }
 }

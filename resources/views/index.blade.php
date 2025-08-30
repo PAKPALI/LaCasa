@@ -34,7 +34,7 @@
     <link href="{{ asset('template/css/style.css') }}" rel="stylesheet">
 
     <!-- Vite -->
-    @vite(['resources/css/app.css', 'resources/js/layouts/app2.js'])
+    @vite(['resources/css/app2.css', 'resources/js/layouts/app2.js'])
 </head>
 <body>
     <div id="app"></div>
