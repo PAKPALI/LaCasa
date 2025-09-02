@@ -5,8 +5,9 @@
 
         <!-- Section LaCasa -->
         <div class="col-lg-3 col-md-6">
-          <h5 class="text-light mb-4">LaCasa</h5>
-          <p>Votre solution simple et fiable pour trouver un logement au Togo.</p>
+          <!-- <h5 class="text-light mb-4">LaCasa</h5> -->
+          <img :src="logo2" alt="logo2" class="img-fluid w-45 mb-4" />
+          <!-- <p>Votre solution simple et fiable pour trouver un logement au Togo.</p> -->
           <div class="d-flex pt-2">
             <a v-for="(icon, i) in socialIcons" :key="i" :href="icon.link" class="btn btn-outline-light btn-social me-1">
               <i :class="icon.class"></i>
@@ -17,9 +18,11 @@
         <!-- Navigation -->
         <div class="col-lg-3 col-md-6">
           <h5 class="text-light mb-4">Navigation</h5>
-          <a v-for="(nav, i) in navLinks" :key="i" :href="nav.link" class="btn btn-link text-light">
-            {{ nav.name }}
-          </a>
+          <div v-for="(nav, i) in navLinks" :key="i">
+            <router-link :to="nav.link" class="btn btn-link text-light">
+              {{ nav.name }}
+            </router-link>
+          </div>
         </div>
 
         <!-- Contact -->
@@ -52,6 +55,7 @@
 
 <script setup>
 // Import des images de galerie
+import logo2 from '@images/logo2.png'
 import prop1 from '@images2/property-1.jpg'
 import prop2 from '@images2/property-2.jpg'
 import prop3 from '@images2/property-3.jpg'
@@ -68,15 +72,16 @@ const socialIcons = [
 ]
 
 const navLinks = [
-  { name: 'Accueil', link: '#' },
+  { name: 'Accueil', link: '/home' },
   { name: 'À propos', link: '#' },
-  { name: 'Annonces', link: '#' },
+  { name: 'Publications', link: '/publication' },
   { name: 'Contact', link: '#' },
 ]
 
+
 const contact = {
   address: 'Lomé, Togo',
-  phone: '+228 90 00 00 00',
+  phone: '+228 90 85 94 88',
   email: 'support@lacasa.tg'
 }
 

@@ -28,5 +28,9 @@
 </script>
 
 <style scoped>
-  /* Tu peux ajouter du style local ici */
+  .container-xxl.py-5 {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+}
 </style>

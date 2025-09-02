@@ -9,7 +9,7 @@
         <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
             <a href="index.html" class="navbar-brand d-flex align-items-center text-center">
                 <div class="icon p-2 me-2">
-                    <img class="img-fluid" :src="logo2" alt="Icon" style="width: 30px; height: 30px;">
+                    <img class="img-fluid bg-dark" :src="logo2" alt="Icon" style="width: 30px; height: 30px;">
                 </div>
                 <h1 class="m-0 text-primary">La Casa</h1>
             </a>
@@ -19,7 +19,7 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto">
                     <li class="nav-item nav-link"><router-link to='/home'> Acceuil </router-link></li>
-                    <li class="nav-item nav-link"><router-link to='/home2'> Acceuil2 </router-link></li>
+                    <!-- <li class="nav-item nav-link"><router-link to='/home2'> Acceuil2 </router-link></li> -->
                     <li><a href="about.html" class="nav-item nav-link">About</a></li>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>

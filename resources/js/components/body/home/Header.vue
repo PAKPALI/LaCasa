@@ -8,7 +8,7 @@
         <p class="animated fadeIn mb-4 pb-2">
           LaCasa simplifie la recherche de logements au Togo. Consultez des annonces fiables, mises à jour et adaptées à vos besoins.
         </p>
-        <a href="#" class="btn btn-primary py-3 px-5 me-3 animated fadeIn">Commencer</a>
+        <!-- <a href="#" class="btn btn-primary py-3 px-5 me-3 animated fadeIn">Commencer</a> -->
       </div>
      <div class="col-md-6 animated fadeIn">
         <div class="owl-carousel header-carousel">

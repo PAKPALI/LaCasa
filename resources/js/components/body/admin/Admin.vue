@@ -88,153 +88,162 @@
   </div>
 
   <div class="site-section mt-5">
-      <div class="container">
+  <div class="container">
 
-        <div class="row justify-content-center mt-5">
-          <div class="col-md-7 text-center">
-            <div class="site-section-title">
-              <h2>Section admin</h2>
-            </div>
-            <p>Cette section permet d'interagir avec les outils dont le site aura besoin pour se developper</p>
-          </div>
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-7 text-center">
+        <div class="site-section-title">
+          <h2>Section admin</h2>
         </div>
-
-        <div class="row justify-content-center" data-aos="fade" data-aos-delay="100">
-            <div class="col-md-12">
-                <div class="accordion unit-8" id="accordion">
-                    <!-- country -->
-                    <div class="accordion-item">
-                        <h3 class="mb-0 heading bg-dark">
-                            <a class="btn-block text-light" data-toggle="collapse" href="#collapse1" role="button" aria-expanded="true" aria-controls="collapse1">
-                                SECTION PAYS
-                            </a>
-                        </h3>
-                        <div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="body-text">
-                                <p>Vous pouvez enregistrez le pays,modifier ou supprimer</p>
-                                <!-- add product -->
-                                <div class="row mt-3">
-                                    <div class="col-8 border-end">
-                                        <h2>Liste Pays</h2>
-                                    </div>
-                                    <div class="col-4">
-                                        <button class="btn btn-dark mt-3 me-2" @click="addProduct">+ Ajouter</button>
-                                    </div>
-                                </div>
-                                <!--tableau des pays -->
-                                <div class="row mt-3 border-top pt-3 mb-3">
-                                    <table class="table table-bordered table-hover">
-                                        <thead class="table-secondary">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Nom</th>
-                                            <th>Code</th>
-                                            <th>Créer par</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr v-for="(product, index) in products" :key="product.id">
-                                            <td>{{ index + 1 }}</td>
-                                            <td>{{ product.name }}</td>
-                                            <td>{{ product.qty }}</td>
-                                            <td>{{ product.limit }}</td>
-                                            <td>
-                                            <span class="badge bg-success" v-if="product.status == 1">Disponible</span>
-                                            <span class="badge bg-danger" v-else>Indisponible</span>
-                                            </td>
-                                            <td>
-                                            <button class="btn btn-sm btn-warning me-1" @click="productUpdated(product)">
-                                                <i class="bi bi-pencil-square"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" @click="deletedProduct(product.id)">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                            </td>
-                                        </tr>
-
-                                        <tr v-if="products.length === 0">
-                                            <td colspan="6" class="text-center text-danger">Aucun pays trouvé</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- town -->
-                    <div class="accordion-item">
-                        <h3 class="mb-0 heading bg-dark">
-                            <a class="btn-block text-light" data-toggle="collapse" href="#collapse2" role="button" aria-expanded="false" aria-controls="collapse2">
-                                SECTION VILLE
-                            </a>
-                        </h3>
-                        <div id="collapse2" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="body-text">
-                                <p>Vous pouvez enregistrez la ville,modifier ou supprimer</p>
-                                <!-- add product -->
-                                <div class="row mt-3">
-                                    <div class="col-8 border-end">
-                                        <h2>Liste Ville</h2>
-                                    </div>
-                                    <div class="col-4">
-                                        <button class="btn btn-dark mt-3 me-2" @click="addProduct">+ Ajouter</button>
-                                    </div>
-                                </div>
-                                <!--tableau des pays -->
-                                <div class="row mt-3 border-top pt-3">
-                                    <table class="table table-bordered table-hover">
-                                        <thead class="table-secondary">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Nom</th>
-                                            <th>Code</th>
-                                            <th>Créer par</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(product, index) in products" :key="product.id">
-                                                <td>{{ index + 1 }}</td>
-                                                <td>{{ product.name }}</td>
-                                                <td>{{ product.qty }}</td>
-                                                <td>{{ product.limit }}</td>
-                                                <td>
-                                                <span class="badge bg-success" v-if="product.status == 1">Disponible</span>
-                                                <span class="badge bg-danger" v-else>Indisponible</span>
-                                                </td>
-                                                <td>
-                                                <button class="btn btn-sm btn-warning me-1" @click="productUpdated(product)">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" @click="deletedProduct(product.id)">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                                </td>
-                                            </tr>
-
-                                            <tr v-if="products.length === 0">
-                                                <td colspan="6" class="text-center text-danger">Aucune ville trouvée</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-                </div>
-            </div>
-        </div>
+        <p>Cette section permet d'interagir avec les outils dont le site aura besoin pour se developper</p>
       </div>
     </div>
+
+    <div class="row justify-content-center" data-aos="fade" data-aos-delay="100">
+      <div class="col-md-12">
+        
+        <!-- Bootstrap Accordion -->
+        <div class="accordion" id="accordionExample">
+
+          <!-- country -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button bg-dark text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                SECTION PAYS
+              </button>
+            </h2>
+            <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+              <div class="accordion-body text-white">
+                <p class="bg-dark text-white">Vous pouvez enregistrez le pays, modifier ou supprimer</p>
+
+                <!-- add product -->
+                <div class="row mt-3">
+                  <div class="col-8 border-end">
+                    <h2>Liste Pays</h2>
+                  </div>
+                  <div class="col-4">
+                    <button class="btn btn-dark mt-3 me-2" @click="addProduct">+ Ajouter</button>
+                  </div>
+                </div>
+
+                <!-- tableau des pays -->
+                <div class="row mt-3 border-top pt-3 mb-3">
+                  <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                      <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Code</th>
+                        <th>Créer par</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(product, index) in products" :key="product.id">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.qty }}</td>
+                        <td>{{ product.limit }}</td>
+                        <td>
+                          <span class="badge bg-success" v-if="product.status == 1">Disponible</span>
+                          <span class="badge bg-danger" v-else>Indisponible</span>
+                        </td>
+                        <td>
+                          <button class="btn btn-sm btn-warning me-1" @click="productUpdated(product)">
+                            <i class="bi bi-pencil-square"></i>
+                          </button>
+                          <button class="btn btn-sm btn-danger" @click="deletedProduct(product.id)">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr v-if="products.length === 0">
+                        <td colspan="6" class="text-center text-danger">Aucun pays trouvé</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- town -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed bg-dark text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                SECTION VILLE
+              </button>
+            </h2>
+            <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <p class="bg-dark text-white">Vous pouvez enregistrez la ville, modifier ou supprimer</p>
+
+                <!-- add product -->
+                <div class="row mt-3">
+                  <div class="col-8 border-end">
+                    <h2>Liste Ville</h2>
+                  </div>
+                  <div class="col-4">
+                    <button class="btn btn-dark mt-3 me-2" @click="addProduct">+ Ajouter</button>
+                  </div>
+                </div>
+
+                <!-- tableau des villes -->
+                <div class="row mt-3 border-top pt-3">
+                  <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                      <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Code</th>
+                        <th>Créer par</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(product, index) in products" :key="product.id">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.qty }}</td>
+                        <td>{{ product.limit }}</td>
+                        <td>
+                          <span class="badge bg-success" v-if="product.status == 1">Disponible</span>
+                          <span class="badge bg-danger" v-else>Indisponible</span>
+                        </td>
+                        <td>
+                          <button class="btn btn-sm btn-warning me-1" @click="productUpdated(product)">
+                            <i class="bi bi-pencil-square"></i>
+                          </button>
+                          <button class="btn btn-sm btn-danger" @click="deletedProduct(product.id)">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr v-if="products.length === 0">
+                        <td colspan="6" class="text-center text-danger">Aucune ville trouvée</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- End Bootstrap Accordion -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
 </template>
 
 <script setup>
 // Importation des dépendances
   import { Modal } from 'bootstrap'
   import axios from 'axios'
-  import { ref, defineProps, onMounted } from 'vue'
+  import { ref, onMounted } from 'vue'
 
   const name = ref('')
   const quantity = ref(0)

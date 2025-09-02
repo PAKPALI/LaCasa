@@ -7,14 +7,6 @@
       "app2.css"
     ]
   },
-  "resources/js/images/dixon.jpeg": {
-    "file": "assets/dixon-Dc7eeunq.jpeg",
-    "src": "resources/js/images/dixon.jpeg"
-  },
-  "resources/js/images/goal.jpeg": {
-    "file": "assets/goal-D4N9GLGN.jpeg",
-    "src": "resources/js/images/goal.jpeg"
-  },
   "resources/js/images/hero_bg_1.jpg": {
     "file": "assets/hero_bg_1-VAm-BHjj.jpg",
     "src": "resources/js/images/hero_bg_1.jpg"
@@ -27,18 +19,6 @@
     "file": "assets/icon1-qbiIWmXk.jpg",
     "src": "resources/js/images/icon1.jpg"
   },
-  "resources/js/images/img_1.jpg": {
-    "file": "assets/img_1-BKJwJIQs.jpg",
-    "src": "resources/js/images/img_1.jpg"
-  },
-  "resources/js/images/img_2.jpg": {
-    "file": "assets/img_2-qcMNDoij.jpg",
-    "src": "resources/js/images/img_2.jpg"
-  },
-  "resources/js/images/img_3.jpg": {
-    "file": "assets/img_3-CC9TpXmN.jpg",
-    "src": "resources/js/images/img_3.jpg"
-  },
   "resources/js/images/logo.jpeg": {
     "file": "assets/logo-BKP-YoEy.jpeg",
     "src": "resources/js/images/logo.jpeg"
@@ -46,22 +26,6 @@
   "resources/js/images/logo2.png": {
     "file": "assets/logo2-BjkGqu9a.png",
     "src": "resources/js/images/logo2.png"
-  },
-  "resources/js/images/person_2.jpg": {
-    "file": "assets/person_2-Dum_nPc4.jpg",
-    "src": "resources/js/images/person_2.jpg"
-  },
-  "resources/js/images/person_3.jpg": {
-    "file": "assets/person_3-WURbUu30.jpg",
-    "src": "resources/js/images/person_3.jpg"
-  },
-  "resources/js/images/question.jpeg": {
-    "file": "assets/question-jaaOC8Sn.jpeg",
-    "src": "resources/js/images/question.jpeg"
-  },
-  "resources/js/images/solution.jpeg": {
-    "file": "assets/solution-DSXKAe-m.jpeg",
-    "src": "resources/js/images/solution.jpeg"
   },
   "resources/js/images/template/about.jpg": {
     "file": "assets/about-cr2Rp6N1.jpg",
@@ -140,12 +104,12 @@
     "src": "resources/js/images/template/team-3.jpg"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-smrbqT3n.js",
+    "file": "assets/app2-EKp-QSD4.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-Di1cD99k.css"
+      "assets/app2-C8Spp8fe.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",

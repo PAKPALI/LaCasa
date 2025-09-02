@@ -23,9 +23,9 @@
               <a href="#" class="btn btn-primary py-3 px-4 me-2">
                 <i class="fa fa-phone-alt me-2"></i>Appeler maintenant
               </a>
-              <a href="#" class="btn btn-dark py-3 px-4">
+              <!-- <a href="#" class="btn btn-dark py-3 px-4">
                 <i class="fa fa-calendar-alt me-2"></i>Prendre un rendez-vous
-              </a>
+              </a> -->
             </div>
           </div>
         </div>

@@ -16,12 +16,12 @@
           <h1 class="mb-4">La meilleure plateforme pour trouver votre bien idéal</h1>
           <p class="mb-4">
             Découvrez un large choix de propriétés adaptées à vos besoins. Que vous souhaitiez acheter,
-            louer ou investir, notre équipe met à votre disposition des annonces fiables et vérifiées
+            louer, notre équipe met à votre disposition des annonces fiables et vérifiées
             afin de vous garantir la meilleure expérience.
           </p>
           <p><i class="fa fa-check text-primary me-3"></i>Des offres variées et mises à jour</p>
           <p><i class="fa fa-check text-primary me-3"></i>Des agents certifiés à votre écoute</p>
-          <p><i class="fa fa-check text-primary me-3"></i>Un accompagnement complet et personnalisé</p>
+          <p><i class="fa fa-check text-primary me-3"></i>Une recherche simple et personnalisée</p>
           <a class="btn btn-primary py-3 px-5 mt-3" href="#">En savoir plus</a>
         </div>
 
