@@ -1,10 +1,10 @@
 <template>
   <!-- addModal -->
-  <div class="modal fade " id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal fade mt-5" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header bg-dark text-white">
-          <h5 class="modal-title" id="addProductModalLabel">Ajouter un pays</h5>
+        <div class="modal-header bg-dark">
+          <h5 class="modal-title text-light" id="addProductModalLabel">Ajouter un pays</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
         </div>
         <div class="modal-body">
@@ -16,28 +16,20 @@
               <label :class="labelNameLog">{{ nameLog }}</label>
             </div>
             <div class="mb-3">
-              <label for="quantite" class="form-label">Code</label>
-              <input type="number" class="form-control" id="quantite" v-model="quantity" @keyup="validateQte">
-              <label :class="labelQteLog">{{ qteLog }}</label>
-            </div>
-            <!-- <div class="mb-3">
-              <label for="limite" class="form-label">Limite</label>
-              <input type="number" class="form-control" id="limite" v-model="limite" @keyup="validateLimit">
-              <label :class="labelLimitLog">{{ limitLog }}</label>
+              <label for="quantite" class="form-label">Acronyme</label>
+              <input type="text" class="form-control" id="acronym" v-model="acronym" @keyup="validateAcronym">
+              <label :class="labelAcronymLog">{{ acronymLog }}</label>
             </div>
             <div class="mb-3">
-              <label for="statut" class="form-label">Statut (<label :class="labelStatusLog">{{ statusLog }}</label></label>)
-              <select class="form-select" id="statut" v-model="status" @change="changeStatus">
-                <option value="">-- Choisir un statut --</option>
-                <option value="1">Disponible</option>
-                <option value="2">Indisponible</option>
-              </select>
-            </div> -->
+              <label for="code" class="form-label">Code</label>
+              <input type="text" class="form-control" id="code" v-model="code" @keyup="validateCode">
+              <label :class="labelCodeLog">{{ codeLog }}</label>
+            </div>
           </form>
         </div>
         <div class="modal-footer bg-light">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" class="btn btn-dark" @click="saveProduct" :disabled="false">Ajouter</button>
+          <button type="button" class="btn btn-dark" @click="saveCountry" :disabled="false">Ajouter</button>
         </div>
       </div>
     </div>
@@ -122,7 +114,7 @@
                     <h2>Liste Pays</h2>
                   </div>
                   <div class="col-4">
-                    <button class="btn btn-dark mt-3 me-2" @click="addProduct">+ Ajouter</button>
+                    <button class="btn btn-dark mt-3 me-2" @click="addCountry">+ Ajouter</button>
                   </div>
                 </div>
 
@@ -246,27 +238,23 @@
   import { ref, onMounted } from 'vue'
 
   const name = ref('')
-  const quantity = ref(0)
-  const limite = ref(0)
+  const acronym = ref(0)
+  const code = ref(0)
 
   const nameLog = ref('Aucun nom pour le moment')
   const labelNameLog = ref('text-danger')
   let nameLenght = 0
 
-  const qteLog = ref('La quantité est égale à 0')
-  const labelQteLog = ref('text-danger')
-  let qte = 0
+  const acronymLog = ref('Aucun acronym pour le moment')
+  const labelAcronymLog = ref('text-danger')
+  let acronymLenght = 0
 
-  const limitLog = ref('La limite est égale à 0')
-  const labelLimitLog = ref('text-danger')
-  let limit = 0
-
-  const statusLog = ref('Le status est sur indisponible')
-  const labelStatusLog = ref('text-danger')
-  const status = ref('')
+  const codeLog = ref('Aucun code pour le moment')
+  const labelCodeLog = ref('text-danger')
+  let codeLenght = 0
   
   // call modal add
-  function addProduct() {
+  function addCountry() {
     resetForm()
     // Ouvre le modal pour ajouter un produit
     const modal = new Modal(document.getElementById('addProductModal'))
@@ -299,21 +287,22 @@
     validateForm()
   }
 
-  function validateQte(event) {
-    visibleQte.value = true
-    qte = event.target.value
-    qteLog.value = qte <= 0 ? 'La quantité est égale à 0' : 'La quantité est égale à ' + qte
-    labelQteLog.value = qte <= 0 ? 'text-danger' : 'text-success'
-    validateForm()
-  }
+  function validateAcronym(event) {
+  acronym.value = event.target.value
+  acronymLog.value = acronym.value.length < 2
+    ? 'Acronyme trop court'
+    : 'Acronyme valide (' + acronym.value + ')'
+  labelAcronymLog.value = acronym.value.length < 2 ? 'text-danger' : 'text-success'
+}
 
-  function validateLimit(event) {
-    visibleLimit.value = true
-    limit = event.target.value
-    limitLog.value = limit <= 0 ? 'La limite est égale à 0' : 'La limite est égale à ' + limit
-    labelLimitLog.value = limit <= 0 ? 'text-danger' : 'text-success'
-    validateForm()
-  }
+function validateCode(event) {
+  code.value = event.target.value
+  codeLog.value = isNaN(code.value)
+    ? 'Le code doit être numérique'
+    : 'Code valide (' + code.value + ')'
+  labelCodeLog.value = isNaN(code.value) ? 'text-danger' : 'text-success'
+}
+
 
   function changeStatus(event) {
     visibleStatus.value = true
@@ -332,7 +321,7 @@
   }
 
   function validateForm() {
-    if(nameLenght >= 3 && qte > 0 && limit > 0 && status.value !== ''){
+    if(nameLenght >= 3 && qte > 0 && limit > 0){
       disabled.value = true
     } else {
       disabled.value = false
@@ -368,23 +357,20 @@
     nameLog.value = 'Aucun nom pour le moment'
     labelNameLog.value = 'text-danger'
 
-    quantity.value = 0
-    qteLog.value = 'La quantité est égale à 0'
-    labelQteLog.value = 'text-danger'
+    acronym.value = ''
+    acronymLog.value = 'Aucun acronyme pour le moment'
+    labelAcronymLog.value = 'text-danger'
 
-    limite.value = 0
-    limitLog.value = 'La limite est égale à 0'
-    labelLimitLog.value = 'text-danger'
+    code.value = ''
+    codeLog.value = 'Aucun code pour le moment'
+    labelCodeLog.value = 'text-danger'
+}
 
-    status.value = ''
-    statusLog.value = 'Le status est sur indisponible'
-    labelStatusLog.value = 'text-danger'
-  }
 
   // npm install sweetalert2
   import Swal from 'sweetalert2'
   // save product in database
-  async function saveProduct() {
+  async function saveCountry() {
     try {
       const data = {
         name: name.value,
