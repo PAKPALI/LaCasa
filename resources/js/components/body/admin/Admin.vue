@@ -1,6 +1,6 @@
 <template>
   <!-- addModal -->
-  <div class="modal fade mt-5" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal fade mt-5" id="addCountryModal" tabindex="-1" aria-labelledby="addCountryModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-dark">
@@ -29,55 +29,48 @@
         </div>
         <div class="modal-footer bg-light">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" class="btn btn-dark" @click="saveCountry" :disabled="false">Ajouter</button>
+          <button type="button" class="btn btn-dark" @click="saveCountry" :disabled="!isFormValid">Ajouter</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- updateModal -->
-  <div class="modal fade" id="updatedProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <!-- updateModal --><!-- updateModal -->
+  <div class="modal fade" id="updatedCountryModal" tabindex="-1" aria-labelledby="updateCountryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-warning text-dark">
-          <h5 class="modal-title" id="addProductModalLabel">Modifier un produit</h5>
+          <h5 class="modal-title" id="updateCountryModalLabel">Modifier un pays</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
         </div>
         <div class="modal-body">
-          <!-- Formulaire ici -->
           <form>
             <div class="mb-3">
-              <label for="nomProduit" class="form-label">Nom du produit</label>
-              <input type="text" class="form-control" id="nomProduit" v-model="name" @keyup="validateName">
+              <label class="form-label">Nom</label>
+              <input type="text" class="form-control" v-model="name" @keyup="validateName">
               <label :class="labelNameLog">{{ visibleName ? nameLog : '' }}</label>
             </div>
             <div class="mb-3">
-              <label for="quantite" class="form-label">Quantité</label>
-              <input type="number" class="form-control" id="quantite" v-model="quantity" @keyup="validateQte">
-              <label :class="labelQteLog">{{ visibleQte ? qteLog: '' }}</label>
+              <label class="form-label">Acronyme</label>
+              <input type="text" class="form-control" v-model="acronym" @keyup="validateAcronym">
+              <label :class="labelAcronymLog">{{ acronymLog }}</label>
             </div>
             <div class="mb-3">
-              <label for="limite" class="form-label">Limite</label>
-              <input type="number" class="form-control" id="limite" v-model="limite" @keyup="validateLimit">
-              <label :class="labelLimitLog">{{ visibleLimit ? limitLog : '' }}</label>
-            </div>
-            <div class="mb-3">
-              <label for="statut" class="form-label">Statut (<label :class="labelStatusLog">{{visibleStatus ? statusLog : '' }}</label></label>)
-              <select class="form-select" id="statut" v-model="status" @change="changeStatus">
-                <option value="">-- Choisir un statut --</option>
-                <option value="1">Disponible</option>
-                <option value="2">Indisponible</option>
-              </select>
+              <label class="form-label">Code</label>
+              <input type="text" class="form-control" v-model="code" @keyup="validateCode">
+              <label :class="labelCodeLog">{{ codeLog }}</label>
             </div>
           </form>
         </div>
         <div class="modal-footer bg-light">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-          <button type="button" class="btn btn-warning" @click="updateProduct">Modifier</button>
+          <button type="button" class="btn btn-warning" @click="updateCountry">Modifier</button>
         </div>
       </div>
     </div>
   </div>
+  <!-- End updateModal -->
+
 
   <div class="site-section mt-5">
   <div class="container">
@@ -125,31 +118,27 @@
                       <tr>
                         <th>#</th>
                         <th>Nom</th>
+                        <th>Acronym</th>
                         <th>Code</th>
-                        <th>Créer par</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(product, index) in products" :key="product.id">
+                      <tr v-for="(country, index) in Countries" :key="country.id">
                         <td>{{ index + 1 }}</td>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.qty }}</td>
-                        <td>{{ product.limit }}</td>
+                        <td>{{ country.name }}</td>
+                        <td>{{ country.acronym }}</td>
+                        <td>{{ country.code }}</td>
                         <td>
-                          <span class="badge bg-success" v-if="product.status == 1">Disponible</span>
-                          <span class="badge bg-danger" v-else>Indisponible</span>
-                        </td>
-                        <td>
-                          <button class="btn btn-sm btn-warning me-1" @click="productUpdated(product)">
+                          <button class="btn btn-sm btn-warning me-1" @click="countryUpdated(country)">
                             <i class="bi bi-pencil-square"></i>
                           </button>
-                          <button class="btn btn-sm btn-danger" @click="deletedProduct(product.id)">
+                          <button class="btn btn-sm btn-danger" @click="deletedCountry(country.id)">
                             <i class="bi bi-trash"></i>
                           </button>
                         </td>
                       </tr>
-                      <tr v-if="products.length === 0">
+                      <tr v-if="Countries.length === 0">
                         <td colspan="6" class="text-center text-danger">Aucun pays trouvé</td>
                       </tr>
                     </tbody>
@@ -193,7 +182,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(product, index) in products" :key="product.id">
+                      <!-- <tr v-for="(product, index) in products" :key="product.id">
                         <td>{{ index + 1 }}</td>
                         <td>{{ product.name }}</td>
                         <td>{{ product.qty }}</td>
@@ -210,10 +199,10 @@
                             <i class="bi bi-trash"></i>
                           </button>
                         </td>
-                      </tr>
-                      <tr v-if="products.length === 0">
+                      </tr> -->
+                      <!-- <tr v-if="products.length === 0">
                         <td colspan="6" class="text-center text-danger">Aucune ville trouvée</td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                   </table>
                 </div>
@@ -235,29 +224,28 @@
 // Importation des dépendances
   import { Modal } from 'bootstrap'
   import axios from 'axios'
-  import { ref, onMounted } from 'vue'
+  import { ref, onMounted, computed } from 'vue'
 
   const name = ref('')
   const acronym = ref(0)
   const code = ref(0)
 
-  const nameLog = ref('Aucun nom pour le moment')
-  const labelNameLog = ref('text-danger')
+  // const nameLog = ref('Aucun nom pour le moment')
+  // const labelNameLog = ref('text-danger')
   let nameLenght = 0
 
   const acronymLog = ref('Aucun acronym pour le moment')
   const labelAcronymLog = ref('text-danger')
-  let acronymLenght = 0
+  let acronymLenght = acronym.value.length
 
   const codeLog = ref('Aucun code pour le moment')
   const labelCodeLog = ref('text-danger')
-  let codeLenght = 0
   
   // call modal add
   function addCountry() {
     resetForm()
     // Ouvre le modal pour ajouter un produit
-    const modal = new Modal(document.getElementById('addProductModal'))
+    const modal = new Modal(document.getElementById('addCountryModal'))
     modal.show()
   }
   
@@ -265,43 +253,44 @@
   const visibleQte = ref(false)
   const visibleLimit = ref(false)
   const visibleStatus = ref(false)
-  const disabled = ref(false)
   
   // call modal update
-  function productUpdated(product) {
-    // Ouvre le modal pour modifier un produit
-    productId = product.id
-    name.value = product.name
-    quantity.value = product.qty
-    limite.value = product.limit
-    status.value = product.status
-    const modal = new Modal(document.getElementById('updatedProductModal'))
-    modal.show()
-  }
-  
-  function validateName(event) {
-    visibleName.value = true
-    nameLenght = event.target.value.length
-    nameLog.value = nameLenght< 3 ? 'Le nom doit contenir au moins 3 caractères' : 'Nombre de caractère valide ('+event.target.value+')'
-    labelNameLog.value = nameLenght < 3 ? 'text-danger' : 'text-success'
+  // function productUpdated(product) {
+  //   // Ouvre le modal pour modifier un produit
+  //   productId = product.id
+  //   name.value = product.name
+  //   quantity.value = product.qty
+  //   limite.value = product.limit
+  //   status.value = product.status
+  //   const modal = new Modal(document.getElementById('updatedProductModal'))
+  //   modal.show()
+  // }
+
+  const nameLog = computed(() => {
+    if (name.value.length === 0) return "Aucun nom pour le moment"
+    if (name.value.length < 3) return "Le nom doit contenir au moins 3 caractères"
+    return "Nom valide ✅"
+  })
+
+  const labelNameLog = computed(() => {
+    return name.value.length >= 3 ? 'text-success' : 'text-danger'
+  })
+
+  function validateAcronym(event) {
+    acronym.value = event.target.value
+    acronymLenght = acronym.value.length 
+    acronymLog.value = acronymLenght < 2 ? 'Acronyme trop court' : 'Acronyme valide (' + acronym.value + ')'
+    labelAcronymLog.value = acronym.value.length < 2 ? 'text-danger' : 'text-success'
     validateForm()
   }
 
-  function validateAcronym(event) {
-  acronym.value = event.target.value
-  acronymLog.value = acronym.value.length < 2
-    ? 'Acronyme trop court'
-    : 'Acronyme valide (' + acronym.value + ')'
-  labelAcronymLog.value = acronym.value.length < 2 ? 'text-danger' : 'text-success'
-}
-
-function validateCode(event) {
-  code.value = event.target.value
-  codeLog.value = isNaN(code.value)
-    ? 'Le code doit être numérique'
-    : 'Code valide (' + code.value + ')'
-  labelCodeLog.value = isNaN(code.value) ? 'text-danger' : 'text-success'
-}
+  function validateCode(event) {
+    code.value = event.target.value
+    acronymLenght = acronym.value.length 
+    codeLog.value = isNaN(code.value) ? 'Le code doit être numérique' : 'Code valide (' + code.value + ')'
+    labelCodeLog.value = isNaN(code.value) ? 'text-danger' : 'text-success'
+    validateForm()
+  }
 
 
   function changeStatus(event) {
@@ -320,31 +309,41 @@ function validateCode(event) {
     validateForm()
   }
 
-  function validateForm() {
-    if(nameLenght >= 3 && qte > 0 && limit > 0){
-      disabled.value = true
-    } else {
-      disabled.value = false
-    }
-  }
+  const isFormValid = computed(() => {
+    return name.value.length >= 3 
+      && acronym.value.length >= 2 
+      && code.value !== '' 
+      && !isNaN(Number(code.value))
+  })
 
-  const products = ref([])
+  // function validateForm() {
+  //   if (nameLenght >= 3 && acronymLenght >= 2 && !isNaN(code.value)) {
+  //     alert()
+  //     isFormValid.value = true
+  //   } else {
+  //     isFormValid.value = false
+  //   }
+  // }
+
+
+  const Countries = ref([])
   // Fonction pour recuperer les produits
-  async function getProducts() {
+  async function getCountries() {
     try {
-      const response = await axios.get('/api/products', {
+      const response = await axios.get('/api/country', {
         headers: {Accept: 'application/json'}
       });
 
-      products.value = response.data;
-      console.log('Produits récupérés:', products.value);
+      Countries.value = response.data;
+      console.log('Pays récupérés:', Countries.value);
     } catch (error) {
-      console.error('Erreur lors de la récupération des produits:', error);
+      alert('Erreur lors de la récupération des pays:', error);
+      console.error('Erreur lors de la récupération des pays:', error);
     }
   }
 
   onMounted(() => {
-    getProducts()
+    getCountries()
   })
 
   function hideModal(id) {
@@ -364,8 +363,7 @@ function validateCode(event) {
     code.value = ''
     codeLog.value = 'Aucun code pour le moment'
     labelCodeLog.value = 'text-danger'
-}
-
+  }
 
   // npm install sweetalert2
   import Swal from 'sweetalert2'
@@ -374,14 +372,13 @@ function validateCode(event) {
     try {
       const data = {
         name: name.value,
-        quantity: quantity.value,
-        limit: limite.value,
-        status: status.value
+        acronym: acronym.value,
+        code: code.value,
       }
-      const response = await axios.post('/api/products', data, {
+      const response = await axios.post('/api/country', data, {
         headers: { Accept: 'application/json'}
       })
-      console.log("Produit ajouté avec succès:", data)
+      console.log("Pays ajouté avec succès:", data)
 
       if (response.data.status) {
         Swal.fire({
@@ -398,9 +395,9 @@ function validateCode(event) {
         // Vider les champs
         resetForm()
         // Recharger les produits
-        getProducts()
+        getCountries()
         // Fermer le modal
-        hideModal('addProductModal')
+        hideModal('addCountryModal')
       } else {
         Swal.fire({
           toast: true,
@@ -418,52 +415,56 @@ function validateCode(event) {
       Swal.fire({
         icon: 'error',
         title: 'Erreur serveur',
-        text: 'Une erreur est survenue lors de l\'ajout du produit.❌'
+        text: 'Une erreur est survenue lors de l\'ajout du pays.❌'
       })
     }
   }
 
-  // update product in database
-  async function updateProduct() {
+  let countryId = 0
+
+  // ouvrir modal update
+  function countryUpdated(country) {
+    countryId = country.id
+    name.value = country.name
+    acronym.value = country.acronym
+    code.value = country.code
+    const modal = new Modal(document.getElementById('updatedCountryModal'))
+    modal.show()
+  }
+
+  // update dans la DB
+  async function updateCountry() {
     try {
       const data = {
-        id: productId,
         name: name.value,
-        quantity: quantity.value,
-        limit: limite.value,
-        status: status.value
+        acronym: acronym.value,
+        code: code.value,
       }
-      const response = await axios.put('/api/products/' + productId, data, {
-        headers: { Accept: 'application/json'}
+
+      const response = await axios.put('/api/country/' + countryId, data, {
+        headers: { Accept: 'application/json' }
       })
-      console.log("Produit modifié avec succès:", data)
 
       if (response.data.status) {
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'success',
-          // title: 'Produit modifié avec succès ✅',
           title: response.data.message,
-          animation: true,
           showConfirmButton: false,
-          timer: 5000,
-          timerProgressBar: true
+          timer: 3000
         })
-        // Recharger les produits
-        getProducts()
-        // Fermer le modal
-        hideModal('updatedProductModal')
+
+        getCountries() // recharge
+        hideModal('updatedCountryModal')
       } else {
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'error',
-          // title: 'Une erreur est survenue lors de la modification du produit.❌',
           title: response.data.message,
           showConfirmButton: false,
-          timer: 5000,
-          timerProgressBar: true
+          timer: 3000
         })
       }
     } catch (error) {
@@ -471,55 +472,55 @@ function validateCode(event) {
       Swal.fire({
         icon: 'error',
         title: 'Erreur serveur',
-        text: 'Une erreur est survenue lors de la modification du produit.❌'
+        text: "Impossible de modifier le pays ❌"
       })
     }
   }
 
   // call delete alert and delete product if confirmed
   let productId = 0
-  async function deletedProduct(id) {
-    const result = await Swal.fire({
-      title: 'Es-tu sûr ?',
-      text: "Cette action est irréversible !",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Oui, supprimer',
-      cancelButtonText: 'Annuler'
-    })
+  // async function deletedProduct(id) {
+  //   const result = await Swal.fire({
+  //     title: 'Es-tu sûr ?',
+  //     text: "Cette action est irréversible !",
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#d33',
+  //     cancelButtonColor: '#3085d6',
+  //     confirmButtonText: 'Oui, supprimer',
+  //     cancelButtonText: 'Annuler'
+  //   })
 
-    if (result.isConfirmed) {
-      try {
-        await axios.delete('/api/products/' + id, {
-          headers: { Accept: 'application/json' }
-        })
+  //   if (result.isConfirmed) {
+  //     try {
+  //       await axios.delete('/api/products/' + id, {
+  //         headers: { Accept: 'application/json' }
+  //       })
         
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'success',
-          title: 'Produit supprimé avec succès ✅',
-          showConfirmButton: false,
-          timer: 3000
-        })
+  //       Swal.fire({
+  //         toast: true,
+  //         position: 'top-end',
+  //         icon: 'success',
+  //         title: 'Produit supprimé avec succès ✅',
+  //         showConfirmButton: false,
+  //         timer: 3000
+  //       })
 
-        // Recharge la liste des produits
-        getProducts()
-      } catch (error) {
-        console.error("Erreur lors de la suppression :", error)
+  //       // Recharge la liste des produits
+  //       getProducts()
+  //     } catch (error) {
+  //       console.error("Erreur lors de la suppression :", error)
 
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'error',
-          title: 'Échec de la suppression ❌',
-          text: error?.response?.data?.message || "Erreur serveur",
-          showConfirmButton: false,
-          timer: 4000
-        })
-      }
-    }
-  }
+  //       Swal.fire({
+  //         toast: true,
+  //         position: 'top-end',
+  //         icon: 'error',
+  //         title: 'Échec de la suppression ❌',
+  //         text: error?.response?.data?.message || "Erreur serveur",
+  //         showConfirmButton: false,
+  //         timer: 4000
+  //       })
+  //     }
+  //   }
+  // }
 </script>
