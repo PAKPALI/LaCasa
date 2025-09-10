@@ -15,7 +15,7 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         $country = Country::create($request->only(['name', 'acronym', 'code']));
-        return response()->json(['status' => true, 'message' => 'Pays ajouté avec succès', 'data' => $country]);
+        return response()->json(['status' => true, 'message' => 'Pays ajouté avec succès ✅', 'data' => $country]);
     }
 
     public function show(Country $country)
