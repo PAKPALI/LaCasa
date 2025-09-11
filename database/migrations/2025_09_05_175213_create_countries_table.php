@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('countries', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('acronym', 5)->unique();       // ex: TG, FR, US
-            $table->string('code', 10)->unique(); // ex: +228, +33, +1
+            $table->string('acronym')->unique();       // ex: TG, FR, US
+            $table->string('code')->unique(); // ex: +228, +33, +1
             $table->timestamps();
         });
     }
