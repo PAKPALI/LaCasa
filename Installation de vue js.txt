@@ -19,6 +19,7 @@ Copier
 Modifier
 npm install vue@3
 npm install
+npm install vue-select
 👉 Explication :
 
 npm install vue@3 : installe Vue version 3 (la version actuelle de Vue, utilisée avec Vite et plus performante).
