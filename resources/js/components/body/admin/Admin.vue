@@ -15,6 +15,7 @@
         <div class="accordion" id="accordionExample">
           <Country accordionId="adminAccordion" />
           <Town accordionId="adminAccordion" />
+          <District accordionId="adminAccordion" />
       </div>
 
       </div>
@@ -26,4 +27,5 @@
 <script setup>
 import Country from './content/Country.vue'
 import Town from './content/Town.vue'
+import District from './content/District.vue'
 </script>

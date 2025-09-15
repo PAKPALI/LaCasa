@@ -8,16 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('towns', function (Blueprint $table) {
+        Schema::create('districts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('country_id')->constrained('countries')->onDelete('cascade'); // si le pays est supprimé, toutes les villes le sont
+            $table->foreignId('town_id')->constrained('towns')->onDelete('cascade'); 
+            // si la ville est supprimée, tous les quartiers sont supprimés
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('towns');
+        Schema::dropIfExists('districts');
     }
 };
