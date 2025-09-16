@@ -283,17 +283,60 @@ async function updateCountry() {
 }
 
 async function deletedCountry(id) {
-  const result = await Swal.fire({ title:'Es-tu sûr ?', text:"Cette action est irréversible !", icon:'warning', showCancelButton:true, confirmButtonColor:'#d33', cancelButtonColor:'#3085d6', confirmButtonText:'Oui, supprimer', cancelButtonText:'Annuler' })
-  if(result.isConfirmed){
+  const result = await Swal.fire({
+    title: 'Es-tu sûr ?',
+    text: "Cette action est irréversible !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler'
+  })
+
+  if (result.isConfirmed) {
     loadingButton.value = id
-    try{
-      await axios.delete('/api/country/'+id, { headers:{ Accept:'application/json' } })
-      Swal.fire({ toast:true, position:'top-end', icon:'success', title:'Pays supprimé ✅', showConfirmButton:false, timer:3000 })
-      getCountries()
-    } catch(error){ console.error(error) }
+    try {
+      const response = await axios.delete('/api/country/' + id, {
+        headers: { Accept: 'application/json' }
+      })
+
+      if (!response.data.status) { 
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: response.data.message,
+          showConfirmButton: false,
+          timer: 3000
+        })
+      } else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Pays supprimé ✅',
+          showConfirmButton: false,
+          timer: 3000
+        })
+        getCountries()
+      }
+
+    } catch (error) {
+      console.error(error)
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: error.response?.data?.message || 'Erreur lors de la suppression !',
+        showConfirmButton: false,
+        timer: 3000
+      })
+    }
     loadingButton.value = ''
   }
 }
+
 
 onMounted(()=>getCountries())
 </script>

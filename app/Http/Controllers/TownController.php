@@ -74,21 +74,38 @@ class TownController extends Controller
         ]);
     }
 
+    // public function destroy(Town $town)
+    // {
+    //     // Ici on ne supprime pas si le pays existe toujours
+    //     if ($town->country) {
+    //         return response()->json([
+    //             'status'  => false,
+    //             'title'   => 'SUPPRESSION REFUSÉE',
+    //             'message' => 'Vous ne pouvez pas supprimer cette ville sans supprimer son pays.'
+    //         ]);
+    //     }
+
+    //     $town->delete();
+
+    //     return response()->json([
+    //         'status'  => true,
+    //         'message' => 'Ville supprimée avec succès'
+    //     ]);
+    // }
+
     public function destroy(Town $town)
     {
-        // Ici on ne supprime pas si le pays existe toujours
-        if ($town->country) {
+        if ($town->districts()->count() > 0) {
             return response()->json([
-                'status'  => false,
-                'title'   => 'SUPPRESSION REFUSÉE',
-                'message' => 'Vous ne pouvez pas supprimer cette ville sans supprimer son pays.'
+                'status' => false,
+                'message' => 'Impossible de supprimer cette ville car des quartiers y sont liés.'
             ]);
         }
 
         $town->delete();
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Ville supprimée avec succès'
         ]);
     }

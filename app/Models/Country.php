@@ -14,4 +14,9 @@ class Country extends Model
         'acronym',
         'code',
     ];
+    // App\Models\Country.php
+    public function towns()
+    {
+        return $this->hasMany(Town::class);
+    }
 }

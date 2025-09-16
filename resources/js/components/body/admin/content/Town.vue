@@ -332,11 +332,31 @@ async function deletedTown(id) {
     try {
       const response = await axios.delete('/api/town/' + id)
       if (response.data && response.data.status === false) {
-        Swal.fire({ icon:'error', title: response.data.title || 'Suppression refusée', text: response.data.message })
+        Swal.fire({toast: true, position: 'top-end', icon:'error', title: response.data.title || 'Suppression refusée', text: response.data.message , showConfirmButton:false, timer:3000 })
       } else {
         Swal.fire({ toast:true, position:'top-end', icon:'success', title: response.data.message || 'Ville supprimée ✅', showConfirmButton:false, timer:3000 })
         await getTowns()
       }
+      // if (!response.data.status) { 
+      //   Swal.fire({
+      //     toast: true,
+      //     position: 'top-end',
+      //     icon: 'error',
+      //     title: response.data.message,
+      //     showConfirmButton: false,
+      //     timer: 3000
+      //   })
+      // } else {
+      //   Swal.fire({
+      //     toast: true,
+      //     position: 'top-end',
+      //     icon: 'success',
+      //     title: 'Pays supprimé ✅',
+      //     showConfirmButton: false,
+      //     timer: 3000
+      //   })
+      //   getCountries()
+      // }
     } catch (error) {
       Swal.fire({ icon:'error', title:'Erreur Serveur', text: error.response?.data?.message || 'Une erreur est survenue.' })
     }

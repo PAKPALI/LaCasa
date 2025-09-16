@@ -106,7 +106,19 @@ class CountryController extends Controller
 
     public function destroy(Country $country)
     {
+        if ($country->towns()->count() > 0) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Impossible de supprimer ce pays car des villes y sont liées.'
+            ]);
+        }
+
         $country->delete();
-        return response()->json(['status' => true, 'message' => 'Pays supprimé avec succès']);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Pays supprimé avec succès'
+        ]);
     }
+
 }
