@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+
+class CategoryController extends Controller
+{
+    public function index()
+    {
+        return response()->json(Category::with('country')->get());
+    }
+
+    public function store(Request $request)
+    {
+        $error_messages = [
+            "name.required"    => "Remplir le champ nom de la categorie !",
+            "name.max"         => "Le nom du pays dépasse 255 caractères !",
+            'country_id.required' => 'Sélectionner un pays',
+            'country_id.exists'   => 'Le pays sélectionnée est invalide !',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'name'       => ['required', 'string', 'max:255'],
+            'country_id' => ['required', 'exists:countries,id'],
+        ], $error_messages);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status"  => false,
+                "message" => $validator->errors()->first(),
+            ]);
+        }
+
+        $category = Category::create($validator->validated());
+
+        return response()->json([
+            "status"  => true,
+            "message" => "Catégorie « ".$category->name." » ajoutée avec succès",
+            "data"    => $category
+        ]);
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $error_messages = [
+            "name.required"    => "Remplir le champ nom de la categorie !",
+            "name.max"         => "Le nom du pays dépasse 255 caractères !",
+            'country_id.required' => 'Sélectionner un pays',
+            'country_id.exists'   => 'Le pays sélectionnée est invalide !',
+        ];
+        $validator = Validator::make($request->all(), [
+            'name'       => ['required', 'string', 'max:255'],
+            'country_id' => ['required', 'exists:countries,id'],
+        ], $error_messages);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status"  => false,
+                "message" => $validator->errors()->first(),
+            ]);
+        }
+
+        $category->update($validator->validated());
+
+        return response()->json([
+            "status"  => true,
+            "message" => "Catégorie « ".$category->name." » mise à jour avec succès",
+            "data"    => $category
+        ]);
+    }
+
+    public function destroy(Category $category)
+    {
+        $category->delete();
+
+        return response()->json([
+            "status"  => true,
+            "message" => "Catégorie supprimée avec succès"
+        ]);
+    }
+}

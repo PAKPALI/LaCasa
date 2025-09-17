@@ -3,7 +3,7 @@
     <div class="container">
 
       <div class="row justify-content-center mt-5">
-        <div class="col-md-7 text-center">
+        <div class="col-md-7 text-center mt-5">
           <div class="site-section-title">
             <h2>Section admin</h2>
           </div>
@@ -16,8 +16,9 @@
           <Country accordionId="adminAccordion" />
           <Town accordionId="adminAccordion" />
           <District accordionId="adminAccordion" />
-      </div>
-
+          <Category accordionId="adminAccordion" />
+          <PubType accordionId="adminAccordion" />
+        </div>
       </div>
 
     </div>
@@ -28,4 +29,6 @@
 import Country from './content/Country.vue'
 import Town from './content/Town.vue'
 import District from './content/District.vue'
+import Category from './content/Category.vue'
+import PubType from './content/PubType.vue'
 </script>
