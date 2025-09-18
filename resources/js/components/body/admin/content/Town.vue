@@ -184,193 +184,193 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { Modal } from 'bootstrap'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import vSelect from "vue-select"
-import "vue-select/dist/vue-select.css"
+  import { ref, computed, onMounted } from 'vue'
+  import { Modal } from 'bootstrap'
+  import axios from 'axios'
+  import Swal from 'sweetalert2'
+  import vSelect from "vue-select"
+  import "vue-select/dist/vue-select.css"
 
-// Données
-const name = ref('')
-const countryId = ref('')
-const Towns = ref([])
-const Countries = ref([])
-let townId = 0
-const selectedTown = ref(null)
-const searchQuery = ref('')
-const currentPage = ref(1)
-const perPage = ref(5)
-const loadingButton = ref('') // "save", "update" ou id pour delete
-const loadingTable = ref(true)
-const loadingCountries = ref(false)
+  // Données
+  const name = ref('')
+  const countryId = ref('')
+  const Towns = ref([])
+  const Countries = ref([])
+  let townId = 0
+  const selectedTown = ref(null)
+  const searchQuery = ref('')
+  const currentPage = ref(1)
+  const perPage = ref(5)
+  const loadingButton = ref('') // "save", "update" ou id pour delete
+  const loadingTable = ref(true)
+  const loadingCountries = ref(false)
 
-// Computed validations
-const nameLog = computed(() => {
-  if (!name.value) return "Aucun nom pour le moment"
-  if (name.value.length < 3) return "Le nom doit contenir au moins 3 caractères"
-  return "Nom valide ✅"
-})
-const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
-const countryLog = computed(() => {
-  if (!countryId.value) return "Aucun pays sélectionné"
-  const c = Countries.value.find(x => x.id === Number(countryId.value))
-  return c ? `Pays sélectionné : ${c.name}` : 'Pays sélectionné'
-})
-const labelCountryLog = computed(() => countryId.value ? 'text-success' : 'text-danger')
-const isFormValid = computed(() => name.value.length >= 3 && countryId.value !== '' && Number(countryId.value) > 0)
-
-// Filter + Pagination
-const filteredTowns = computed(() => {
-  if (!searchQuery.value) return Towns.value
-  return Towns.value.filter(t => {
-    const q = searchQuery.value.toLowerCase()
-    const countryName = t.country ? t.country.name.toLowerCase() : ''
-    const countryAcr = t.country ? t.country.acronym.toLowerCase() : ''
-    return t.name.toLowerCase().includes(q) || countryName.includes(q) || countryAcr.includes(q)
+  // Computed validations
+  const nameLog = computed(() => {
+    if (!name.value) return "Aucun nom pour le moment"
+    if (name.value.length < 3) return "Le nom doit contenir au moins 3 caractères"
+    return "Nom valide ✅"
   })
-})
-const totalPages = computed(() => Math.max(1, Math.ceil(filteredTowns.value.length / perPage.value)))
-const paginatedTowns = computed(() => {
-  const start = (currentPage.value - 1) * perPage.value
-  return filteredTowns.value.slice(start, start + perPage.value)
-})
-function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
-function prevPage() { if (currentPage.value > 1) currentPage.value-- }
-
-// CRUD
-async function getCountries() {
-  loadingCountries.value = true
-  try {
-    const response = await axios.get('/api/country', { headers: { Accept: 'application/json' } })
-    Countries.value = response.data
-  } catch (error) {
-    Swal.fire({ icon: 'error', title: 'Erreur API', text: 'Impossible de récupérer les pays' })
-  } finally {
-    loadingCountries.value = false
-  }
-}
-
-async function getTowns() {
-  loadingTable.value = true
-  try {
-    const response = await axios.get('/api/town', { headers: { Accept: 'application/json' } })
-    Towns.value = response.data
-  } catch (error) {
-    console.error('getTowns', error)
-  }
-  loadingTable.value = false
-}
-
-function resetForm() {
-  name.value = ''
-  countryId.value = ''
-}
-
-function addTown() {
-  resetForm()
-  getCountries()
-  new Modal(document.getElementById('addTownModal')).show()
-}
-
-function townUpdated(town) {
-  townId = town.id
-  name.value = town.name
-  countryId.value = town.country_id ?? (town.country ? town.country.id : '')
-  getCountries()
-  new Modal(document.getElementById('updatedTownModal')).show()
-}
-
-async function saveTown() {
-  loadingButton.value = 'save'
-  try {
-    const response = await axios.post('/api/town', { name: name.value, country_id: countryId.value })
-    if (response.data.status) {
-      Swal.fire({ toast:true, position:'top-end', icon:'success', title:response.data.message, showConfirmButton:false, timer:3000 })
-      resetForm()
-      await getTowns()
-      Modal.getInstance(document.getElementById('addTownModal')).hide()
-    } else {
-      Swal.fire({ icon:'error', title: response.data.title || 'Erreur', text: response.data.message })
-    }
-  } catch (error) {
-    Swal.fire({ icon:'error', title:'Erreur Serveur', text: error.response?.data?.message || 'Une erreur est survenue.' })
-  }
-  loadingButton.value = ''
-}
-
-async function updateTown() {
-  loadingButton.value = 'update'
-  try {
-    const response = await axios.put('/api/town/' + townId, { name: name.value, country_id: countryId.value })
-    if (response.data.status) {
-      Swal.fire({ toast:true, position:'top-end', icon:'success', title:response.data.message, showConfirmButton:false, timer:3000 })
-      await getTowns()
-      Modal.getInstance(document.getElementById('updatedTownModal')).hide()
-    } else {
-      Swal.fire({ icon:'error', title: response.data.title || 'Erreur', text: response.data.message })
-    }
-  } catch (error) {
-    Swal.fire({ icon:'error', title:'Erreur Serveur', text: error.response?.data?.message || 'Une erreur est survenue.' })
-  }
-  loadingButton.value = ''
-}
-
-async function deletedTown(id) {
-  const result = await Swal.fire({
-    title: 'Es-tu sûr ?',
-    text: "Cette action est irréversible !",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Oui, supprimer',
-    cancelButtonText: 'Annuler'
+  const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
+  const countryLog = computed(() => {
+    if (!countryId.value) return "Aucun pays sélectionné"
+    const c = Countries.value.find(x => x.id === Number(countryId.value))
+    return c ? `Pays sélectionné : ${c.name}` : 'Pays sélectionné'
   })
-  if (result.isConfirmed) {
-    loadingButton.value = id
+  const labelCountryLog = computed(() => countryId.value ? 'text-success' : 'text-danger')
+  const isFormValid = computed(() => name.value.length >= 3 && countryId.value !== '' && Number(countryId.value) > 0)
+
+  // Filter + Pagination
+  const filteredTowns = computed(() => {
+    if (!searchQuery.value) return Towns.value
+    return Towns.value.filter(t => {
+      const q = searchQuery.value.toLowerCase()
+      const countryName = t.country ? t.country.name.toLowerCase() : ''
+      const countryAcr = t.country ? t.country.acronym.toLowerCase() : ''
+      return t.name.toLowerCase().includes(q) || countryName.includes(q) || countryAcr.includes(q)
+    })
+  })
+  const totalPages = computed(() => Math.max(1, Math.ceil(filteredTowns.value.length / perPage.value)))
+  const paginatedTowns = computed(() => {
+    const start = (currentPage.value - 1) * perPage.value
+    return filteredTowns.value.slice(start, start + perPage.value)
+  })
+  function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
+  function prevPage() { if (currentPage.value > 1) currentPage.value-- }
+
+  // CRUD
+  async function getCountries() {
+    loadingCountries.value = true
     try {
-      const response = await axios.delete('/api/town/' + id)
-      if (response.data && response.data.status === false) {
-        Swal.fire({toast: true, position: 'top-end', icon:'error', title: response.data.title || 'Suppression refusée', text: response.data.message , showConfirmButton:false, timer:3000 })
-      } else {
-        Swal.fire({ toast:true, position:'top-end', icon:'success', title: response.data.message || 'Ville supprimée ✅', showConfirmButton:false, timer:3000 })
+      const response = await axios.get('/api/country', { headers: { Accept: 'application/json' } })
+      Countries.value = response.data
+    } catch (error) {
+      Swal.fire({ icon: 'error', title: 'Erreur API', text: 'Impossible de récupérer les pays' })
+    } finally {
+      loadingCountries.value = false
+    }
+  }
+
+  async function getTowns() {
+    loadingTable.value = true
+    try {
+      const response = await axios.get('/api/town', { headers: { Accept: 'application/json' } })
+      Towns.value = response.data
+    } catch (error) {
+      console.error('getTowns', error)
+    }
+    loadingTable.value = false
+  }
+
+  function resetForm() {
+    name.value = ''
+    countryId.value = ''
+  }
+
+  function addTown() {
+    resetForm()
+    getCountries()
+    new Modal(document.getElementById('addTownModal')).show()
+  }
+
+  function townUpdated(town) {
+    townId = town.id
+    name.value = town.name
+    countryId.value = town.country_id ?? (town.country ? town.country.id : '')
+    getCountries()
+    new Modal(document.getElementById('updatedTownModal')).show()
+  }
+
+  async function saveTown() {
+    loadingButton.value = 'save'
+    try {
+      const response = await axios.post('/api/town', { name: name.value, country_id: countryId.value })
+      if (response.data.status) {
+        Swal.fire({ toast:true, position:'top-end', icon:'success', title:response.data.message, showConfirmButton:false, timer:3000 })
+        resetForm()
         await getTowns()
+        Modal.getInstance(document.getElementById('addTownModal')).hide()
+      } else {
+        Swal.fire({ icon:'error', title: response.data.title || 'Erreur', text: response.data.message })
       }
-      // if (!response.data.status) { 
-      //   Swal.fire({
-      //     toast: true,
-      //     position: 'top-end',
-      //     icon: 'error',
-      //     title: response.data.message,
-      //     showConfirmButton: false,
-      //     timer: 3000
-      //   })
-      // } else {
-      //   Swal.fire({
-      //     toast: true,
-      //     position: 'top-end',
-      //     icon: 'success',
-      //     title: 'Pays supprimé ✅',
-      //     showConfirmButton: false,
-      //     timer: 3000
-      //   })
-      //   getCountries()
-      // }
     } catch (error) {
       Swal.fire({ icon:'error', title:'Erreur Serveur', text: error.response?.data?.message || 'Une erreur est survenue.' })
     }
     loadingButton.value = ''
   }
-}
 
-function viewTown(town) {
-  selectedTown.value = town
-  new Modal(document.getElementById('viewTownModal')).show()
-}
+  async function updateTown() {
+    loadingButton.value = 'update'
+    try {
+      const response = await axios.put('/api/town/' + townId, { name: name.value, country_id: countryId.value })
+      if (response.data.status) {
+        Swal.fire({ toast:true, position:'top-end', icon:'success', title:response.data.message, showConfirmButton:false, timer:3000 })
+        await getTowns()
+        Modal.getInstance(document.getElementById('updatedTownModal')).hide()
+      } else {
+        Swal.fire({ icon:'error', title: response.data.title || 'Erreur', text: response.data.message })
+      }
+    } catch (error) {
+      Swal.fire({ icon:'error', title:'Erreur Serveur', text: error.response?.data?.message || 'Une erreur est survenue.' })
+    }
+    loadingButton.value = ''
+  }
 
-onMounted(async () => {
-  await getCountries()
-  await getTowns()
-})
+  async function deletedTown(id) {
+    const result = await Swal.fire({
+      title: 'Es-tu sûr ?',
+      text: "Cette action est irréversible !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    })
+    if (result.isConfirmed) {
+      loadingButton.value = id
+      try {
+        const response = await axios.delete('/api/town/' + id)
+        if (response.data && response.data.status === false) {
+          Swal.fire({toast: true, position: 'top-end', icon:'error', title: response.data.title || 'Suppression refusée', text: response.data.message , showConfirmButton:false, timer:3000 })
+        } else {
+          Swal.fire({ toast:true, position:'top-end', icon:'success', title: response.data.message || 'Ville supprimée ✅', showConfirmButton:false, timer:3000 })
+          await getTowns()
+        }
+        // if (!response.data.status) { 
+        //   Swal.fire({
+        //     toast: true,
+        //     position: 'top-end',
+        //     icon: 'error',
+        //     title: response.data.message,
+        //     showConfirmButton: false,
+        //     timer: 3000
+        //   })
+        // } else {
+        //   Swal.fire({
+        //     toast: true,
+        //     position: 'top-end',
+        //     icon: 'success',
+        //     title: 'Pays supprimé ✅',
+        //     showConfirmButton: false,
+        //     timer: 3000
+        //   })
+        //   getCountries()
+        // }
+      } catch (error) {
+        Swal.fire({ icon:'error', title:'Erreur Serveur', text: error.response?.data?.message || 'Une erreur est survenue.' })
+      }
+      loadingButton.value = ''
+    }
+  }
+
+  function viewTown(town) {
+    selectedTown.value = town
+    new Modal(document.getElementById('viewTownModal')).show()
+  }
+
+  onMounted(async () => {
+    await getCountries()
+    await getTowns()
+  })
 </script>

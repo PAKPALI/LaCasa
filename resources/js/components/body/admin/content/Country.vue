@@ -156,187 +156,187 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { Modal } from 'bootstrap'
-import axios from 'axios'
-import Swal from 'sweetalert2'
+  import { ref, computed, onMounted } from 'vue'
+  import { Modal } from 'bootstrap'
+  import axios from 'axios'
+  import Swal from 'sweetalert2'
 
-// Données
-const name = ref('')
-const acronym = ref('')
-const code = ref('')
-const Countries = ref([])
-let countryId = 0
-const searchQuery = ref('')
-const currentPage = ref(1)
-const perPage = ref(5)
-const loadingButton = ref('') // "save", "update" ou id pour delete
-const loadingTable = ref(true)
+  // Données
+  const name = ref('')
+  const acronym = ref('')
+  const code = ref('')
+  const Countries = ref([])
+  let countryId = 0
+  const searchQuery = ref('')
+  const currentPage = ref(1)
+  const perPage = ref(5)
+  const loadingButton = ref('') // "save", "update" ou id pour delete
+  const loadingTable = ref(true)
 
-// Computed validations
-const nameLog = computed(() => {
-  if (!name.value) return "Aucun nom pour le moment"
-  if (name.value.length < 3) return "Le nom doit contenir au moins 3 caractères"
-  return "Nom valide ✅"
-})
-const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
-
-const acronymLog = computed(() => {
-  if (!acronym.value) return "Aucun acronyme pour le moment"
-  if (acronym.value.length < 2) return "Acronyme trop court"
-  return `Acronyme valide (${acronym.value}) ✅`
-})
-const labelAcronymLog = computed(() => acronym.value.length >= 2 ? 'text-success' : 'text-danger')
-
-const codeLog = computed(() => {
-  if (!code.value) return "Aucun code pour le moment"
-  if (isNaN(Number(code.value))) return "Le code doit être numérique"
-  return `Code valide (${code.value}) ✅`
-})
-const labelCodeLog = computed(() => isNaN(Number(code.value)) || !code.value ? 'text-danger' : 'text-success')
-
-const isFormValid = computed(() =>
-  name.value.length >= 3 &&
-  acronym.value.length >= 2 &&
-  code.value !== '' &&
-  !isNaN(Number(code.value))
-)
-
-// Filter + Pagination
-const filteredCountries = computed(() => {
-  if (!searchQuery.value) return Countries.value
-  return Countries.value.filter(c =>
-    c.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    c.acronym.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    c.code.toString().includes(searchQuery.value)
-  )
-})
-const totalPages = computed(() => Math.ceil(filteredCountries.value.length / perPage.value))
-const paginatedCountries = computed(() => {
-  const start = (currentPage.value - 1) * perPage.value
-  const end = start + perPage.value
-  return filteredCountries.value.slice(start, end)
-})
-function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
-function prevPage() { if (currentPage.value > 1) currentPage.value-- }
-
-// CRUD
-async function getCountries() {
-  loadingTable.value = true
-  try {
-    const response = await axios.get('/api/country', { headers: { Accept: 'application/json' } })
-    Countries.value = response.data
-  } catch (error) { console.error(error) }
-  loadingTable.value = false
-}
-
-function addCountry() {
-  resetForm()
-  new Modal(document.getElementById('addCountryModal')).show()
-}
-
-function countryUpdated(country) {
-  countryId = country.id
-  name.value = country.name
-  acronym.value = country.acronym
-  code.value = country.code
-  new Modal(document.getElementById('updatedCountryModal')).show()
-}
-
-function resetForm() { name.value=''; acronym.value=''; code.value='' }
-
-async function saveCountry() {
-  loadingButton.value = 'save'
-  try {
-    const response = await axios.post('/api/country', { name: name.value, acronym: acronym.value, code: code.value }, { headers:{ Accept:'application/json' } })
-    if(response.data.status){
-      Swal.fire({ toast:true, position:'top-end', icon:'success', title:response.data.message, showConfirmButton:false, timer:3000 })
-      resetForm()
-      getCountries()
-      Modal.getInstance(document.getElementById('addCountryModal')).hide()
-    } else {
-      Swal.fire({ icon:'error', title:response.data.title, text:response.data.message })
-    }
-  } catch(error){
-    Swal.fire({ icon:'error', title:"Erreur Serveur", text:error.response?.data?.message || "Une erreur est survenue." })
-    console.error(error)
-  }
-  loadingButton.value = ''
-}
-
-async function updateCountry() {
-  loadingButton.value = 'update'
-  try {
-    const response = await axios.put('/api/country/'+countryId, { name:name.value, acronym:acronym.value, code:code.value }, { headers:{ Accept:'application/json' } })
-    if(response.data.status){
-      Swal.fire({ toast:true, position:'top-end', icon:'success', title:response.data.message, showConfirmButton:false, timer:3000 })
-      getCountries()
-      Modal.getInstance(document.getElementById('updatedCountryModal')).hide()
-    } else {
-      Swal.fire({ icon:'error', title:response.data.title, text:response.data.message })
-    }
-  } catch(error){
-    Swal.fire({ icon:'error', title:"Erreur Serveur", text:error.response?.data?.message || "Une erreur est survenue." })
-    console.error(error)
-  }
-  loadingButton.value = ''
-}
-
-async function deletedCountry(id) {
-  const result = await Swal.fire({
-    title: 'Es-tu sûr ?',
-    text: "Cette action est irréversible !",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Oui, supprimer',
-    cancelButtonText: 'Annuler'
+  // Computed validations
+  const nameLog = computed(() => {
+    if (!name.value) return "Aucun nom pour le moment"
+    if (name.value.length < 3) return "Le nom doit contenir au moins 3 caractères"
+    return "Nom valide ✅"
   })
+  const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
 
-  if (result.isConfirmed) {
-    loadingButton.value = id
+  const acronymLog = computed(() => {
+    if (!acronym.value) return "Aucun acronyme pour le moment"
+    if (acronym.value.length < 2) return "Acronyme trop court"
+    return `Acronyme valide (${acronym.value}) ✅`
+  })
+  const labelAcronymLog = computed(() => acronym.value.length >= 2 ? 'text-success' : 'text-danger')
+
+  const codeLog = computed(() => {
+    if (!code.value) return "Aucun code pour le moment"
+    if (isNaN(Number(code.value))) return "Le code doit être numérique"
+    return `Code valide (${code.value}) ✅`
+  })
+  const labelCodeLog = computed(() => isNaN(Number(code.value)) || !code.value ? 'text-danger' : 'text-success')
+
+  const isFormValid = computed(() =>
+    name.value.length >= 3 &&
+    acronym.value.length >= 2 &&
+    code.value !== '' &&
+    !isNaN(Number(code.value))
+  )
+
+  // Filter + Pagination
+  const filteredCountries = computed(() => {
+    if (!searchQuery.value) return Countries.value
+    return Countries.value.filter(c =>
+      c.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      c.acronym.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      c.code.toString().includes(searchQuery.value)
+    )
+  })
+  const totalPages = computed(() => Math.ceil(filteredCountries.value.length / perPage.value))
+  const paginatedCountries = computed(() => {
+    const start = (currentPage.value - 1) * perPage.value
+    const end = start + perPage.value
+    return filteredCountries.value.slice(start, end)
+  })
+  function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
+  function prevPage() { if (currentPage.value > 1) currentPage.value-- }
+
+  // CRUD
+  async function getCountries() {
+    loadingTable.value = true
     try {
-      const response = await axios.delete('/api/country/' + id, {
-        headers: { Accept: 'application/json' }
-      })
+      const response = await axios.get('/api/country', { headers: { Accept: 'application/json' } })
+      Countries.value = response.data
+    } catch (error) { console.error(error) }
+    loadingTable.value = false
+  }
 
-      if (!response.data.status) { 
+  function addCountry() {
+    resetForm()
+    new Modal(document.getElementById('addCountryModal')).show()
+  }
+
+  function countryUpdated(country) {
+    countryId = country.id
+    name.value = country.name
+    acronym.value = country.acronym
+    code.value = country.code
+    new Modal(document.getElementById('updatedCountryModal')).show()
+  }
+
+  function resetForm() { name.value=''; acronym.value=''; code.value='' }
+
+  async function saveCountry() {
+    loadingButton.value = 'save'
+    try {
+      const response = await axios.post('/api/country', { name: name.value, acronym: acronym.value, code: code.value }, { headers:{ Accept:'application/json' } })
+      if(response.data.status){
+        Swal.fire({ toast:true, position:'top-end', icon:'success', title:response.data.message, showConfirmButton:false, timer:3000 })
+        resetForm()
+        getCountries()
+        Modal.getInstance(document.getElementById('addCountryModal')).hide()
+      } else {
+        Swal.fire({ icon:'error', title:response.data.title, text:response.data.message })
+      }
+    } catch(error){
+      Swal.fire({ icon:'error', title:"Erreur Serveur", text:error.response?.data?.message || "Une erreur est survenue." })
+      console.error(error)
+    }
+    loadingButton.value = ''
+  }
+
+  async function updateCountry() {
+    loadingButton.value = 'update'
+    try {
+      const response = await axios.put('/api/country/'+countryId, { name:name.value, acronym:acronym.value, code:code.value }, { headers:{ Accept:'application/json' } })
+      if(response.data.status){
+        Swal.fire({ toast:true, position:'top-end', icon:'success', title:response.data.message, showConfirmButton:false, timer:3000 })
+        getCountries()
+        Modal.getInstance(document.getElementById('updatedCountryModal')).hide()
+      } else {
+        Swal.fire({ icon:'error', title:response.data.title, text:response.data.message })
+      }
+    } catch(error){
+      Swal.fire({ icon:'error', title:"Erreur Serveur", text:error.response?.data?.message || "Une erreur est survenue." })
+      console.error(error)
+    }
+    loadingButton.value = ''
+  }
+
+  async function deletedCountry(id) {
+    const result = await Swal.fire({
+      title: 'Es-tu sûr ?',
+      text: "Cette action est irréversible !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    })
+
+    if (result.isConfirmed) {
+      loadingButton.value = id
+      try {
+        const response = await axios.delete('/api/country/' + id, {
+          headers: { Accept: 'application/json' }
+        })
+
+        if (!response.data.status) { 
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: response.data.message,
+            showConfirmButton: false,
+            timer: 3000
+          })
+        } else {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Pays supprimé ✅',
+            showConfirmButton: false,
+            timer: 3000
+          })
+          getCountries()
+        }
+
+      } catch (error) {
+        console.error(error)
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'error',
-          title: response.data.message,
+          title: error.response?.data?.message || 'Erreur lors de la suppression !',
           showConfirmButton: false,
           timer: 3000
         })
-      } else {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'success',
-          title: 'Pays supprimé ✅',
-          showConfirmButton: false,
-          timer: 3000
-        })
-        getCountries()
       }
-
-    } catch (error) {
-      console.error(error)
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'error',
-        title: error.response?.data?.message || 'Erreur lors de la suppression !',
-        showConfirmButton: false,
-        timer: 3000
-      })
+      loadingButton.value = ''
     }
-    loadingButton.value = ''
   }
-}
 
 
-onMounted(()=>getCountries())
+  onMounted(()=>getCountries())
 </script>

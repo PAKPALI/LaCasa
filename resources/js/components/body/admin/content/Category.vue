@@ -174,154 +174,154 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { Modal } from 'bootstrap'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import vSelect from "vue-select"
-import "vue-select/dist/vue-select.css"
+  import { ref, computed, onMounted } from 'vue'
+  import { Modal } from 'bootstrap'
+  import axios from 'axios'
+  import Swal from 'sweetalert2'
+  import vSelect from "vue-select"
+  import "vue-select/dist/vue-select.css"
 
-const name = ref('')
-const countryId = ref('')
-const Categories = ref([])
-const Countries = ref([])
-let categoryId = 0
-const selectedCategory = ref(null)
-const searchQuery = ref('')
-const currentPage = ref(1)
-const perPage = ref(5)
-const loadingButton = ref('')
-const loadingTable = ref(true)
-const loadingCountries = ref(false)
+  const name = ref('')
+  const countryId = ref('')
+  const Categories = ref([])
+  const Countries = ref([])
+  let categoryId = 0
+  const selectedCategory = ref(null)
+  const searchQuery = ref('')
+  const currentPage = ref(1)
+  const perPage = ref(5)
+  const loadingButton = ref('')
+  const loadingTable = ref(true)
+  const loadingCountries = ref(false)
 
-const nameLog = computed(() => {
-  if (!name.value) return "Aucun nom pour le moment"
-  if (name.value.length < 3) return "Le nom doit contenir au moins 3 caractères"
-  return "Nom valide ✅"
-})
-const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
-const countryLog = computed(() => {
-  if (!countryId.value) return "Aucun pays sélectionné"
-  const c = Countries.value.find(x => x.id === Number(countryId.value))
-  return c ? `Pays sélectionné : ${c.name}` : 'Pays sélectionné'
-})
-const labelCountryLog = computed(() => countryId.value ? 'text-success' : 'text-danger')
-const isFormValid = computed(() => name.value.length >= 3 && countryId.value !== '' && Number(countryId.value) > 0)
-
-const filteredCategories = computed(() => {
-  if (!searchQuery.value) return Categories.value
-  return Categories.value.filter(c => {
-    const q = searchQuery.value.toLowerCase()
-    const countryName = c.country ? c.country.name.toLowerCase() : ''
-    return c.name.toLowerCase().includes(q) || countryName.includes(q)
+  const nameLog = computed(() => {
+    if (!name.value) return "Aucun nom pour le moment"
+    if (name.value.length < 3) return "Le nom doit contenir au moins 3 caractères"
+    return "Nom valide ✅"
   })
-})
-const totalPages = computed(() => Math.max(1, Math.ceil(filteredCategories.value.length / perPage.value)))
-const paginatedCategories = computed(() => {
-  const start = (currentPage.value - 1) * perPage.value
-  return filteredCategories.value.slice(start, start + perPage.value)
-})
-
-function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
-function prevPage() { if (currentPage.value > 1) currentPage.value-- }
-
-async function getCategories() {
-  loadingTable.value = true
-  try {
-    const res = await axios.get('/api/category', { headers: { Accept: 'application/json' } })
-    Categories.value = res.data
-  } finally {
-    loadingTable.value = false
-  }
-}
-async function getCountries() {
-  loadingCountries.value = true
-  try {
-    const res = await axios.get('/api/country', { headers: { Accept: 'application/json' } })
-    Countries.value = res.data
-  } finally {
-    loadingCountries.value = false
-  }
-}
-function resetForm() {
-  name.value = ''
-  countryId.value = ''
-}
-function addCategory() {
-  resetForm()
-  getCountries()
-  new Modal(document.getElementById('addCategoryModal')).show()
-}
-function categoryUpdated(category) {
-  categoryId = category.id
-  name.value = category.name
-  countryId.value = category.country_id ?? (category.country ? category.country.id : '')
-  getCountries()
-  new Modal(document.getElementById('updatedCategoryModal')).show()
-}
-async function saveCategory() {
-  loadingButton.value = 'save'
-  try {
-    const res = await axios.post('/api/category', { name: name.value, country_id: countryId.value })
-    if (res.data.status) {
-      Swal.fire({ toast:true, position:'top-end', icon:'success', title:res.data.message, showConfirmButton:false, timer:3000 })
-      await getCategories()
-      Modal.getInstance(document.getElementById('addCategoryModal')).hide()
-    } else {
-      Swal.fire({ icon:'error', title: res.data.title || 'Erreur', text: res.data.message })
-    }
-  } finally {
-    loadingButton.value = ''
-  }
-}
-async function updateCategory() {
-  loadingButton.value = 'update'
-  try {
-    const res = await axios.put('/api/category/' + categoryId, { name: name.value, country_id: countryId.value })
-    if (res.data.status) {
-      Swal.fire({ toast:true, position:'top-end', icon:'success', title:res.data.message, showConfirmButton:false, timer:3000 })
-      await getCategories()
-      Modal.getInstance(document.getElementById('updatedCategoryModal')).hide()
-    } else {
-      Swal.fire({ icon:'error', title: res.data.title || 'Erreur', text: res.data.message })
-    }
-  } finally {
-    loadingButton.value = ''
-  }
-}
-async function deletedCategory(id) {
-  const result = await Swal.fire({
-    title: 'Es-tu sûr ?',
-    text: "Cette action est irréversible !",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Oui, supprimer',
-    cancelButtonText: 'Annuler'
+  const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
+  const countryLog = computed(() => {
+    if (!countryId.value) return "Aucun pays sélectionné"
+    const c = Countries.value.find(x => x.id === Number(countryId.value))
+    return c ? `Pays sélectionné : ${c.name}` : 'Pays sélectionné'
   })
-  if (result.isConfirmed) {
-    loadingButton.value = id
+  const labelCountryLog = computed(() => countryId.value ? 'text-success' : 'text-danger')
+  const isFormValid = computed(() => name.value.length >= 3 && countryId.value !== '' && Number(countryId.value) > 0)
+
+  const filteredCategories = computed(() => {
+    if (!searchQuery.value) return Categories.value
+    return Categories.value.filter(c => {
+      const q = searchQuery.value.toLowerCase()
+      const countryName = c.country ? c.country.name.toLowerCase() : ''
+      return c.name.toLowerCase().includes(q) || countryName.includes(q)
+    })
+  })
+  const totalPages = computed(() => Math.max(1, Math.ceil(filteredCategories.value.length / perPage.value)))
+  const paginatedCategories = computed(() => {
+    const start = (currentPage.value - 1) * perPage.value
+    return filteredCategories.value.slice(start, start + perPage.value)
+  })
+
+  function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
+  function prevPage() { if (currentPage.value > 1) currentPage.value-- }
+
+  async function getCategories() {
+    loadingTable.value = true
     try {
-      const res = await axios.delete('/api/category/' + id)
-      if (res.data.status === false) {
-        Swal.fire({toast:true, position:'top-end', icon:'error', title:res.data.title || 'Suppression refusée', text:res.data.message, showConfirmButton:false, timer:3000 })
-      } else {
-        Swal.fire({ toast:true, position:'top-end', icon:'success', title: res.data.message || 'Catégorie supprimée ✅', showConfirmButton:false, timer:3000 })
+      const res = await axios.get('/api/category', { headers: { Accept: 'application/json' } })
+      Categories.value = res.data
+    } finally {
+      loadingTable.value = false
+    }
+  }
+  async function getCountries() {
+    loadingCountries.value = true
+    try {
+      const res = await axios.get('/api/country', { headers: { Accept: 'application/json' } })
+      Countries.value = res.data
+    } finally {
+      loadingCountries.value = false
+    }
+  }
+  function resetForm() {
+    name.value = ''
+    countryId.value = ''
+  }
+  function addCategory() {
+    resetForm()
+    getCountries()
+    new Modal(document.getElementById('addCategoryModal')).show()
+  }
+  function categoryUpdated(category) {
+    categoryId = category.id
+    name.value = category.name
+    countryId.value = category.country_id ?? (category.country ? category.country.id : '')
+    getCountries()
+    new Modal(document.getElementById('updatedCategoryModal')).show()
+  }
+  async function saveCategory() {
+    loadingButton.value = 'save'
+    try {
+      const res = await axios.post('/api/category', { name: name.value, country_id: countryId.value })
+      if (res.data.status) {
+        Swal.fire({ toast:true, position:'top-end', icon:'success', title:res.data.message, showConfirmButton:false, timer:3000 })
         await getCategories()
+        Modal.getInstance(document.getElementById('addCategoryModal')).hide()
+      } else {
+        Swal.fire({ icon:'error', title: res.data.title || 'Erreur', text: res.data.message })
       }
     } finally {
       loadingButton.value = ''
     }
   }
-}
-function viewCategory(category) {
-  selectedCategory.value = category
-  new Modal(document.getElementById('viewCategoryModal')).show()
-}
+  async function updateCategory() {
+    loadingButton.value = 'update'
+    try {
+      const res = await axios.put('/api/category/' + categoryId, { name: name.value, country_id: countryId.value })
+      if (res.data.status) {
+        Swal.fire({ toast:true, position:'top-end', icon:'success', title:res.data.message, showConfirmButton:false, timer:3000 })
+        await getCategories()
+        Modal.getInstance(document.getElementById('updatedCategoryModal')).hide()
+      } else {
+        Swal.fire({ icon:'error', title: res.data.title || 'Erreur', text: res.data.message })
+      }
+    } finally {
+      loadingButton.value = ''
+    }
+  }
+  async function deletedCategory(id) {
+    const result = await Swal.fire({
+      title: 'Es-tu sûr ?',
+      text: "Cette action est irréversible !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    })
+    if (result.isConfirmed) {
+      loadingButton.value = id
+      try {
+        const res = await axios.delete('/api/category/' + id)
+        if (res.data.status === false) {
+          Swal.fire({toast:true, position:'top-end', icon:'error', title:res.data.title || 'Suppression refusée', text:res.data.message, showConfirmButton:false, timer:3000 })
+        } else {
+          Swal.fire({ toast:true, position:'top-end', icon:'success', title: res.data.message || 'Catégorie supprimée ✅', showConfirmButton:false, timer:3000 })
+          await getCategories()
+        }
+      } finally {
+        loadingButton.value = ''
+      }
+    }
+  }
+  function viewCategory(category) {
+    selectedCategory.value = category
+    new Modal(document.getElementById('viewCategoryModal')).show()
+  }
 
-onMounted(async () => {
-  await getCountries()
-  await getCategories()
-})
+  onMounted(async () => {
+    await getCountries()
+    await getCategories()
+  })
 </script>

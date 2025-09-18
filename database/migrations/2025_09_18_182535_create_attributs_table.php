@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pub_types', function (Blueprint $table) {
+        Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->foreignId('category_id')->constrained('categories')->onUpdate('cascade')->onDelete('cascade'); // supprime les pub_types si catégorie supprimée
+            $table->foreignId('pub_type_id')->constrained('pub_types')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('pub_types');
+        Schema::dropIfExists('attributes');
     }
 };

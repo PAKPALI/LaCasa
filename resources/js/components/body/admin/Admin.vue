@@ -18,6 +18,7 @@
           <District accordionId="adminAccordion" />
           <Category accordionId="adminAccordion" />
           <PubType accordionId="adminAccordion" />
+          <Attribute accordionId="adminAccordion" />
         </div>
       </div>
 
@@ -26,9 +27,10 @@
 </template>
 
 <script setup>
-import Country from './content/Country.vue'
-import Town from './content/Town.vue'
-import District from './content/District.vue'
-import Category from './content/Category.vue'
-import PubType from './content/PubType.vue'
+  import Country from './content/Country.vue'
+  import Town from './content/Town.vue'
+  import District from './content/District.vue'
+  import Category from './content/Category.vue'
+  import PubType from './content/PubType.vue'
+  import Attribute from './content/Attribute.vue'
 </script>
