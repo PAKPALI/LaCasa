@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid header bg-white p-0">
+  <div class="container-fluid mt-5 header bg-white p-0">
     <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
       <div class="col-md-6 p-5 mt-lg-5">
         <h1 class="display-5 animated fadeIn mb-4">

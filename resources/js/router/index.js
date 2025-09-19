@@ -3,12 +3,14 @@ import { createRouter, createWebHistory } from 'vue-router' //fonction de Vue qu
 // import Home2 from '../components/body/home2/Home2.vue'
 import Home from '../components/body/home/Home.vue'
 import Publication from '../components/body/pub/Index.vue'
+import CreatePublication from '../components/body/pub/create.vue'
 import Admin from '../components/body/admin/Admin.vue'
 
 const routes = [
   // { path: '', name: 'home2', component: Home2 },
   { path: '/home', name: 'home', component: Home },
   { path: '/publication', name: 'Publications', component: Publication },
+  { path: '/createPub', name: 'Create pub', component: CreatePublication },
   { path: '/admin', name: 'admin', component: Admin },
 ]
 
