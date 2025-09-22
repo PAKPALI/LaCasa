@@ -8,10 +8,15 @@ use Illuminate\Support\Facades\Validator;
 
 class AttributController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $attributes = Attribut::with('pubType.category.country')->orderBy('id', 'desc')->get();
-        return response()->json($attributes);
+        $query = Attribut::with('pubType.category.country');
+
+        if ($request->has('pub_type_id')) {
+            $query->where('pub_type_id', $request->pub_type_id);
+        }
+
+        return response()->json($query->get());
     }
 
     public function store(Request $request)

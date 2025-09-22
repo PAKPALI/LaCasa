@@ -10,11 +10,15 @@ use Illuminate\Support\Facades\Validator;
 class PubTypeController extends Controller
 {
     // Liste tous les types
-    public function index()
+    public function index(Request $request)
     {
-        // $pubTypes = PubType::with('category')->orderBy('id','desc')->get();
-        $pubTypes = PubType::with('category.country')->get();
-        return response()->json($pubTypes);
+        $query = PubType::with('category.country');
+
+        if ($request->has('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        return response()->json($query->get());
     }
 
     // Ajouter un type

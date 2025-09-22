@@ -8,13 +8,19 @@ use Illuminate\Support\Facades\Validator;
 
 class DistrictController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Charger la ville et le pays liés
-        return response()->json(
-            District::with(['town.country'])->get()
-        );
+        $query = District::with(['town.country']);
+
+        // Filtrer si town_id passé (pour le formulaire)
+        if ($request->has('town_id')) {
+            $query->where('town_id', $request->town_id);
+        }
+
+        // Si aucun filtre, on renvoie tout pour la liste globale
+        return response()->json($query->get());
     }
+
 
     public function store(Request $request)
     {

@@ -9,11 +9,15 @@ use Illuminate\Support\Facades\Validator;
 
 class TownController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Charger aussi le pays lié pour l'afficher dans la table
-        return response()->json(Town::with('country')->get());
+        $query = Town::with('country');
+        if ($request->has('country_id')) {
+            $query->where('country_id', $request->country_id);
+        }
+        return response()->json($query->get());
     }
+
 
     public function store(Request $request)
     {

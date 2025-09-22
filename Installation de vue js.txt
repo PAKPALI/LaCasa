@@ -20,6 +20,8 @@ Modifier
 npm install vue@3
 npm install
 npm install vue-select@beta --legacy-peer-deps
+npm install vue-toastification
+
 
 👉 Explication :
 

@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Category::with('country')->get());
+        $query = Category::with('country');
+
+        // Filtrer si district_id passé (pour le formulaire)
+        if ($request->has('country_id')) {
+            $query->where('country_id', $request->country_id);
+        }
+
+        return response()->json($query->get());
     }
 
     public function store(Request $request)
