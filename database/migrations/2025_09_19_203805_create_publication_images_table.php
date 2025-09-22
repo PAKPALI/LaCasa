@@ -11,13 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('publication_images', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('publication_id')->constrained('publications')->onDelete('cascade');
-            $table->string('path');
-            $table->timestamps();
-        });
+        // Schema::create('publication_images', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('publication_id')->constrained('publications')->onDelete('cascade');
+        //     $table->string('path');
+        //     $table->timestamps();
+        // });
 
+        if (!Schema::hasTable('publication_images')) {
+            Schema::create('publication_images', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('publication_id')->constrained('publications')->onDelete('cascade');
+                $table->string('path');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
