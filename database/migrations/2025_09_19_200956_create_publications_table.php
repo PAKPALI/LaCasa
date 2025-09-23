@@ -33,17 +33,9 @@ return new class extends Migration {
             $table->foreignId('publication_id')->constrained('publications')->onDelete('cascade');
             $table->foreignId('attribute_id')->constrained('attributes')->onDelete('cascade');
         });
-
-        Schema::create('publication_images', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('publication_id')->constrained('publications')->onDelete('cascade');
-            $table->string('path');
-            $table->timestamps();
-        });
     }
 
     public function down(): void {
-        Schema::dropIfExists('publication_images');
         Schema::dropIfExists('publication_attribute');
         Schema::dropIfExists('publications');
     }

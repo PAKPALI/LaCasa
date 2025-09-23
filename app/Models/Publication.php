@@ -18,11 +18,8 @@ class Publication extends Model
     use HasFactory;
 
     protected $fillable = [
-        'country_id','town_id','district_id',
-        'category_id','pub_type_id',
-        'price','bathroom','surface',
-        'advance','deposit','description','visit',
-        'offer_type','is_active'
+        'country_id','town_id','district_id','category_id','pub_type_id','price','bathroom','surface',
+        'advance','deposit','description','visit','offer_type','is_active'
     ];
 
     public function country()  { return $this->belongsTo(Country::class); }
@@ -32,7 +29,12 @@ class Publication extends Model
     public function pubType()  { return $this->belongsTo(PubType::class); }
 
     public function attributes() {
-        return $this->belongsToMany(Attribut::class, 'publication_attribute');
+        return $this->belongsToMany(
+            Attribut::class,        // modèle lié
+            'publication_attribute', // table pivot
+            'publication_id',        // clé étrangère vers Publication
+            'attribute_id'           // clé étrangère vers Attribut
+        );
     }
 
     public function images() {

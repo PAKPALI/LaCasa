@@ -17,4 +17,9 @@ class Attribut extends Model
     {
         return $this->belongsTo(PubType::class);
     }
+
+    public function publications()
+    {
+        return $this->belongsToMany(Publication::class, 'publication_attribute');
+    }
 }
