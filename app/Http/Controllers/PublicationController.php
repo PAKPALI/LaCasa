@@ -14,17 +14,18 @@ class PublicationController extends Controller
     {
         $publications = Publication::with([
             'pubType:id,name',
-            'category:id,name',      // 🔹 ajout de la relation catégorie
+            'category:id,name',
             'district:id,name',
             'town:id,name',
             'country:id,name',
-            'images'
+            'images',
+            'attributes:id,name' // 🔹 Ajouter la relation attributs
         ])->get();
 
         $formatted = $publications->map(function ($pub) {
             return [
                 'id' => $pub->id,
-                'title' => $pub->pubType->name ?? 'Type inconnu',         // nom du type de publication
+                'title' => $pub->pubType->name ?? 'Type inconnu',
                 'price' => $pub->price,
                 'bathroom' => $pub->bathroom,
                 'surface' => $pub->surface,
@@ -33,17 +34,19 @@ class PublicationController extends Controller
                 'visit' => $pub->visit,
                 'offer_type' => $pub->offer_type,
                 'is_active' => $pub->is_active,
-                'category_name' => $pub->category->name ?? 'Catégorie inconnue', // nom de la catégorie
+                'category_name' => $pub->category->name ?? 'Catégorie inconnue',
                 'district_name' => $pub->district->name ?? 'Non défini',
                 'town_name' => $pub->town->name ?? 'Non défini',
                 'country_name' => $pub->country->name ?? 'Non défini',
-                'images' => $pub->images->map(fn($img) => '/'.$img->path) // public path
+                'images' => $pub->images->map(fn($img) => '/'.$img->path),
+                'phone1' => $pub->phone1,
+                'phone2' => $pub->phone2,
+                'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name]) // 🔹 Transformation des attributs
             ];
         });
 
         return response()->json($formatted);
     }
-
 
 
     public function store(Request $request)
@@ -67,7 +70,9 @@ class PublicationController extends Controller
                 'is_active'   => ['boolean'],
                 'attributes'  => ['array'],
                 'attributes.*'=> ['exists:attributes,id'],
-                'images.*'    => ['image','mimes:jpg,jpeg,png','max:2048']
+                'images.*'    => ['image','mimes:jpg,jpeg,png','max:2048'],
+                'phone1'      => ['nullable','string','max:20'], // ajouté
+                'phone2'      => ['nullable','string','max:20'], // ajouté
             ],
             [
                 'country_id.required'  => 'Veuillez sélectionner un pays.',
@@ -84,9 +89,12 @@ class PublicationController extends Controller
                 'offer_type.in'        => 'Le type d’offre doit être "rent" ou "sale".',
                 'images.*.image'       => 'Chaque fichier doit être une image.',
                 'images.*.mimes'       => 'Seuls les formats JPG et PNG sont acceptés.',
-                'images.*.max'         => 'Chaque image doit être inférieure à 2 Mo.'
+                'images.*.max'         => 'Chaque image doit être inférieure à 2 Mo.',
+                'phone1.max'           => 'Le numéro 1 ne peut pas dépasser 20 caractères.',
+                'phone2.max'           => 'Le numéro 2 ne peut pas dépasser 20 caractères.',
             ]
         );
+
 
         if ($validator->fails()) {
             return response()->json([

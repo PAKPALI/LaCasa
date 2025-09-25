@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->decimal('advance', 12, 2)->nullable();
             $table->decimal('deposit', 12, 2)->nullable();
             $table->text('description')->nullable();
+            $table->string('phone1')->nullable();
+            $table->string('phone2')->nullable();
             $table->decimal('visit', 12, 2)->nullable();
 
             $table->enum('offer_type', ['rent', 'sale'])->default('rent'); // louer/vendre

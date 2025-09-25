@@ -19,7 +19,7 @@ class Publication extends Model
 
     protected $fillable = [
         'country_id','town_id','district_id','category_id','pub_type_id','price','bathroom','surface',
-        'advance','deposit','description','visit','offer_type','is_active'
+        'advance','deposit','description','visit','offer_type','is_active,phone1,phone2'
     ];
 
     public function country()  { return $this->belongsTo(Country::class); }
