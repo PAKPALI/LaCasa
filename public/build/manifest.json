@@ -104,12 +104,12 @@
     "src": "resources/js/images/template/team-3.jpg"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-GqwznTrf.js",
+    "file": "assets/app2-C5x3rsng.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-DChyqU_D.css"
+      "assets/app2-Bn6izmZi.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
