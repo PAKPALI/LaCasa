@@ -33,7 +33,7 @@
               <div class="property-item rounded overflow-hidden shadow">
                 <div class="position-relative overflow-hidden">
                   <img class="img-fluid" :src="p.images && p.images.length ? p.images[0] : placeholderImage" alt="">
-                  
+
                   <!-- Type d'offre -->
                   <div :class="['rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3', p.offer_type === 'sale' ? 'bg-danger' : 'bg-info']">
                     {{ p.offer_type === 'sale' ? 'À vendre' : 'À louer' }}
@@ -51,29 +51,39 @@
                 </div>
 
                 <!-- Attributs sous le prix / titre -->
-                <div class="mb-2 d-flex flex-wrap">
-                  <span v-for="attr in p.attributes" :key="attr.id" class="badge bg-success me-1 mb-1">
+                <div class="mb-2 d-flex flex-wrap px-4 pt-3">
+                  <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-success me-1 mb-1">
                     {{ attr.name }}
                   </span>
                 </div>
 
-                <div class="p-4 pb-0">
-                  <h5 class="text-primary mb-3">{{ formatPrice(p.price) }}</h5>
-                  <a class="d-block h5 mb-2" href="#">{{ p.title || 'Titre non défini' }}</a>
-                  <p><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name || p.town_name || p.country_name || 'Localisation non définie' }}</p>
-                  <p class="border-rounded text-center p-2" style="background-color: #f9f9f9;">
-                    <span v-if="p.phone1">
-                      <i class="fa fa-phone text-primary me-2"></i>{{ p.phone1 }}
-                    </span>
-                    <span v-if="p.phone2" class="ms-3">
-                      <i class="fa fa-phone text-primary me-2"></i>{{ p.phone2 }}
-                    </span>
-                  </p>
+                <!-- Contenu principal en deux colonnes côte-à-côte -->
+                <div class="p-2 pb-0">
+                  <div class="row border-top gx-2">
+                    <!-- gauche -->
+                    <div class="col-12 col-md-6">
+                      <h5 class="text-primary mb-3">{{ formatPrice(p.price) }}</h5>
+                      <a class="d-block h5 mb-2" href="#">{{ p.title || 'Titre non défini' }}</a>
+                      <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{ p.town_name }}</p>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex align-items-start justify-content-end">
+                      <!-- Si tu veux mettre quelque chose à droite (actions, mini-galerie...), remplace ce commentaire -->
+                      <!-- Exemple :
+                      <div class="text-end w-100">
+                        <button class="btn btn-sm btn-outline-primary mb-2">Modifier</button>
+                        <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex border-top">
+                  <small v-if="p.phone1" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone1 }}</small>
+                  <small v-if="p.phone2" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone2 }}</small>
                 </div>
 
                 <div class="d-flex border-top">
-                  <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ p.surface || 0 }} m²</small>
-                  <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>{{ p.bathroom || 0 }} Chambres</small>
+                  <small v-if="p.surface" class="flex-fill text-center py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ p.surface || 0 }} m²</small>
+                  <small v-if="p.bathroom" class="flex-fill text-center py-2"><i class="fa fa-bed text-primary me-2"></i>{{ p.bathroom || 0 }} Chambres</small>
                 </div>
               </div>
             </div>
@@ -157,12 +167,18 @@
                   <td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td>
                 </tr>
                 <tr>
-                  <th>Téléphone 1</th>
-                  <td>{{ selectedPublication?.phone1 || 'Non défini' }}</td>
-                </tr>
-                <tr>
-                  <th>Téléphone 2</th>
-                  <td>{{ selectedPublication?.phone2 || 'Non défini' }}</td>
+                  <th>Téléphones</th>
+                  <td>
+                    <div>
+                      <span v-if="selectedPublication?.phone1">
+                        <i class="fa fa-phone text-primary me-2"></i>{{ selectedPublication.phone1 }}
+                      </span>
+                      <span v-if="selectedPublication?.phone2" class="ms-3">
+                        <i class="fa fa-phone text-primary me-2"></i>{{ selectedPublication.phone2 }}
+                      </span>
+                      <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Non défini</span>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
