@@ -106,7 +106,7 @@
     <div id="collapsePubType" class="accordion-collapse collapse show" aria-labelledby="headingPubType"
       data-bs-parent="#accordionExample">
       <div class="accordion-body bg-dark text-white">
-        <p>Vous pouvez enregistrer, modifier, visualiser ou supprimer un type de pub.</p>
+        <p>Vous pouvez enregistrer, modifier, visualiser ou supprimer un type de pub (Piece,chambre salon etc...).</p>
 
         <!-- Ajouter -->
         <div class="row mt-3 mb-3">

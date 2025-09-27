@@ -116,7 +116,7 @@
     </h2>
     <div id="collapseCategory" class="accordion-collapse collapse show" aria-labelledby="headingCategory" data-bs-parent="#accordionExample">
       <div class="accordion-body bg-dark text-white">
-        <p>Vous pouvez enregistrer une catégorie, modifier, visualiser ou supprimer.</p>
+        <p>Vous pouvez enregistrer, modifier, visualiser ou supprimer une catégorie (Maison,Appartement,Immeuble,Boutique etc...).</p>
 
         <div class="row mt-3 mb-3">
           <div class="col-8">

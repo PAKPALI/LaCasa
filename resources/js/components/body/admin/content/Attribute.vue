@@ -25,9 +25,15 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Type de pub</label>
-                            <v-select v-model="pubTypeId" :options="PubTypes" label="name" :reduce="p => p.id"
-                                placeholder="Rechercher un type de pub..." :filterable="true"
-                                :loading="loadingPubTypes" />
+                            <v-select
+                                v-model="pubTypeId"
+                                :options="PubTypes"
+                                :reduce="p => p.id"
+                                :get-option-label="option => option.category ? `${option.name} (${option.category.name})` : option.name"
+                                placeholder="Rechercher un type de pub..."
+                                :filterable="true"
+                                :loading="loadingPubTypes"
+                            />
                             <label :class="labelPubTypeLog">{{ pubTypeLog }}</label>
                         </div>
                     </form>
@@ -61,9 +67,15 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Type de pub</label>
-                            <v-select v-model="pubTypeId" :options="PubTypes" label="name" :reduce="p => p.id"
-                                placeholder="Rechercher un type de pub..." :filterable="true"
-                                :loading="loadingPubTypes" />
+                            <v-select
+                                v-model="pubTypeId"
+                                :options="PubTypes"
+                                :reduce="p => p.id"
+                                :get-option-label="option => option.category ? `${option.name} (${option.category.name})` : option.name"
+                                placeholder="Rechercher un type de pub..."
+                                :filterable="true"
+                                :loading="loadingPubTypes"
+                            />
                             <label :class="labelPubTypeLog">{{ pubTypeLog }}</label>
                         </div>
                     </form>
@@ -117,7 +129,7 @@
         <div id="collapseAttribute" class="accordion-collapse collapse show" aria-labelledby="headingAttribute"
             data-bs-parent="#accordionExample">
             <div class="accordion-body bg-dark text-white">
-                <p>Vous pouvez enregistrer un attribut, modifier, visualiser ou supprimer.</p>
+                <p>Vous pouvez enregistrer, modifier, visualiser ou supprimer un attribut (WCDI,WCDE,CI,CE,Terrasse,Garage).</p>
 
                 <!-- Ajouter -->
                 <div class="row mt-3 mb-3">
@@ -217,10 +229,12 @@
     const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
 
     const pubTypeLog = computed(() => {
-        if (!pubTypeId.value) return "Aucun type sélectionné"
-        const t = PubTypes.value.find(x => x.id === Number(pubTypeId.value))
-        return t ? `Type sélectionné : ${t.name}` : 'Type sélectionné'
-    })
+    if (!pubTypeId.value) return "Aucun type sélectionné"
+    const t = PubTypes.value.find(x => x.id === Number(pubTypeId.value))
+    return t ? `Type sélectionné : ${t.name}${t.category ? ` (${t.category.name})` : ''}` : 'Type sélectionné'
+})
+
+
     const labelPubTypeLog = computed(() => pubTypeId.value ? 'text-success' : 'text-danger')
 
     const isFormValid = computed(() => name.value.length >= 3 && pubTypeId.value !== '' && Number(pubTypeId.value) > 0)

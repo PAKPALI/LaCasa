@@ -5,7 +5,7 @@
       <div class="row g-0 gx-5 align-items-end">
         <div class="col-lg-6">
           <div class="text-start mx-auto mb-5">
-            <h1 class="mb-3">Nos Propriétés</h1>
+            <h1 class="mb-3">Les Propriétés</h1>
             <p>
               Découvrez une sélection de biens immobiliers disponibles à la vente et à la location.
               Trouvez facilement la maison, la villa ou le bureau qui correspond à vos besoins.
@@ -108,9 +108,9 @@ const base = [
   { img: property_1, badge: 'À vendre', type: 'Appartement', delay: '0.1s' },
   { img: property_2, badge: 'À louer', type: 'Villa', delay: '0.3s' },
   { img: property_3, badge: 'À vendre', type: 'Bureau', delay: '0.5s' },
-  { img: property_4, badge: 'À louer', type: 'Immeuble', delay: '0.1s' },
-  { img: property_5, badge: 'À vendre', type: 'Maison', delay: '0.3s' },
-  { img: property_6, badge: 'À louer', type: 'Duplex', delay: '0.5s' }
+  // { img: property_4, badge: 'À louer', type: 'Immeuble', delay: '0.1s' },
+  // { img: property_5, badge: 'À vendre', type: 'Maison', delay: '0.3s' },
+  // { img: property_6, badge: 'À louer', type: 'Duplex', delay: '0.5s' }
 ].map(p => ({
   ...p,
   price: '12 345 000 FCFA',

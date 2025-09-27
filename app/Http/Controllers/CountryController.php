@@ -103,7 +103,6 @@ class CountryController extends Controller
         ]);
     }
 
-
     public function destroy(Country $country)
     {
         if ($country->towns()->count() > 0) {

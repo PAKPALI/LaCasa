@@ -132,7 +132,7 @@
         <h5 class="fw-bold text-light border-bottom mb-3">Informations complémentaires</h5>
         <div class="row">
           <div class="col-md-4 mb-3">
-            <label class="form-label">Prix</label>
+            <label class="form-label">Prix (FCFA)</label>
             <input type="number" class="form-control" v-model="form.price" />
           </div>
           <div class="col-md-4 mb-3">
@@ -144,15 +144,15 @@
             <input type="number" class="form-control" v-model="form.surface" />
           </div>
           <div class="col-md-4 mb-3">
-            <label class="form-label">Avance</label>
+            <label class="form-label">Avance (En mois)</label>
             <input type="number" class="form-control" v-model="form.advance" />
           </div>
           <div class="col-md-4 mb-3">
-            <label class="form-label">Caution</label>
+            <label class="form-label">Caution (En mois)</label>
             <input type="number" class="form-control" v-model="form.deposit" />
           </div>
           <div class="col-md-4 mb-3">
-            <label class="form-label">Prix de la visite</label>
+            <label class="form-label">Prix de la visite (FCFA)</label>
             <input type="number" class="form-control" v-model="form.visit" />
           </div>
         </div>

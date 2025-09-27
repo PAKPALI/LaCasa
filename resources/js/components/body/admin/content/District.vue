@@ -25,7 +25,13 @@
 
             <div class="mb-3">
               <label class="form-label">Pays</label>
-              <v-select v-model="countryId":options="Countries"label="name":reduce="c => c.id"placeholder="Rechercher un pays..."@input="onCountryChange"/>
+              <v-select
+                v-model="countryId"
+                :options="Countries"
+                label="name"
+                :reduce="c => c.id"
+                placeholder="Rechercher un pays..."
+              />
               <label :class="labelCountryLog">{{ countryLog }}</label>
             </div>
 
@@ -33,11 +39,11 @@
               <label class="form-label">Ville</label>
               <v-select
                 v-model="townId"
-                :options="filteredTownsByCountry"
+                :options="Towns"
                 label="name"
                 :reduce="t => t.id"
                 placeholder="Rechercher une ville..."
-                :disabled="!countryId"
+                :disabled="!countryId || loadingTowns"
               />
               <label :class="labelTownLog">{{ townLog }}</label>
             </div>
@@ -77,7 +83,7 @@
                 :options="Countries"
                 label="name"
                 :reduce="c => c.id"
-                @input="onCountryChange"
+                placeholder="Rechercher un pays..."
               />
               <label :class="labelCountryLog">{{ countryLog }}</label>
             </div>
@@ -86,10 +92,11 @@
               <label class="form-label">Ville</label>
               <v-select
                 v-model="townId"
-                :options="filteredTownsByCountry"
+                :options="Towns"
                 label="name"
                 :reduce="t => t.id"
-                :disabled="!countryId"
+                placeholder="Rechercher une ville..."
+                :disabled="!countryId || loadingTowns"
               />
               <label :class="labelTownLog">{{ townLog }}</label>
             </div>
@@ -192,166 +199,162 @@
 </template>
 
 <script setup>
-  import { ref, computed, onMounted } from 'vue'
-  import { Modal } from 'bootstrap'
-  import axios from 'axios'
-  import Swal from 'sweetalert2'
-  import vSelect from 'vue-select'
-  import 'vue-select/dist/vue-select.css'
+import { ref, computed, onMounted, watch } from 'vue'
+import { Modal } from 'bootstrap'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 
-  // Données
-  const name = ref('')
-  const countryId = ref('')
-  const townId = ref('')
-  const Districts = ref([])
-  const Countries = ref([])
-  const Towns = ref([])
-  let districtId = 0
-  const selectedDistrict = ref(null)
-  const searchQuery = ref('')
-  const currentPage = ref(1)
-  const perPage = ref(5)
-  const loadingButton = ref('')
-  const loadingTable = ref(true)
-  const loadingCountries = ref(false)
-  const loadingTowns = ref(false)
+// Données
+const name = ref('')
+const countryId = ref('')
+const townId = ref('')
+const Districts = ref([])
+const Countries = ref([])
+const Towns = ref([])
+let districtId = 0
+const selectedDistrict = ref(null)
+const searchQuery = ref('')
+const currentPage = ref(1)
+const perPage = ref(5)
+const loadingButton = ref('')
+const loadingTable = ref(true)
+const loadingCountries = ref(false)
+const loadingTowns = ref(false)
 
-  // Validation
-  const nameLog = computed(() => {
-    if (!name.value) return 'Aucun nom'
-    if (name.value.length < 3) return 'Le nom doit contenir au moins 3 caractères'
-    return 'Nom valide ✅'
+// Validation
+const nameLog = computed(() => !name.value ? 'Aucun nom' : name.value.length < 3 ? 'Le nom doit contenir au moins 3 caractères' : 'Nom valide ✅')
+const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
+
+const countryLog = computed(() => {
+  if (!countryId.value) return 'Aucun pays sélectionné'
+  const c = Countries.value.find(x => x.id === Number(countryId.value))
+  return c ? `Pays sélectionné : ${c.name}` : 'Pays sélectionné'
+})
+const labelCountryLog = computed(() => countryId.value ? 'text-success' : 'text-danger')
+
+const townLog = computed(() => {
+  if (!townId.value) return 'Aucune ville sélectionnée'
+  const t = Towns.value.find(x => x.id === Number(townId.value))
+  return t ? `Ville sélectionnée : ${t.name}` : 'Ville sélectionnée'
+})
+const labelTownLog = computed(() => townId.value ? 'text-success' : 'text-danger')
+
+const isFormValid = computed(() =>
+  name.value.length >= 3 &&
+  countryId.value &&
+  townId.value
+)
+
+// Filter + Pagination districts
+const filteredDistricts = computed(() => {
+  if (!searchQuery.value) return Districts.value
+  const q = searchQuery.value.toLowerCase()
+  return Districts.value.filter(d => {
+    const townName = d.town ? d.town.name.toLowerCase() : ''
+    const countryName = d.town && d.town.country ? d.town.country.name.toLowerCase() : ''
+    return d.name.toLowerCase().includes(q) || townName.includes(q) || countryName.includes(q)
   })
-  const labelNameLog = computed(() => name.value.length >= 3 ? 'text-success' : 'text-danger')
+})
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredDistricts.value.length / perPage.value)))
+const paginatedDistricts = computed(() => {
+  const start = (currentPage.value - 1) * perPage.value
+  const end = start + perPage.value
+  return filteredDistricts.value.slice(start, end)
+})
+function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
+function prevPage() { if (currentPage.value > 1) currentPage.value-- }
 
-  const countryLog = computed(() => {
-    if (!countryId.value) return 'Aucun pays sélectionné'
-    const c = Countries.value.find(x => x.id === Number(countryId.value))
-    return c ? `Pays sélectionné : ${c.name}` : 'Pays sélectionné'
-  })
-  const labelCountryLog = computed(() => countryId.value ? 'text-success' : 'text-danger')
+// API
+async function getCountries() {
+  loadingCountries.value = true
+  try { Countries.value = (await axios.get('/api/country')).data } 
+  catch(e){ console.error('getCountries', e) }
+  finally{ loadingCountries.value=false }
+}
 
-  const townLog = computed(() => {
-    if (!townId.value) return 'Aucune ville sélectionnée'
-    const t = Towns.value.find(x => x.id === Number(townId.value))
-    return t ? `Ville sélectionnée : ${t.name}` : 'Ville sélectionnée'
-  })
-  const labelTownLog = computed(() => townId.value ? 'text-success' : 'text-danger')
+async function getTowns(country = null) {
+  if (!country) { Towns.value = []; return } // ne jamais charger toutes les villes
+  loadingTowns.value = true
+  try { Towns.value = (await axios.get('/api/town', { params:{ country_id: country } })).data } 
+  catch(e){ console.error('getTowns', e) }
+  finally{ loadingTowns.value=false }
+}
 
-  const isFormValid = computed(() =>
-    name.value.length >= 3 &&
-    countryId.value &&
-    townId.value
-  )
+async function getDistricts() {
+  loadingTable.value = true
+  try { Districts.value = (await axios.get('/api/district')).data }
+  catch(e){ console.error('getDistricts', e) }
+  finally{ loadingTable.value=false }
+}
 
-  // Filtrage ville selon pays
-  const filteredTownsByCountry = computed(() => Towns.value.filter(t => t.country_id === countryId.value))
+// Modals
+function addDistrict() { resetForm(); getCountries(); new Modal(document.getElementById('addDistrictModal')).show() }
 
-  // Filter + Pagination districts
-  const filteredDistricts = computed(() => {
-    if (!searchQuery.value) return Districts.value
-    const q = searchQuery.value.toLowerCase()
-    return Districts.value.filter(d => {
-      const townName = d.town ? d.town.name.toLowerCase() : ''
-      const countryName = d.town && d.town.country ? d.town.country.name.toLowerCase() : ''
-      return d.name.toLowerCase().includes(q) || townName.includes(q) || countryName.includes(q)
-    })
-  })
-  const totalPages = computed(() => Math.max(1, Math.ceil(filteredDistricts.value.length / perPage.value)))
-  const paginatedDistricts = computed(() => {
-    const start = (currentPage.value - 1) * perPage.value
-    const end = start + perPage.value
-    return filteredDistricts.value.slice(start, end)
-  })
-  function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
-  function prevPage() { if (currentPage.value > 1) currentPage.value-- }
+function districtUpdated(district) {
+  districtId = district.id
+  name.value = district.name
+  countryId.value = district.town?.country_id ?? ''
+  townId.value = district.town_id ?? ''
+  getCountries()
+  getTowns(countryId.value)
+  new Modal(document.getElementById('updateDistrictModal')).show()
+}
 
-  // CRUD API
-  async function getCountries() {
-    loadingCountries.value = true
-    try { Countries.value = (await axios.get('/api/country')).data } 
-    catch(e){ console.error('getCountries', e) }
-    finally{ loadingCountries.value=false }
-  }
-  async function getTowns() {
-    loadingTowns.value = true
-    try { Towns.value = (await axios.get('/api/town')).data } 
-    catch(e){ console.error('getTowns', e) }
-    finally{ loadingTowns.value=false }
-  }
-  async function getDistricts() {
-    loadingTable.value = true
-    try { Districts.value = (await axios.get('/api/district')).data }
-    catch(e){ console.error('getDistricts', e) }
-    finally{ loadingTable.value=false }
-  }
+function resetForm() { name.value = ''; countryId.value=''; townId.value='' }
 
-  // Gestion modals
-  function addDistrict() {
-    resetForm()
-    getCountries()
-    new Modal(document.getElementById('addDistrictModal')).show()
-  }
+// Watch countryId pour charger les villes uniquement quand un pays est choisi
+watch(countryId, async (newVal) => {
+  townId.value = ''
+  await getTowns(newVal)
+})
 
-  function districtUpdated(district) {
-    districtId = district.id
-    name.value = district.name
-    countryId.value = district.town?.country_id ?? ''
-    townId.value = district.town_id ?? ''
-    getCountries()
-    getTowns()
-    new Modal(document.getElementById('updateDistrictModal')).show()
-  }
+// CRUD District
+async function saveDistrict() {
+  loadingButton.value='save'
+  try {
+    const res = await axios.post('/api/district', { name: name.value, town_id: townId.value })
+    if(res.data.status){
+      Swal.fire({toast:true,position:'top-end',icon:'success',title:res.data.message,showConfirmButton:false,timer:3000})
+      resetForm(); await getDistricts()
+      Modal.getInstance(document.getElementById('addDistrictModal')).hide()
+    } else Swal.fire({icon:'error',title:res.data.title||'Erreur',text:res.data.message})
+  } catch(e){ Swal.fire({icon:'error',title:'Erreur Serveur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
+  loadingButton.value=''
+}
 
-  function resetForm() { name.value = ''; countryId.value=''; townId.value='' }
+async function updateDistrict() {
+  loadingButton.value='update'
+  try {
+    const res = await axios.put('/api/district/'+districtId,{name:name.value,town_id:townId.value})
+    if(res.data.status){
+      Swal.fire({toast:true,position:'top-end',icon:'success',title:res.data.message,showConfirmButton:false,timer:3000})
+      await getDistricts()
+      Modal.getInstance(document.getElementById('updateDistrictModal')).hide()
+    } else Swal.fire({icon:'error',title:res.data.title||'Erreur',text:res.data.message})
+  } catch(e){ Swal.fire({icon:'error',title:'Erreur Serveur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
+  loadingButton.value=''
+}
 
-  function onCountryChange() { townId.value = '' }
-
-  async function saveDistrict() {
-    loadingButton.value='save'
-    try {
-      const res = await axios.post('/api/district', { name: name.value, town_id: townId.value })
-      if(res.data.status){
-        Swal.fire({toast:true,position:'top-end',icon:'success',title:res.data.message,showConfirmButton:false,timer:3000})
-        resetForm()
-        await getDistricts()
-        Modal.getInstance(document.getElementById('addDistrictModal')).hide()
-      } else Swal.fire({icon:'error',title:res.data.title||'Erreur',text:res.data.message})
+async function deletedDistrict(id) {
+  const result = await Swal.fire({title:'Es-tu sûr ?',text:"Cette action est irréversible !",icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Oui, supprimer',cancelButtonText:'Annuler'})
+  if(result.isConfirmed){
+    loadingButton.value=id
+    try{
+      const res = await axios.delete('/api/district/'+id)
+      if(res.data?.status===false) Swal.fire({icon:'error',title:res.data.title||'Suppression refusée',text:res.data.message})
+      else { Swal.fire({toast:true,position:'top-end',icon:'success',title:res.data.message||'Quartier supprimé ✅',showConfirmButton:false,timer:3000}); await getDistricts() }
     } catch(e){ Swal.fire({icon:'error',title:'Erreur Serveur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
     loadingButton.value=''
   }
+}
 
-  async function updateDistrict() {
-    loadingButton.value='update'
-    try {
-      const res = await axios.put('/api/district/'+districtId,{name:name.value,town_id:townId.value})
-      if(res.data.status){
-        Swal.fire({toast:true,position:'top-end',icon:'success',title:res.data.message,showConfirmButton:false,timer:3000})
-        await getDistricts()
-        Modal.getInstance(document.getElementById('updateDistrictModal')).hide()
-      } else Swal.fire({icon:'error',title:res.data.title||'Erreur',text:res.data.message})
-    } catch(e){ Swal.fire({icon:'error',title:'Erreur Serveur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
-    loadingButton.value=''
-  }
+function viewDistrict(district){ selectedDistrict.value=district; new Modal(document.getElementById('viewDistrictModal')).show() }
 
-  async function deletedDistrict(id) {
-    const result = await Swal.fire({title:'Es-tu sûr ?',text:"Cette action est irréversible !",icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonColor:'#3085d6',confirmButtonText:'Oui, supprimer',cancelButtonText:'Annuler'})
-    if(result.isConfirmed){
-      loadingButton.value=id
-      try{
-        const res = await axios.delete('/api/district/'+id)
-        if(res.data?.status===false) Swal.fire({icon:'error',title:res.data.title||'Suppression refusée',text:res.data.message})
-        else { Swal.fire({toast:true,position:'top-end',icon:'success',title:res.data.message||'Quartier supprimé ✅',showConfirmButton:false,timer:3000}); await getDistricts() }
-      } catch(e){ Swal.fire({icon:'error',title:'Erreur Serveur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
-      loadingButton.value=''
-    }
-  }
-
-  function viewDistrict(district){ selectedDistrict.value=district; new Modal(document.getElementById('viewDistrictModal')).show() }
-
-  onMounted(async ()=>{
-    await getCountries()
-    await getTowns()
-    await getDistricts()
-  })
+onMounted(async ()=>{
+  await getCountries()
+  await getDistricts()
+})
 </script>
+

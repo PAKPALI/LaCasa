@@ -13,7 +13,7 @@
         <div class="col-lg-6 text-start text-lg-end">
           <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
             <li class="nav-item me-2">
-              <button class="btn btn-outline-primary" :class="{ active: activeTab==='featured' }" @click="activeTab='featured'">À la une</button>
+              <button class="btn btn-outline-dark" :class="{ active: activeTab==='featured' }" @click="activeTab='featured'">Tous</button>
             </li>
             <li class="nav-item me-2">
               <button class="btn btn-outline-danger" :class="{ active: activeTab==='sell' }" @click="activeTab='sell'">À vendre</button>
@@ -32,7 +32,24 @@
             <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp" :data-wow-delay="p.delay || '0.1s'">
               <div class="property-item rounded overflow-hidden shadow">
                 <div class="position-relative overflow-hidden">
-                  <img class="img-fluid" :src="p.images && p.images.length ? p.images[0] : placeholderImage" alt="">
+                  <div v-if="p.images && p.images.length" :id="'carouselList' + i" class="carousel slide" data-bs-ride="carousel" :data-bs-interval="3000">
+                    <div class="carousel-inner rounded">
+                      <div v-for="(img, index) in p.images" :key="index" class="carousel-item" :class="{ active: index === 0 }">
+                        <img :src="img" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="">
+                      </div>
+                    </div>
+
+                    <!-- Boutons ronds centrés verticalement -->
+                    <button class="carousel-control-prev blink-btn rounded-circle border-0 d-flex align-items-center justify-content-center" type="button" :data-bs-target="'#carouselList' + i" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next blink-btn rounded-circle border-0 d-flex align-items-center justify-content-center" type="button" :data-bs-target="'#carouselList' + i" data-bs-slide="next">
+                      <span class="carousel-control-next-icon"></span>
+                    </button>
+                  </div>
+                  <div v-else>
+                    <img class="img-fluid w-100" style="height: 200px; object-fit: cover;" :src="placeholderImage" alt="">
+                  </div>
 
                   <!-- Type d'offre -->
                   <div :class="['rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3', p.offer_type === 'sale' ? 'bg-danger' : 'bg-info']">
@@ -40,7 +57,7 @@
                   </div>
 
                   <!-- Catégorie -->
-                  <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                  <div class="bg-dark text-light rounded-top text-primary position-absolute start-0 bottom-0 mx-0 pt-1 px-5">
                     {{ p.category_name || 'Type inconnu' }}
                   </div>
 
@@ -52,21 +69,21 @@
 
                 <!-- Attributs sous le prix / titre -->
                 <div class="mb-2 d-flex flex-wrap px-4 pt-3">
-                  <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-success me-1 mb-1">
+                  <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-dark me-1 mb-1">
                     {{ attr.name }}
                   </span>
                 </div>
 
                 <!-- Contenu principal en deux colonnes côte-à-côte -->
-                <div class="p-2 pb-0">
-                  <div class="row border-top gx-2">
+                <div class="p-2  pb-0">
+                  <div class="row bg-dark text-light border-top gx-2">
                     <!-- gauche -->
-                    <div class="col-12 col-md-6">
-                      <h5 class="text-primary mb-3">{{ formatPrice(p.price) }}</h5>
-                      <a class="d-block h5 mb-2" href="#">{{ p.title || 'Titre non défini' }}</a>
+                    <div class="col-12 col-md-10 text-center">
+                      <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }} / Mois</h5>
+                      <a class="d-block h4 text-light mb-2" href="#">{{ p.title || 'Titre non défini' }}</a>
                       <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{ p.town_name }}</p>
                     </div>
-                    <div class="col-12 col-md-6 d-flex align-items-start justify-content-end">
+                    <div class="col-2 col-md-4 d-flex align-items-start justify-content-end">
                       <!-- Si tu veux mettre quelque chose à droite (actions, mini-galerie...), remplace ce commentaire -->
                       <!-- Exemple :
                       <div class="text-end w-100">
@@ -76,12 +93,16 @@
                     </div>
                   </div>
                 </div>
-                <div class="d-flex border-top">
+                <div class="d-flex  border-top">
+                  <small class="flex-fill text-center py-2"><button @click="openEditModal(p.id)" class="btn btn-sm btn-outline-primary mb-2">Modifier</button></small>
+                  <small class="flex-fill text-center py-2"><button class="btn btn-sm btn-outline-danger">Supprimer</button></small>
+                </div>
+                <div class="d-flex bg-dark text-light border-top">
                   <small v-if="p.phone1" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone1 }}</small>
                   <small v-if="p.phone2" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone2 }}</small>
                 </div>
 
-                <div class="d-flex border-top">
+                <div class="d-flex bg-dark text-light border-top">
                   <small v-if="p.surface" class="flex-fill text-center py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>{{ p.surface || 0 }} m²</small>
                   <small v-if="p.bathroom" class="flex-fill text-center py-2"><i class="fa fa-bed text-primary me-2"></i>{{ p.bathroom || 0 }} Chambres</small>
                 </div>
@@ -151,6 +172,14 @@
                   <td>{{ formatPrice(selectedPublication?.price) }}</td>
                 </tr>
                 <tr>
+                  <th>Caution</th>
+                  <td>{{ selectedPublication?.deposit }} Mois</td>
+                </tr>
+                <tr>
+                  <th>Avance</th>
+                  <td>{{ selectedPublication?.advance }} Mois</td>
+                </tr>
+                <tr>
                   <th>Localisation</th>
                   <td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td>
                 </tr>
@@ -170,13 +199,17 @@
                   <th>Téléphones</th>
                   <td>
                     <div>
-                      <span v-if="selectedPublication?.phone1">
-                        <i class="fa fa-phone text-primary me-2"></i>{{ selectedPublication.phone1 }}
-                      </span>
-                      <span v-if="selectedPublication?.phone2" class="ms-3">
-                        <i class="fa fa-phone text-primary me-2"></i>{{ selectedPublication.phone2 }}
-                      </span>
-                      <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Non défini</span>
+                      <p>
+                        <span v-if="selectedPublication?.phone1">
+                          <i class="fa fa-phone text-primary me-2"> 1</i>:  {{ selectedPublication.phone1 }}
+                        </span>
+                      </p>
+                      <p>
+                        <span v-if="selectedPublication?.phone2">
+                          <i class="fa fa-phone text-primary me-2"> 2</i>: {{ selectedPublication.phone2 }}
+                        </span>
+                      </p>
+                      <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Pas de Numéro Disponible</span>
                     </div>
                   </td>
                 </tr>
@@ -195,11 +228,25 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal d'édition -->
+  <EditPublication 
+  v-if="showEditModal" 
+  :publication-id="editingPubId" 
+  @close="showEditModal = false" 
+  @updated="handleUpdatedPublication" 
+/>
+
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { Modal } from 'bootstrap'
+import EditPublication from './edit.vue'
+
+const showEditModal = ref(false)
+const editingPubId = ref(null)
+const publicationsList = ref([]) // Liste locale utilisée pour modification
 
 const placeholderImage = '/images2/property-placeholder.jpg'
 
@@ -214,14 +261,25 @@ const activeTab = ref('featured')
 const selectedPublication = ref(null)
 const modalInstance = ref(null)
 
+// Synchronisation props → publicationsList
+watch(
+  () => props.publications,
+  (newList) => {
+    publicationsList.value = [...newList]
+  },
+  { immediate: true }
+)
+
+// Filtrage des publications selon l'onglet actif
 const filteredPublications = computed(() => {
-  if (!props.publications) return []
-  if (activeTab.value === 'featured') return props.publications
-  if (activeTab.value === 'sell') return props.publications.filter(p => p.offer_type === 'sale')
-  if (activeTab.value === 'rent') return props.publications.filter(p => p.offer_type === 'rent')
-  return props.publications
+  if (!publicationsList.value) return []
+  if (activeTab.value === 'featured') return publicationsList.value
+  if (activeTab.value === 'sell') return publicationsList.value.filter(p => p.offer_type === 'sale')
+  if (activeTab.value === 'rent') return publicationsList.value.filter(p => p.offer_type === 'rent')
+  return publicationsList.value
 })
 
+// Ouvre le modal de détails
 const openModal = (pub) => {
   selectedPublication.value = pub
   if (!modalInstance.value) {
@@ -230,30 +288,40 @@ const openModal = (pub) => {
   modalInstance.value.show()
 }
 
+// Ouvre le modal d'édition
+const openEditModal = (id) => {
+  editingPubId.value = id
+  showEditModal.value = true // Le composant se monte, fetch la publication et showModal()
+}
+
+// Met à jour la publication après édition
+const handleUpdatedPublication = (updatedPub) => {
+  const index = publicationsList.value.findIndex(p => p.id === updatedPub.id)
+  if (index !== -1) publicationsList.value[index] = updatedPub
+}
+
+// Formatage du prix
 const formatPrice = (price) => {
   if (!price) return '0 FCFA'
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(price)
 }
+
+// Suppression fictive (à compléter avec API)
+const deletePublication = (id) => {
+  const index = publicationsList.value.findIndex(p => p.id === id)
+  if (index !== -1) publicationsList.value.splice(index, 1)
+}
 </script>
 
+
 <style scoped>
-/* 🎯 Animation clignotante du bouton œil */
-@keyframes blink {
-  0%, 100% {
-    background-color: white;
-    color: black;
-  }
-  50% {
-    background-color: black;
-    color: white;
-  }
-}
+
 
 .eye-alert-btn {
   background-color: white;
   color: black;
   border-radius: 50%;
-  animation: blink 1.5s infinite;
+  animation: blink 5s infinite;
   transition: all 0.3s ease;
 }
 
@@ -290,4 +358,44 @@ const formatPrice = (price) => {
 .custom-info-table tr:nth-child(even) th {
   background-color: #000301;
 }
+
+/* 🎯 Animation clignotante du bouton œil */
+@keyframes blink {
+  0%, 100% {
+    background-color: white;
+    color: black;
+    opacity: 1;
+  }
+  50% {
+    background-color: black;
+    color: white;
+    opacity: 0.3;
+  }
+}
+
+.blink-btn {
+  animation: blink 5s infinite;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255,255,255,0.8);
+  color: black;
+  z-index: 5;
+}
+
+.carousel-control-prev.blink-btn {
+  left: 10px;
+}
+
+.carousel-control-next.blink-btn {
+  right: 10px;
+}
+
+.blink-btn span {
+  background-size: 100% 100%;
+}
+
+
 </style>
