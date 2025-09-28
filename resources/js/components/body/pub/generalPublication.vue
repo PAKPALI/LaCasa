@@ -6,8 +6,8 @@
       <div class="row g-0 gx-5 align-items-end">
         <div class="col-lg-6">
           <div class="text-start mx-auto mb-5">
-            <h1 class="mb-3">Mes publications</h1>
-            <p>La liste de vos publications s'affichera ci-dessous une fois créées.</p>
+            <h1 class="mb-3">Les publications</h1>
+            <p>La liste des publications s'affichera ci-dessous.</p>
           </div>
         </div>
         <div class="col-lg-6 text-start text-lg-end">
@@ -86,7 +86,7 @@
                 </div>
 
                 <!-- Boutons Modifier/Supprimer -->
-                <div class="d-flex border-top">
+                <!-- <div class="d-flex border-top">
                   <small class="flex-fill text-center py-2">
                     <button title="Modifier"
                       @click="openEditModal(p.id)" 
@@ -100,10 +100,10 @@
                   <small class="flex-fill text-center py-2">
                     <button title="Supprimer" class="btn btn-sm btn-danger" @click="deletePublication(p.id)"><i class="fa fa-trash text-light me-0"></i></button>
                   </small>
-                </div>
+                </div> -->
 
                 <!-- Téléphones -->
-                <div class="d-flex bg-dark text-light border-top">
+                <div class="d-flex bg-dark text-light border-light border-top">
                   <small v-if="p.phone1 && p.phone1 !== 'null' && p.phone1.trim() !== ''" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone1 }}</small>
                   <small v-if="p.phone2 && p.phone2 !== 'null' && p.phone2.trim() !== ''" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone2 }}</small>
                 </div>
@@ -346,56 +346,56 @@ const deletePublication = async (id) => {
 
 
 <style scoped>
-.eye-alert-btn {
-  background-color: white;
-  color: black;
-  border-radius: 50%;
-  animation: blink 4s infinite;
-  transition: all 0.3s ease;
-}
-.eye-alert-btn:hover { transform: scale(1.1); }
+    .eye-alert-btn {
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+    animation: blink 4s infinite;
+    transition: all 0.3s ease;
+    }
+    .eye-alert-btn:hover { transform: scale(1.1); }
 
-.custom-info-table {
-  border-collapse: separate;
-  border-spacing: 0 8px;
-  width: 100%;
-}
-.custom-info-table th {
-  width: 35%;
-  font-weight: 600;
-  color: #ffffff;
-  background-color: #00050a;
-  padding: 10px 15px;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
-}
-.custom-info-table td {
-  color: #ffffff;
-  background-color: #000000;
-  padding: 10px 15px;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  box-shadow: 0 1px 3px rgba(247, 246, 246, 0.842);
-}
-.custom-info-table tr:nth-child(even) td,
-.custom-info-table tr:nth-child(even) th { background-color: #000301; }
+    .custom-info-table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    width: 100%;
+    }
+    .custom-info-table th {
+    width: 35%;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #00050a;
+    padding: 10px 15px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    }
+    .custom-info-table td {
+    color: #ffffff;
+    background-color: #000000;
+    padding: 10px 15px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    box-shadow: 0 1px 3px rgba(247, 246, 246, 0.842);
+    }
+    .custom-info-table tr:nth-child(even) td,
+    .custom-info-table tr:nth-child(even) th { background-color: #000301; }
 
-@keyframes blink {
-  0%, 100% { background-color: white; color: black; opacity: 1; }
-  50% { background-color: black; color: white; opacity: 0.3; }
-}
-.blink-btn {
-  animation: blink 3s infinite;
-  width: 40px;
-  height: 40px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(255,255,255,0.8);
-  color: black;
-  z-index: 5;
-}
-.carousel-control-prev.blink-btn { left: 10px; }
-.carousel-control-next.blink-btn { right: 10px; }
-.blink-btn span { background-size: 100% 100%; }
+    @keyframes blink {
+    0%, 100% { background-color: white; color: black; opacity: 1; }
+    50% { background-color: black; color: white; opacity: 0.3; }
+    }
+    .blink-btn {
+    animation: blink 3s infinite;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255,255,255,0.8);
+    color: black;
+    z-index: 5;
+    }
+    .carousel-control-prev.blink-btn { left: 10px; }
+    .carousel-control-next.blink-btn { right: 10px; }
+    .blink-btn span { background-size: 100% 100%; }
 </style>
