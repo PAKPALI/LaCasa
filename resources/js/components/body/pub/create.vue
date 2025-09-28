@@ -388,28 +388,6 @@ const submitPublication = async () => {
 
     const res = await axios.post('/api/publication', payload)
 
-    const newPub = {
-      id: res.data.id,
-      title: pubTypes.value.find(p => p.id === selectedPubType.value)?.name || 'Type inconnu',
-      price: form.value.price,
-      bathroom: form.value.bathroom,
-      surface: form.value.surface,
-      advance: form.value.advance,
-      deposit: form.value.deposit,
-      visit: form.value.visit,
-      offer_type: form.value.sale_or_rent,
-      is_active: form.value.status === 'active',
-      category_name: categories.value.find(c => c.id === selectedCategory.value)?.name || 'Catégorie inconnue',
-      district_name: districts.value.find(d => d.id === selectedDistrict.value)?.name || 'Non défini',
-      town_name: towns.value.find(t => t.id === selectedTown.value)?.name || 'Non défini',
-      country_name: countries.value.find(c => c.id === selectedCountry.value)?.name || 'Non défini',
-      images: form.value.images.map(f => URL.createObjectURL(f)),
-      phone1: form.value.phone1,
-      phone2: form.value.phone2
-    }
-
-    publicationsList.value.unshift(newPub)
-
     Swal.fire({ toast:true, position:'top-end', icon:'success', title: res.data.message || 'Publication créée ✅', showConfirmButton:false, timer:3000 })
 
     form.value = { price:'', bathroom:'', surface:'', advance:'', deposit:'', description:'', visit:'', sale_or_rent:'', status:'', images: [], phone1:'', phone2:'' }
@@ -420,6 +398,7 @@ const submitPublication = async () => {
     selectedCategory.value = null
     selectedPubType.value = null
     selectedAttributes.value = []
+    fetchPublications()
 
   } catch (err) {
     console.error(err)

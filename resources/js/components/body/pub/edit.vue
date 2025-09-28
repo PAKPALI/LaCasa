@@ -138,11 +138,24 @@
             <div class="col-md-6"><label>Numéro 2</label><input type="number" v-model="form.phone2" class="form-control" /></div>
           </div>
 
-          <div class="text-end mt-3">
-            <button type="submit" class="btn btn-success me-2" :disabled="isSubmitting">
-              💾 {{ isSubmitting ? 'Mise à jour...' : 'Mettre à jour' }}
-            </button>
-            <button type="button" class="btn btn-secondary" @click="closeModal">❌ Fermer</button>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div v-if="formErrors.length" class="mt-2 text-warning small">
+                <ul class="mb-0">
+                  <li v-for="(err, i) in formErrors" :key="i">{{ err }}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <!-- Bouton submit et erreurs -->
+              <div class="text-end mt-3">
+                <button type="submit" class="btn btn-success me-2"
+                  :disabled="isSubmitting || !isFormValid">
+                  💾 {{ isSubmitting ? 'Mise à jour...' : 'Mettre à jour' }}
+                </button>
+                <button type="button" class="btn btn-secondary" @click="closeModal">❌ Fermer</button>
+              </div>
+            </div>
           </div>
 
         </form>
@@ -176,25 +189,36 @@ const form = ref({ price:'', bathroom:'', surface:'', advance:'', deposit:'', de
 const previewImages = ref([]), existingImages = ref([])
 const isSubmitting = ref(false)
 
-// Méthodes pour gérer modal
+// 🚨 Gestion des erreurs
+const formErrors = ref([])
+const validateForm = () => {
+  const errors = []
+  if(!selectedCountry.value) errors.push('Sélectionnez un pays')
+  if(!selectedTown.value) errors.push('Sélectionnez une ville')
+  if(!selectedDistrict.value) errors.push('Sélectionnez un quartier')
+  if(!selectedCategory.value) errors.push('Sélectionnez une catégorie')
+  if(!selectedPubType.value) errors.push('Sélectionnez un type de publication')
+  if(!selectedAttributes.value.length || selectedAttributes.value.some(a=>!a)) errors.push('Ajoutez au moins un attribut')
+  if(!form.value.images.some(f=>f) && existingImages.value.length===0) errors.push('Ajoutez au moins une image')
+  if(!form.value.price) errors.push('Prix obligatoire')
+  if(!form.value.surface) errors.push('Surface obligatoire')
+  if(!form.value.phone1 && !form.value.phone2) errors.push('Au moins un numéro de téléphone requis')
+  if(!form.value.sale_or_rent) errors.push('Sélectionnez à vendre / à louer')
+  if(!form.value.status) errors.push('Sélectionnez un statut')
+  formErrors.value = errors
+  return errors.length === 0
+}
+const isFormValid = ref(false)
+
+// Modal
 const showModal = async () => {
   await nextTick()
   modalInstance.value = new Modal(document.getElementById('editModal'), { backdrop: 'static', keyboard: false })
   modalInstance.value.show()
 }
+const closeModal = () => { if(modalInstance.value) modalInstance.value.hide(); emit('close') }
 
-const closeModal = () => {
-  if (modalInstance.value) modalInstance.value.hide()
-  emit('close')
-}
-
-// Charger publication
-onMounted(async () => {
-  await fetchCountries()
-  loadPublication()
-})
-
-// FETCH FUNCTIONS (comme dans ton code original)
+// Fetch / Load
 const fetchCountries = async () => { loadingCountries.value=true; countries.value=(await axios.get('/api/country')).data; loadingCountries.value=false }
 const fetchTowns = async (countryId) => { loadingTowns.value=true; towns.value=(await axios.get(`/api/town?country_id=${countryId}`)).data; loadingTowns.value=false }
 const fetchDistricts = async (townId) => { loadingDistricts.value=true; districts.value=(await axios.get(`/api/district?town_id=${townId}`)).data; loadingDistricts.value=false }
@@ -202,7 +226,6 @@ const fetchCategories = async (countryId) => { loadingCategories.value=true; cat
 const fetchPubTypes = async (categoryId) => { loadingPubTypes.value=true; pubTypes.value=(await axios.get(`/api/pub-type?category_id=${categoryId}`)).data; loadingPubTypes.value=false }
 const fetchAttributes = async (pubTypeId) => { loadingAttributes.value=true; attributes.value=(await axios.get(`/api/attribute?pub_type_id=${pubTypeId}`)).data; loadingAttributes.value=false }
 
-// Charger données de la publication
 const loadPublication = async () => {
   try {
     const res = await axios.get(`/api/publication/${props.publicationId}`)
@@ -227,38 +250,40 @@ const loadPublication = async () => {
     }
     previewImages.value = pub.images.map(img => '/' + img.path)
     existingImages.value = pub.images.map(img=>img.id)
-
-    await showModal()  // <-- Affiche le modal
+    await showModal()
+    isFormValid.value = validateForm() // 🔥 validation immédiate
   } catch(err){
     console.error(err)
     Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Impossible de charger la publication', showConfirmButton:false, timer:3000 })
   }
 }
 
-// Watchers et fonctions d'ajout/suppression
-watch(selectedCountry, async val => { selectedTown.value=null; selectedDistrict.value=null; if(val) await fetchTowns(val) })
-watch(selectedTown, async val => { selectedDistrict.value=null; if(val) await fetchDistricts(val) })
-watch(selectedCategory, async val => { selectedPubType.value=null; if(val) await fetchPubTypes(val) })
-watch(selectedPubType, async val => { selectedAttributes.value=[]; if(val) await fetchAttributes(val) })
+onMounted(async () => { await fetchCountries(); loadPublication() })
 
+// Watchers pour re-validation
+watch([selectedCountry, selectedTown, selectedDistrict, selectedCategory, selectedPubType, selectedAttributes, form], () => {
+  isFormValid.value = validateForm()
+}, { deep:true })
+
+// Attributs / Images
 const addAttribute = () => selectedAttributes.value.push(null)
 const removeAttribute = i => selectedAttributes.value.splice(i,1)
-
 const addImage = () => { form.value.images.push(null); previewImages.value.push(null) }
 const removeImage = i => { form.value.images.splice(i,1); previewImages.value.splice(i,1); existingImages.value.splice(i,1) }
 const onSingleFileChange = (e,i) => { const file = e.target.files[0]; form.value.images[i]=file; previewImages.value[i]=URL.createObjectURL(file) }
 
 // Submit
 const submitPublication = async () => {
-  if(isSubmitting.value) return
+  if(!validateForm() || isSubmitting.value) return
   isSubmitting.value = true
-  try{
+  try {
     const payload = new FormData()
-    payload.append('country_id', selectedCountry.value)
-    payload.append('town_id', selectedTown.value)
-    payload.append('district_id', selectedDistrict.value)
-    payload.append('category_id', selectedCategory.value)
-    payload.append('pub_type_id', selectedPubType.value)
+    payload.append('_method','PUT')
+    payload.append('country_id',selectedCountry.value)
+    payload.append('town_id',selectedTown.value)
+    payload.append('district_id',selectedDistrict.value)
+    payload.append('category_id',selectedCategory.value)
+    payload.append('pub_type_id',selectedPubType.value)
     selectedAttributes.value.forEach(a=>payload.append('attributes[]',a))
     for(const key in form.value){
       if(key==='images') continue
@@ -267,17 +292,17 @@ const submitPublication = async () => {
       else payload.append(key, form.value[key])
     }
     form.value.images.forEach(f=>{if(f) payload.append('images[]',f)})
-    existingImages.value.forEach(id=>payload.append('existing_images[]', id))
-
-    const res = await axios.put(`/api/publication/${props.publicationId}`, payload)
-    Swal.fire({ toast:true, position:'top-end', icon:'success', title: res.data.message || 'Publication mise à jour ✅', showConfirmButton:false, timer:3000 })
+    existingImages.value.forEach(id=>payload.append('existing_images[]',id))
+    const res = await axios.post(`/api/publication/${props.publicationId}`, payload, { headers:{'Content-Type':'multipart/form-data'} })
+    Swal.fire({ toast:true, position:'top-end', icon:'success', title:res.data.message||'Publication mise à jour ✅', showConfirmButton:false, timer:3000 })
     emit('updated', res.data)
     closeModal()
   } catch(err){
-    console.error(err)
+    console.error('❌ Erreur lors de la mise à jour', err.response?.data || err)
     Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Erreur lors de la mise à jour', showConfirmButton:false, timer:3000 })
-  } finally{ isSubmitting.value=false }
+  } finally { isSubmitting.value=false }
 }
+
 </script>
 
 <style scoped>

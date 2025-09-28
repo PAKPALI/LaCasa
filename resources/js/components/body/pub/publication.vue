@@ -32,7 +32,7 @@
             <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp" :data-wow-delay="p.delay || '0.1s'">
               <div class="property-item rounded overflow-hidden shadow">
                 <div class="position-relative overflow-hidden">
-                  <div v-if="p.images && p.images.length" :id="'carouselList' + i" class="carousel slide" data-bs-ride="carousel" :data-bs-interval="3000">
+                  <div v-if="p.images && p.images.length" :id="'carouselList' + i" class="carousel slide" data-bs-ride="carousel" :data-bs-interval="5000">
                     <div class="carousel-inner rounded">
                       <div v-for="(img, index) in p.images" :key="index" class="carousel-item" :class="{ active: index === 0 }">
                         <img :src="img" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="">
@@ -77,29 +77,35 @@
                 <!-- Contenu principal en deux colonnes côte-à-côte -->
                 <div class="p-2  pb-0">
                   <div class="row bg-dark text-light border-top gx-2">
-                    <!-- gauche -->
                     <div class="col-12 col-md-10 text-center">
                       <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }} / Mois</h5>
                       <a class="d-block h4 text-light mb-2" href="#">{{ p.title || 'Titre non défini' }}</a>
                       <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{ p.town_name }}</p>
                     </div>
-                    <div class="col-2 col-md-4 d-flex align-items-start justify-content-end">
-                      <!-- Si tu veux mettre quelque chose à droite (actions, mini-galerie...), remplace ce commentaire -->
-                      <!-- Exemple :
-                      <div class="text-end w-100">
-                        <button class="btn btn-sm btn-outline-primary mb-2">Modifier</button>
-                        <button class="btn btn-sm btn-outline-danger">Supprimer</button>
-                      </div> -->
-                    </div>
                   </div>
                 </div>
-                <div class="d-flex  border-top">
-                  <small class="flex-fill text-center py-2"><button @click="openEditModal(p.id)" class="btn btn-sm btn-outline-primary mb-2">Modifier</button></small>
-                  <small class="flex-fill text-center py-2"><button class="btn btn-sm btn-outline-danger">Supprimer</button></small>
+
+                <!-- Boutons Modifier/Supprimer -->
+                <div class="d-flex border-top">
+                  <small class="flex-fill text-center py-2">
+                    <button title="Modifier"
+                      @click="openEditModal(p.id)" 
+                      class="btn btn-sm btn-secondary mb-2"
+                      :disabled="loadingEdit === p.id"
+                    >
+                      <span v-if="loadingEdit === p.id" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <i class="fa fa-edit text-light me-0"></i>
+                    </button>
+                  </small>
+                  <small class="flex-fill text-center py-2">
+                    <button title="Supprimer" class="btn btn-sm btn-danger" @click="deletePublication(p.id)"><i class="fa fa-trash text-light me-0"></i></button>
+                  </small>
                 </div>
+
+                <!-- Téléphones -->
                 <div class="d-flex bg-dark text-light border-top">
-                  <small v-if="p.phone1" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone1 }}</small>
-                  <small v-if="p.phone2" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone2 }}</small>
+                  <small v-if="p.phone1 && p.phone1 !== 'null' && p.phone1.trim() !== ''" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone1 }}</small>
+                  <small v-if="p.phone2 && p.phone2 !== 'null' && p.phone2.trim() !== ''" class="flex-fill text-center py-2"><i class="fa fa-phone text-primary me-2"></i>{{ p.phone2 }}</small>
                 </div>
 
                 <div class="d-flex bg-dark text-light border-top">
@@ -109,9 +115,17 @@
               </div>
             </div>
 
-            <div v-if="filteredPublications.length === 0" class="col-12 text-center py-5">
-              <p class="text-muted">Aucune publication pour cette catégorie pour le moment.</p>
+            <div class="col-12 text-center py-5">
+              <div v-if="loadingPublications" class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
+              </div>
+              <div v-else-if="filteredPublications.length === 0">
+                <p class="text-muted">Aucune publication pour cette catégorie pour le moment.</p>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -123,15 +137,13 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-light">
-          <h5 class="modal-title">
-            {{ selectedPublication?.title || 'Détails de la publication' }}
-          </h5>
+          <h5 class="modal-title">{{ selectedPublication?.title || 'Détails de la publication' }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
-          <!-- Carrousel d'images -->
-          <div v-if="selectedPublication?.images?.length" id="carouselImages" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+          <!-- Carrousel d'images modal -->
+          <div v-if="selectedPublication?.images?.length" id="carouselImages" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
             <div class="carousel-inner rounded">
               <div v-for="(img, index) in selectedPublication.images" :key="index" class="carousel-item" :class="{ active: index === 0 }">
                 <img :src="img" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Image de la publication">
@@ -145,18 +157,12 @@
             </button>
           </div>
 
-          <!-- 📊 Infos détaillées sous forme de tableau -->
+          <!-- Infos détaillées -->
           <div class="mt-4">
             <table class="table custom-info-table">
               <tbody>
-                <tr>
-                  <th>Catégorie</th>
-                  <td>{{ selectedPublication?.category_name || 'Catégorie inconnue' }}</td>
-                </tr>
-                <tr>
-                  <th>Type d'offre</th>
-                  <td>{{ selectedPublication?.offer_type === 'sale' ? 'À vendre' : 'À louer' }}</td>
-                </tr>
+                <tr><th>Catégorie</th><td>{{ selectedPublication?.category_name || 'Catégorie inconnue' }}</td></tr>
+                <tr><th>Type d'offre</th><td>{{ selectedPublication?.offer_type === 'sale' ? 'À vendre' : 'À louer' }}</td></tr>
                 <tr v-if="selectedPublication?.attributes?.length">
                   <th>Attributs</th>
                   <td>
@@ -167,50 +173,23 @@
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <th>Prix</th>
-                  <td>{{ formatPrice(selectedPublication?.price) }}</td>
-                </tr>
-                <tr>
-                  <th>Caution</th>
-                  <td>{{ selectedPublication?.deposit }} Mois</td>
-                </tr>
-                <tr>
-                  <th>Avance</th>
-                  <td>{{ selectedPublication?.advance }} Mois</td>
-                </tr>
-                <tr>
-                  <th>Localisation</th>
-                  <td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td>
-                </tr>
-                <tr>
-                  <th>Superficie</th>
-                  <td>{{ selectedPublication?.surface || 0 }} m²</td>
-                </tr>
-                <tr>
-                  <th>Chambres</th>
-                  <td>{{ selectedPublication?.bathroom || 0 }}</td>
-                </tr>
-                <tr>
-                  <th>Description</th>
-                  <td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td>
-                </tr>
+                <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }}</td></tr>
+                <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} Mois</td></tr>
+                <tr><th>Avance</th><td>{{ selectedPublication?.advance }} Mois</td></tr>
+                <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
+                <tr><th>Superficie</th><td>{{ selectedPublication?.surface || 0 }} m²</td></tr>
+                <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || 0 }}</td></tr>
+                <tr><th>Description</th><td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td></tr>
                 <tr>
                   <th>Téléphones</th>
                   <td>
-                    <div>
-                      <p>
-                        <span v-if="selectedPublication?.phone1">
-                          <i class="fa fa-phone text-primary me-2"> 1</i>:  {{ selectedPublication.phone1 }}
-                        </span>
-                      </p>
-                      <p>
-                        <span v-if="selectedPublication?.phone2">
-                          <i class="fa fa-phone text-primary me-2"> 2</i>: {{ selectedPublication.phone2 }}
-                        </span>
-                      </p>
-                      <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Pas de Numéro Disponible</span>
-                    </div>
+                    <p v-if="selectedPublication?.phone1 && selectedPublication.phone1 !== 'null' && selectedPublication.phone1.trim() !== ''">
+                      <i class="fa fa-phone text-primary me-2">1</i>: {{ selectedPublication.phone1 }}
+                    </p>
+                    <p v-if="selectedPublication?.phone2 && selectedPublication.phone2 !== 'null' && selectedPublication.phone2.trim() !== ''">
+                      <i class="fa fa-phone text-primary me-2">2</i>: {{ selectedPublication.phone2 }}
+                    </p>
+                    <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Pas de Numéro Disponible</span>
                   </td>
                 </tr>
               </tbody>
@@ -231,46 +210,64 @@
 
   <!-- Modal d'édition -->
   <EditPublication 
-  v-if="showEditModal" 
-  :publication-id="editingPubId" 
-  @close="showEditModal = false" 
-  @updated="handleUpdatedPublication" 
-/>
-
+    v-if="showEditModal" 
+    :publication-id="editingPubId" 
+    @close="showEditModal = false" 
+    @updated="fetchPublications" 
+  />
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { Modal } from 'bootstrap'
+import { ref, computed, watch, nextTick } from 'vue'
+import { Modal, Carousel } from 'bootstrap'
 import EditPublication from './edit.vue'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const showEditModal = ref(false)
 const editingPubId = ref(null)
-const publicationsList = ref([]) // Liste locale utilisée pour modification
-
-const placeholderImage = '/images2/property-placeholder.jpg'
-
-const props = defineProps({
-  publications: {
-    type: Array,
-    required: true
-  }
-})
-
-const activeTab = ref('featured')
+const publicationsList = ref([])
 const selectedPublication = ref(null)
 const modalInstance = ref(null)
+const placeholderImage = '/images2/property-placeholder.jpg'
+const loadingEdit = ref(null)
+const loadingPublications = ref(false)
 
-// Synchronisation props → publicationsList
-watch(
-  () => props.publications,
-  (newList) => {
-    publicationsList.value = [...newList]
-  },
-  { immediate: true }
-)
+const props = defineProps({
+  publications: { type: Array, required: true }
+})
 
-// Filtrage des publications selon l'onglet actif
+// Copier les publications du parent
+watch(() => props.publications, (newList) => {
+  publicationsList.value = [...newList]
+}, { immediate: true })
+
+// Initialiser tous les carrousels des publications
+const initCarousels = () => {
+  nextTick(() => {
+    publicationsList.value.forEach((p, i) => {
+      const el = document.getElementById('carouselList' + i)
+      if (el) new Carousel(el)
+    })
+  })
+}
+
+// Charger les publications
+const fetchPublications = async () => {
+  loadingPublications.value = true
+  try {
+    const res = await axios.get('/api/publication')
+    publicationsList.value = res.data
+    initCarousels()
+  } catch (err) {
+    console.error('Erreur lors du chargement des publications', err)
+  } finally {
+    loadingPublications.value = false
+  }
+}
+
+// Filtrage par onglet
+const activeTab = ref('featured')
 const filteredPublications = computed(() => {
   if (!publicationsList.value) return []
   if (activeTab.value === 'featured') return publicationsList.value
@@ -279,25 +276,25 @@ const filteredPublications = computed(() => {
   return publicationsList.value
 })
 
-// Ouvre le modal de détails
+// Ouvrir le modal et initialiser le carrousel
 const openModal = (pub) => {
   selectedPublication.value = pub
-  if (!modalInstance.value) {
-    modalInstance.value = new Modal(document.getElementById('publicationModal'))
-  }
-  modalInstance.value.show()
+  nextTick(() => {
+    if (!modalInstance.value) modalInstance.value = new Modal(document.getElementById('publicationModal'))
+    modalInstance.value.show()
+
+    // Initialiser carrousel du modal
+    const carouselEl = document.getElementById('carouselImages')
+    if (carouselEl) new Carousel(carouselEl)
+  })
 }
 
-// Ouvre le modal d'édition
-const openEditModal = (id) => {
+// Modal d'édition
+const openEditModal = async (id) => {
   editingPubId.value = id
-  showEditModal.value = true // Le composant se monte, fetch la publication et showModal()
-}
-
-// Met à jour la publication après édition
-const handleUpdatedPublication = (updatedPub) => {
-  const index = publicationsList.value.findIndex(p => p.id === updatedPub.id)
-  if (index !== -1) publicationsList.value[index] = updatedPub
+  loadingEdit.value = id
+  showEditModal.value = true
+  setTimeout(() => loadingEdit.value = null, 8000)
 }
 
 // Formatage du prix
@@ -306,35 +303,62 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(price)
 }
 
-// Suppression fictive (à compléter avec API)
-const deletePublication = (id) => {
-  const index = publicationsList.value.findIndex(p => p.id === id)
-  if (index !== -1) publicationsList.value.splice(index, 1)
+// Supprimer une publication
+const deletePublication = async (id) => {
+  const result = await Swal.fire({
+    title: 'Êtes-vous sûr ?',
+    text: "Cette action est irréversible !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler'
+  })
+
+  if (result.isConfirmed) {
+    try {
+      await axios.delete(`/api/publication/${id}`)
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Publication supprimée ✅',
+        showConfirmButton: false,
+        timer: 3000
+      })
+      fetchPublications()
+    } catch (err) {
+      console.error('Erreur lors de la suppression', err)
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: 'Impossible de supprimer la publication',
+        showConfirmButton: false,
+        timer: 3000
+      })
+    }
+  }
 }
 </script>
 
 
 <style scoped>
-
-
 .eye-alert-btn {
   background-color: white;
   color: black;
   border-radius: 50%;
-  animation: blink 5s infinite;
+  animation: blink 4s infinite;
   transition: all 0.3s ease;
 }
-
-.eye-alert-btn:hover {
-  transform: scale(1.1);
-}
+.eye-alert-btn:hover { transform: scale(1.1); }
 
 .custom-info-table {
   border-collapse: separate;
-  border-spacing: 0 8px; /* espace entre les lignes */
+  border-spacing: 0 8px;
   width: 100%;
 }
-
 .custom-info-table th {
   width: 35%;
   font-weight: 600;
@@ -344,7 +368,6 @@ const deletePublication = (id) => {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
-
 .custom-info-table td {
   color: #ffffff;
   background-color: #000000;
@@ -353,28 +376,15 @@ const deletePublication = (id) => {
   border-bottom-right-radius: 8px;
   box-shadow: 0 1px 3px rgba(247, 246, 246, 0.842);
 }
-
 .custom-info-table tr:nth-child(even) td,
-.custom-info-table tr:nth-child(even) th {
-  background-color: #000301;
-}
+.custom-info-table tr:nth-child(even) th { background-color: #000301; }
 
-/* 🎯 Animation clignotante du bouton œil */
 @keyframes blink {
-  0%, 100% {
-    background-color: white;
-    color: black;
-    opacity: 1;
-  }
-  50% {
-    background-color: black;
-    color: white;
-    opacity: 0.3;
-  }
+  0%, 100% { background-color: white; color: black; opacity: 1; }
+  50% { background-color: black; color: white; opacity: 0.3; }
 }
-
 .blink-btn {
-  animation: blink 5s infinite;
+  animation: blink 3s infinite;
   width: 40px;
   height: 40px;
   position: absolute;
@@ -384,18 +394,7 @@ const deletePublication = (id) => {
   color: black;
   z-index: 5;
 }
-
-.carousel-control-prev.blink-btn {
-  left: 10px;
-}
-
-.carousel-control-next.blink-btn {
-  right: 10px;
-}
-
-.blink-btn span {
-  background-size: 100% 100%;
-}
-
-
+.carousel-control-prev.blink-btn { left: 10px; }
+.carousel-control-next.blink-btn { right: 10px; }
+.blink-btn span { background-size: 100% 100%; }
 </style>

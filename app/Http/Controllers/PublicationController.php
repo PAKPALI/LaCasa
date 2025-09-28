@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Publication;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class PublicationController extends Controller
@@ -40,8 +41,8 @@ class PublicationController extends Controller
                 'town_name' => $pub->town->name ?? 'Non défini',
                 'country_name' => $pub->country->name ?? 'Non défini',
                 'images' => $pub->images->map(fn($img) => '/'.$img->path),
-                'phone1' => $pub->phone1,
-                'phone2' => $pub->phone2,
+                'phone1' => ($pub->phone1 && $pub->phone1 !== 'null') ? $pub->phone1 : null,
+                'phone2' => ($pub->phone2 && $pub->phone2 !== 'null') ? $pub->phone2 : null,
                 'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name]) // 🔹 Transformation des attributs
             ];
         });
@@ -63,8 +64,6 @@ class PublicationController extends Controller
 
         return response()->json($publication);
     }
-
-
 
     public function store(Request $request)
     {
@@ -112,7 +111,6 @@ class PublicationController extends Controller
             ]
         );
 
-
         if ($validator->fails()) {
             return response()->json([
                 'status'  => false,
@@ -152,30 +150,54 @@ class PublicationController extends Controller
 
     public function update(Request $request, $id)
     {
+        Log::info('📩 UPDATE REÇU', [
+            'id' => $id,
+            'payload' => $request->all()
+        ]);
         $publication = Publication::findOrFail($id);
 
         $validator = Validator::make(
             $request->all(),
             [
-                'country_id'  => ['required','exists:countries,id'],
-                'town_id'     => ['required','exists:towns,id'],
-                'district_id' => ['required','exists:districts,id'],
-                'category_id' => ['required','exists:categories,id'],
-                'pub_type_id' => ['required','exists:pub_types,id'],
-                'price'       => ['nullable','numeric'],
-                'bathroom'    => ['nullable','integer'],
-                'surface'     => ['nullable','numeric'],
-                'advance'     => ['nullable','numeric'],
-                'deposit'     => ['nullable','numeric'],
-                'description' => ['nullable','string'],
-                'visit'       => ['nullable','numeric'],
-                'offer_type'  => ['required','in:rent,sale'],
+                'country_id'  => ['required', 'exists:countries,id'],
+                'town_id'     => ['required', 'exists:towns,id'],
+                'district_id' => ['required', 'exists:districts,id'],
+                'category_id' => ['required', 'exists:categories,id'],
+                'pub_type_id' => ['required', 'exists:pub_types,id'],
+                'price'       => ['nullable', 'numeric'],
+                'bathroom'    => ['nullable', 'integer'],
+                'surface'     => ['nullable', 'numeric'],
+                'advance'     => ['nullable', 'numeric'],
+                'deposit'     => ['nullable', 'numeric'],
+                'description' => ['nullable', 'string'],
+                'visit'       => ['nullable', 'numeric'],
+                'offer_type'  => ['required', 'in:rent,sale'],
                 'is_active'   => ['boolean'],
                 'attributes'  => ['array'],
                 'attributes.*'=> ['exists:attributes,id'],
-                'images.*'    => ['image','mimes:jpg,jpeg,png','max:2048'],
-                'existing_images' => ['array'], // 🟢 tableau des images existantes à conserver
-                'existing_images.*' => ['exists:images,id']
+                // 🔥 images deviennent optionnelles
+                'images.*'    => ['sometimes', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+                'phone1'      => ['nullable','string','max:20'],
+                'phone2'      => ['nullable','string','max:20'],
+            ],
+            [
+                'country_id.required'  => 'Veuillez sélectionner un pays.',
+                'country_id.exists'    => 'Le pays sélectionné est invalide.',
+                'town_id.required'     => 'Veuillez sélectionner une ville.',
+                'town_id.exists'       => 'La ville sélectionnée est invalide.',
+                'district_id.required' => 'Veuillez sélectionner un quartier.',
+                'district_id.exists'   => 'Le quartier sélectionné est invalide.',
+                'category_id.required' => 'Veuillez sélectionner une catégorie.',
+                'category_id.exists'   => 'La catégorie sélectionnée est invalide.',
+                'pub_type_id.required' => 'Veuillez sélectionner un type de publication.',
+                'pub_type_id.exists'   => 'Le type de publication sélectionné est invalide.',
+                'offer_type.required'  => 'Veuillez indiquer si c’est une offre de location ou de vente.',
+                'offer_type.in'        => 'Le type d’offre doit être "rent" ou "sale".',
+                'images.*.image'       => 'Chaque fichier doit être une image.',
+                'images.*.mimes'       => 'Seuls les formats JPG et PNG sont acceptés.',
+                'images.*.max'         => 'Chaque image doit être inférieure à 2 Mo.',
+                'phone1.max'           => 'Le numéro 1 ne peut pas dépasser 20 caractères.',
+                'phone2.max'           => 'Le numéro 2 ne peut pas dépasser 20 caractères.',
             ]
         );
 
@@ -188,45 +210,24 @@ class PublicationController extends Controller
 
         $validated = $validator->validated();
 
-        // Mise à jour de la publication
-        $publication->update([
-            'country_id'  => $validated['country_id'],
-            'town_id'     => $validated['town_id'],
-            'district_id' => $validated['district_id'],
-            'category_id' => $validated['category_id'],
-            'pub_type_id' => $validated['pub_type_id'],
-            'price'       => $validated['price'] ?? null,
-            'bathroom'    => $validated['bathroom'] ?? null,
-            'surface'     => $validated['surface'] ?? null,
-            'advance'     => $validated['advance'] ?? null,
-            'deposit'     => $validated['deposit'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'visit'       => $validated['visit'] ?? null,
-            'offer_type'  => $validated['offer_type'],
-            'is_active'   => $validated['is_active'] ?? true,
-            'phone1'      => $validated['phone1'] ?? null,
-            'phone2'      => $validated['phone2'] ?? null
-        ]);
+        // ✅ Mise à jour des champs principaux
+        $publication->update($validated);
 
-        // Mise à jour des attributs
+        // ✅ Mise à jour des attributs
         if (isset($validated['attributes'])) {
             $publication->attributes()->sync($validated['attributes']);
         }
 
-        // 🔹 Gestion des images
-        $existingImages = $validated['existing_images'] ?? [];
-
-        // Supprimer les images qui ne sont pas conservées
-        $publication->images()->whereNotIn('id', $existingImages)->get()->each(function ($img) {
-            $path = public_path($img->path);
-            if (file_exists($path)) unlink($path);
-            $img->delete();
-        });
-
-        // Ajouter les nouvelles images uploadées
+        // ✅ Suppression et remplacement des images uniquement si de nouvelles images sont envoyées
         if ($request->hasFile('images')) {
+            foreach ($publication->images as $img) {
+                $imagePath = public_path($img->path);
+                if (file_exists($imagePath)) unlink($imagePath);
+                $img->delete();
+            }
+
             foreach ($request->file('images') as $image) {
-                $imageName = \Str::uuid() . '.' . $image->getClientOriginalExtension();
+                $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('LaCasa/pub'), $imageName);
 
                 $publication->images()->create([
@@ -241,6 +242,7 @@ class PublicationController extends Controller
             'publication' => $publication->load(['country','town','district','category','pubType','attributes','images'])
         ]);
     }
+
 
 
     public function destroy($id)
