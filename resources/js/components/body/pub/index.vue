@@ -1,7 +1,7 @@
 <template>
   <!-- <ParticleJs /> -->
   <Header />
-  <SearchBar />
+  <!-- <SearchBar /> -->
   <!-- <Category />
   <About /> -->
   <!-- <PropertyList /> -->

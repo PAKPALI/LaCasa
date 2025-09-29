@@ -11,17 +11,49 @@ use Illuminate\Support\Facades\Validator;
 
 class PublicationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $publications = Publication::with([
+        $query = Publication::with([
             'pubType:id,name',
             'category:id,name',
             'district:id,name',
             'town:id,name',
             'country:id,name',
             'images',
-            'attributes:id,name' // 🔹 Ajouter la relation attributs
-        ])->get();
+            'attributes:id,name'
+        ]);
+
+        // 🔹 FILTRAGE DYNAMIQUE
+        if ($request->filled('country_id')) {
+            $query->where('country_id', $request->country_id);
+        }
+        if ($request->filled('town_id')) {
+            $query->where('town_id', $request->town_id);
+        }
+        if ($request->filled('district_id')) {
+            $query->where('district_id', $request->district_id);
+        }
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        if ($request->filled('pub_type_id')) {
+            $query->where('pub_type_id', $request->pub_type_id);
+        }
+        if ($request->filled('attribute_ids')) {
+            $attributeIds = $request->attribute_ids; // tableau d'IDs
+            foreach ($attributeIds as $attrId) {
+                $query->whereHas('attributes', function ($q) use ($attrId) {
+                    $q->where('id', $attrId);
+                });
+            }
+        }
+
+        // 🔹 LIMITATION AU CHARGEMENT INITIAL
+        if ($request->filled('limit')) {
+            $query->latest()->take($request->limit);
+        }
+
+        $publications = $query->get();
 
         $formatted = $publications->map(function ($pub) {
             return [
@@ -43,12 +75,13 @@ class PublicationController extends Controller
                 'images' => $pub->images->map(fn($img) => '/'.$img->path),
                 'phone1' => ($pub->phone1 && $pub->phone1 !== 'null') ? $pub->phone1 : null,
                 'phone2' => ($pub->phone2 && $pub->phone2 !== 'null') ? $pub->phone2 : null,
-                'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name]) // 🔹 Transformation des attributs
+                'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name])
             ];
         });
 
         return response()->json($formatted);
     }
+
 
     public function show($id)
     {

@@ -1,8 +1,8 @@
 <template>
   <div class="row mt-5">
-    <div class="col-12">
+    <!-- <div class="col-12">
       <router-link to='/createPub' class="btn btn-dark border-0 w-100 py-3"> + Ajouter publication </router-link>
-    </div>
+    </div> -->
   </div>
   <div class="container-fluid bg-primary mb-5" style="padding: 35px;">
     <div class="container">
