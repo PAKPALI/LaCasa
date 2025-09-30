@@ -1,11 +1,11 @@
 <template>
   <div class="container-fluid mt-5 header bg-white p-0">
     <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
-      <div class="col-md-6 p-5 mt-lg-5">
-        <h1 class="display-5 animated fadeIn mb-4">
+      <div class="col-md-6 p-3 mt-lg-5">
+        <h1 class="display-5 animated fadeIn mb-2">
           Trouvez <span class="text-primary">la maison idéale</span> pour vous et votre famille
         </h1>
-        <p class="animated fadeIn mb-4 pb-2">
+        <p class="animated fadeIn mb-2 pb-1">
           LaCasa simplifie la recherche de logements au Togo. Consultez des annonces fiables, mises à jour et adaptées à vos besoins.
         </p>
         <!-- <a href="#" class="btn btn-primary py-3 px-5 me-3 animated fadeIn">Commencer</a> -->

@@ -40,12 +40,19 @@ class PublicationController extends Controller
             $query->where('pub_type_id', $request->pub_type_id);
         }
         if ($request->filled('attribute_ids')) {
-            $attributeIds = $request->attribute_ids; // tableau d'IDs
-            foreach ($attributeIds as $attrId) {
-                $query->whereHas('attributes', function ($q) use ($attrId) {
-                    $q->where('id', $attrId);
-                });
-            }
+            $attributeIds = $request->attribute_ids;
+
+            $query->whereHas('attributes', function ($q) use ($attributeIds) {
+                $q->whereIn('attributes.id', $attributeIds);
+            }, '=', count($attributeIds));
+        }
+        log::info('🔍 FILTRES REÇUS', $request->all());
+        if ($request->filled('price1') && $request->filled('price2')) {
+            $query->whereBetween('price', [$request->price1, $request->price2]);
+        } elseif ($request->filled('price1')) {
+            $query->where('price', $request->price1);
+        } elseif ($request->filled('price2')) {
+            $query->where('price', $request->price2);
         }
 
         // 🔹 LIMITATION AU CHARGEMENT INITIAL
