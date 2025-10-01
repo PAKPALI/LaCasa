@@ -107,7 +107,7 @@
           <label class="form-label fw-semibold text-light">Photos</label>
           <div class="p-2 border rounded bg-light">
             <div v-for="(file, index) in form.images" :key="index" class="d-flex align-items-center mb-2">
-              <input type="file" class="form-control" @change="onSingleFileChange($event, index)" />
+              <input type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp"  @change="onSingleFileChange($event, index)" />
               <img v-if="previewImages[index]" :src="previewImages[index]" class="img-thumbnail ms-2" style="width: 80px; height: 60px;">
               <button type="button" class="btn btn-outline-danger ms-2" @click="removeImage(index)">🗑</button>
             </div>
@@ -336,11 +336,45 @@ const removeImage = (i) => {
   form.value.images.splice(i, 1)
   previewImages.value.splice(i, 1)
 }
-const onSingleFileChange = (e, i) => {
-  const file = e.target.files[0]
-  form.value.images[i] = file
-  previewImages.value[i] = URL.createObjectURL(file)
+const onSingleFileChange = (event, index) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  // ✅ Vérification du type
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+  if (!allowedTypes.includes(file.type)) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'error',
+      title: "⚠️ Formats acceptés : JPG, PNG, WebP uniquement",
+      showConfirmButton: false,
+      timer: 3000
+    })
+    event.target.value = '' // reset input
+    return
+  }
+
+  // ✅ Vérification de la taille (2 Mo max)
+  const maxSize = 2 * 1024 * 1024
+  if (file.size > maxSize) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'error',
+      title: "⚠️ Chaque image doit être inférieure à 2 Mo",
+      showConfirmButton: false,
+      timer: 3000
+    })
+    event.target.value = ''
+    return
+  }
+
+  // ✅ Si tout est bon → on garde le fichier et on affiche l’aperçu
+  form.value.images[index] = file
+  previewImages.value[index] = URL.createObjectURL(file)
 }
+
 
 // Submit
 const submitPublication = async () => {
@@ -402,7 +436,7 @@ const submitPublication = async () => {
 
   } catch (err) {
     console.error(err)
-    Swal.fire({ toast:true, position:'top-end', icon:'error', title: 'Une erreur est survenue lors de la création', showConfirmButton:false, timer:3000 })
+    Swal.fire({ toast:true, position:'top-end', icon:'error', title: err.response.data.message, showConfirmButton:false, timer:3000 })
   } finally {
     isSubmitting.value = false
   }
