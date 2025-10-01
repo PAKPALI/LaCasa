@@ -215,8 +215,7 @@ class PublicationController extends Controller
                 'is_active'   => ['boolean'],
                 'attributes'  => ['array'],
                 'attributes.*'=> ['exists:attributes,id'],
-                // 🔥 images deviennent optionnelles
-                'images.*'    => ['sometimes', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+                'images.*' => ['image','mimes:jpg,jpeg,png,webp','max:2048'],
                 'phone1'      => ['nullable','string','max:20'],
                 'phone2'      => ['nullable','string','max:20'],
             ],
