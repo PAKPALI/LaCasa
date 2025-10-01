@@ -33,14 +33,14 @@
                 <!-- Quartier -->
                 <div class="col-md-4 mt-2 mb-2">
                   <label class="form-label fw-semibold text-light"><strong>Quartier</strong></label>
-                  <v-select v-model="filters.district_id" :options="districts" label="name" :reduce="d => d.id"
-                    placeholder="Sélectionner un quartier" :filterable="true" :loading="loadingDistricts"
-                    :disabled="!filters.town_id || districts.length === 0"></v-select>
+                  <v-select v-model="filters.district_id" :options="districts" label="name" :reduce="d => d.id" placeholder="Sélectionner un ou plusieurs quartiers"
+                    :filterable="true" :loading="loadingDistricts" :disabled="!filters.town_id || districts.length === 0" :multiple="true">
+                  </v-select>
                 </div>
 
                 <!-- Catégorie -->
                 <div class="col-md-4 mt-2 mb-2">
-                  <label class="form-label fw-semibold text-light"><strong>Catég</strong>orie</label>
+                  <label class="form-label fw-semibold text-light"><strong>Catégorie</strong></label>
                   <v-select v-model="filters.category_id" :options="categories" label="name" :reduce="c => c.id"
                     placeholder="Sélectionner une catégorie" :filterable="true" :loading="loadingCategories"></v-select>
                 </div>
@@ -360,7 +360,7 @@
     keyword: '',
     country_id: null,
     town_id: null,
-    district_id: null,
+    district_id: [],
     category_id: null,
     pub_type_id: null,
     attribute_ids: [],

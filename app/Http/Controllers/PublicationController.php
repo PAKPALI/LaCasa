@@ -30,9 +30,15 @@ class PublicationController extends Controller
         if ($request->filled('town_id')) {
             $query->where('town_id', $request->town_id);
         }
+        Log::info('🏙️ FILTRE QUARTIER', $request->all());
         if ($request->filled('district_id')) {
-            $query->where('district_id', $request->district_id);
+            $districtIds = is_array($request->district_id) 
+                ? $request->district_id 
+                : [$request->district_id];
+
+            $query->whereIn('district_id', $districtIds);
         }
+
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
