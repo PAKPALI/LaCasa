@@ -53,7 +53,7 @@
           </div>
 
           <!-- Catégorie -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label class="form-label fw-semibold text-light">Catégorie</label>
             <v-select
               v-model="selectedCategory"
@@ -68,7 +68,7 @@
           </div>
 
           <!-- Type de publication -->
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label class="form-label fw-semibold text-light">Type de publication</label>
             <v-select
               v-model="selectedPubType"
