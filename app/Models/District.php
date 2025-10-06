@@ -21,4 +21,9 @@ class District extends Model
         // Accès rapide au pays via la relation ville → pays
         return $this->town->country();
     }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

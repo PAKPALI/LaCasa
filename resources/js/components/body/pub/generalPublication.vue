@@ -41,8 +41,9 @@
                 <!-- Catégorie -->
                 <div class="col-md-4 mt-2 mb-2">
                   <label class="form-label fw-semibold text-light"><strong>Catégorie</strong></label>
-                  <v-select v-model="filters.category_id" :options="categories" label="name" :reduce="c => c.id"
-                    placeholder="Sélectionner une catégorie" :filterable="true" :loading="loadingCategories"></v-select>
+                  <v-select v-model="filters.category_id" :options="categories" label="name" :reduce="c => c.id" placeholder="Sélectionner une catégorie"
+                    :filterable="true" :loading="loadingCategories" :disabled="!filters.country_id || categories.length === 0">
+                  </v-select>
                 </div>
 
                 <!-- Type de publication -->
@@ -434,12 +435,23 @@
   }
 
   const fetchCategories = async () => {
-    loadingCategories.value = true
+    // Si aucun pays sélectionné, on vide les catégories et on sort
+    if (!filters.value.country_id) {
+      categories.value = [];
+      filters.value.category_id = null;
+      return;
+    }
+
+    loadingCategories.value = true;
     try {
-      const res = await axios.get('/api/category')
-      categories.value = res.data
-    } finally { loadingCategories.value = false }
-  }
+      // On passe le country_id en paramètre pour récupérer seulement les catégories disponibles dans ce pays
+      const res = await axios.get('/api/category', { params: { country_id: filters.value.country_id } });
+      categories.value = res.data;
+      filters.value.category_id = null;
+    } finally {
+      loadingCategories.value = false;
+    }
+  };
 
   const fetchPubTypes = async () => {
     if (!filters.value.category_id) { pubTypes.value = []; filters.value.pub_type_id = null; return }
@@ -519,6 +531,7 @@
   // WATCHERS OPTIONS
   // -----------------
   watch(() => filters.value.country_id, fetchTowns)
+  watch(() => filters.value.country_id, fetchCategories)
   watch(() => filters.value.town_id, fetchDistricts)
   watch(() => filters.value.category_id, fetchPubTypes)
 

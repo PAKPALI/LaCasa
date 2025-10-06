@@ -51,11 +51,20 @@
                     </li>
                     <li class="nav-item">
                         <router-link 
-                            to='' 
+                            to='/register' 
                             class="nav-link text-white"
                             @mouseenter="hoverLink($event)" 
                             @mouseleave="leaveLink($event)">
-                            A propos
+                            Register
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link 
+                            to='/login' 
+                            class="nav-link text-white"
+                            @mouseenter="hoverLink($event)" 
+                            @mouseleave="leaveLink($event)">
+                            Login
                         </router-link>
                     </li>
                     <li><a href="" class="nav-item nav-link"></a></li>
