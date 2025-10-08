@@ -24,6 +24,7 @@ class User extends Authenticatable
         'district_id',
         'user_type',
         'role',
+        'is_active',
         'profile_image', // ← ajouté
     ];
 
@@ -74,20 +75,23 @@ class User extends Authenticatable
     // 🎯 MÉTHODES UTILES
     // ----------------------
 
-    public function isSuperAdmin(): bool
+    // Dans ton modèle User.php
+    protected $appends = ['role_name'];
+
+    public function getRoleNameAttribute()
     {
-        return $this->role === 1;
+        switch ($this->role) {
+            case 1:
+                return 'Super Admin';
+            case 2:
+                return 'Admin';
+            case 3:
+                return 'Client';
+            default:
+                return 'Inconnu';
+        }
     }
 
-    public function isAdmin(): bool
-    {
-        return $this->role === 2;
-    }
-
-    public function isClient(): bool
-    {
-        return $this->role === 3;
-    }
 
     public function isAgency(): bool
     {

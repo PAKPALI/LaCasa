@@ -19,6 +19,7 @@
           <Category accordionId="adminAccordion" />
           <PubType accordionId="adminAccordion" />
           <Attribute accordionId="adminAccordion" />
+          <User accordionId="adminAccordion" />
         </div>
       </div>
 
@@ -33,4 +34,5 @@
   import Category from './content/Category.vue'
   import PubType from './content/PubType.vue'
   import Attribute from './content/Attribute.vue'
+  import User from './content/User.vue'
 </script>

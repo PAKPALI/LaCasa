@@ -138,117 +138,184 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import axios from 'axios'
-import vSelect from 'vue-select'
-import 'vue-select/dist/vue-select.css'
-import Swal from 'sweetalert2'
+  import { ref, watch } from 'vue'
+  import axios from 'axios'
+  import vSelect from 'vue-select'
+  import 'vue-select/dist/vue-select.css'
+  import Swal from 'sweetalert2'
+  import { useRouter } from 'vue-router'
 
-const profileImage = ref(null)
-const previewImage = ref(null)
+  const profileImage = ref(null)
+  const previewImage = ref(null)
 
-const handleProfileImage = (event) => {
-  const file = event.target.files[0]
-  if (!file) return
+  const handleProfileImage = (event) => {
+    const file = event.target.files[0]
+    if (!file) return
 
-  profileImage.value = file
+    profileImage.value = file
 
-  // Aperçu
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    previewImage.value = e.target.result
-  }
-  reader.readAsDataURL(file)
-}
-
-const form = ref({
-  name: '',
-  email: '',
-  password: '',
-  password_confirmation: '',
-  phone: '',
-  user_type: null,
-})
-
-const selectedCountry = ref(null)
-const selectedTown = ref(null)
-const selectedDistrict = ref(null)
-
-const countries = ref([])
-const towns = ref([])
-const districts = ref([])
-
-const loadingCountries = ref(false)
-const loadingTowns = ref(false)
-const loadingDistricts = ref(false)
-const isSubmitting = ref(false)
-
-// 🔹 Charger les pays
-const fetchCountries = async () => {
-  loadingCountries.value = true
-  countries.value = (await axios.get('/api/country')).data
-  loadingCountries.value = false
-}
-fetchCountries()
-
-// 🔹 Dynamique : villes selon pays
-watch(selectedCountry, async (newVal) => {
-  towns.value = []
-  districts.value = []
-  selectedTown.value = null
-  selectedDistrict.value = null
-  if (!newVal) return
-  loadingTowns.value = true
-  towns.value = (await axios.get(`/api/town?country_id=${newVal}`)).data
-  loadingTowns.value = false
-})
-
-// 🔹 Dynamique : quartiers selon ville
-watch(selectedTown, async (newVal) => {
-  districts.value = []
-  selectedDistrict.value = null
-  if (!newVal) return
-  loadingDistricts.value = true
-  districts.value = (await axios.get(`/api/district?town_id=${newVal}`)).data
-  loadingDistricts.value = false
-})
-
-// 🔹 Soumission du formulaire
-const registerUser = async () => {
-  if (isSubmitting.value) return
-
-  if (!form.value.user_type)
-    return Swal.fire({ icon: 'error', title: 'Veuillez choisir votre type (personne ou agence)', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 })
-
-  if (!selectedCountry.value || !selectedTown.value || !selectedDistrict.value)
-    return Swal.fire({ icon: 'error', title: 'Veuillez sélectionner votre pays, ville et quartier', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 })
-
-  try {
-    isSubmitting.value = true
-
-    const payload = new FormData()
-    for (const key in form.value) {
-      payload.append(key, form.value[key])
+    // Aperçu
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      previewImage.value = e.target.result
     }
-    payload.append('country_id', selectedCountry.value)
-    payload.append('town_id', selectedTown.value)
-    payload.append('district_id', selectedDistrict.value)
+    reader.readAsDataURL(file)
+  }
 
-    if (profileImage.value) {
-      payload.append('profile_image', profileImage.value)
+  const form = ref({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    phone: '',
+    user_type: null,
+  })
+
+  const selectedCountry = ref(null)
+  const selectedTown = ref(null)
+  const selectedDistrict = ref(null)
+
+  const countries = ref([])
+  const towns = ref([])
+  const districts = ref([])
+
+  const loadingCountries = ref(false)
+  const loadingTowns = ref(false)
+  const loadingDistricts = ref(false)
+  const isSubmitting = ref(false)
+  const router = useRouter()  
+
+  // 🔹 Charger les pays
+  const fetchCountries = async () => {
+    loadingCountries.value = true
+    countries.value = (await axios.get('/api/country')).data
+    loadingCountries.value = false
+  }
+  fetchCountries()
+
+  // 🔹 Dynamique : villes selon pays
+  watch(selectedCountry, async (newVal) => {
+    towns.value = []
+    districts.value = []
+    selectedTown.value = null
+    selectedDistrict.value = null
+    if (!newVal) return
+    loadingTowns.value = true
+    towns.value = (await axios.get(`/api/town?country_id=${newVal}`)).data
+    loadingTowns.value = false
+  })
+
+  // 🔹 Dynamique : quartiers selon ville
+  watch(selectedTown, async (newVal) => {
+    districts.value = []
+    selectedDistrict.value = null
+    if (!newVal) return
+    loadingDistricts.value = true
+    districts.value = (await axios.get(`/api/district?town_id=${newVal}`)).data
+    loadingDistricts.value = false
+  })
+
+  // 🔹 Soumission du formulaire
+  const registerUser = async () => {
+    if (isSubmitting.value) return
+
+    // Validation basique front
+    if (!form.value.name.trim()) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Veuillez entrer votre nom complet',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      })
     }
 
-    const res = await axios.post('/api/register', payload, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    })
+    if (!form.value.email.trim()) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Veuillez entrer une adresse email valide',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      })
+    }
 
-    Swal.fire({ icon: 'success', title: res.data.message || 'Inscription réussie ✅', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 })
-  } catch (err) {
-    Swal.fire({ icon: 'error', title: err.response?.data?.message || 'Erreur lors de l’inscription', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 })
-  } finally {
-    isSubmitting.value = false
+    if (form.value.password.length < 6) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Le mot de passe doit contenir au moins 6 caractères',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      })
+    }
+
+    if (form.value.password !== form.value.password_confirmation) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Les mots de passe ne correspondent pas',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      })
+    }
+
+    if (!form.value.user_type)
+      return Swal.fire({ icon: 'error', title: 'Veuillez choisir votre type (personne ou agence)', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 })
+
+    if (!selectedCountry.value || !selectedTown.value || !selectedDistrict.value)
+      return Swal.fire({ icon: 'error', title: 'Veuillez sélectionner votre pays, ville et quartier', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 })
+
+    try {
+      isSubmitting.value = true
+
+      const payload = new FormData()
+      for (const key in form.value) {
+        payload.append(key, form.value[key])
+      }
+      payload.append('country_id', selectedCountry.value)
+      payload.append('town_id', selectedTown.value)
+      payload.append('district_id', selectedDistrict.value)
+
+      if (profileImage.value) {
+        payload.append('profile_image', profileImage.value)
+      }
+
+      const res = await axios.post('/api/register', payload, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+
+      Swal.fire({ icon: 'success', title: res.data.message || 'Inscription réussie ✅', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000,
+        didOpen: () => {
+          // Redirection immédiate
+          router.push({ name: 'login' })
+        }
+      })
+    } catch (err) {
+      console.error(err.response?.data) // utile pour debug
+
+      const errorMessage =
+        err.response?.data?.message ||
+        err.response?.data?.errors?.name?.[0] ||
+        'Erreur lors de l’inscription'
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur',
+        text: errorMessage,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      })
+    } finally {
+      isSubmitting.value = false
+    }
   }
-}
 
 </script>
 
