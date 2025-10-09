@@ -3,21 +3,37 @@
     <div class="overlay"></div>
 
     <div class="login-card p-4 rounded shadow-lg position-relative bg-opacity-75">
-      <h2 class="fw-bold text-center border-bottom mb-4  text-uppercase text-light">Connexion</h2>
+      <h2 class="fw-bold text-center border-bottom mb-4 text-uppercase text-light">Connexion</h2>
 
       <form @submit.prevent="loginUser">
         <div class="mb-3">
           <label class="form-label fw-semibold">Adresse email</label>
-          <input type="email" v-model="form.email" class="form-control" placeholder="Ex: exemple@mail.com" required />
+          <input
+            type="email"
+            v-model="form.email"
+            class="form-control"
+            placeholder="Ex: exemple@mail.com"
+            
+          />
         </div>
 
         <div class="mb-3">
           <label class="form-label fw-semibold">Mot de passe</label>
-          <input type="password" v-model="form.password" class="form-control" placeholder="••••••••" required />
+          <input
+            type="password"
+            v-model="form.password"
+            class="form-control"
+            placeholder="••••••••"
+          />
         </div>
 
         <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" v-model="form.remember" id="rememberCheck">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            v-model="form.remember"
+            id="rememberCheck"
+          />
           <label class="form-check-label" for="rememberCheck">Se souvenir de moi</label>
         </div>
 
@@ -40,6 +56,12 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useRouter } from 'vue-router'
+
+// 🔧 Important : pour que Laravel puisse stocker la session (cookie)
+axios.defaults.withCredentials = true
+
+const router = useRouter()
 
 const form = ref({
   email: '',
@@ -54,20 +76,41 @@ const loginUser = async () => {
 
   try {
     isSubmitting.value = true
-    const res = await axios.post('/api/login', form.value)
-    Swal.fire({
-      icon: 'success',
-      title: res.data.message || 'Connexion réussie ✅',
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000
-    })
-    window.location.href = '/dashboard'
+
+    await axios.get('/sanctum/csrf-cookie');
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    axios.post('/myLogin', form.value, { withCredentials: true })
+
+    if (res.data.status) {
+      Swal.fire({
+        icon: 'success',
+        title: res.data.message || 'Connexion réussie ✅',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500
+      })
+
+      // 🎯 Redirection après connexion
+      setTimeout(() => {
+        if (res.data.user.role === 1) router.push('/admin')
+        else router.push('/home')
+      }, 800)
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: res.data.message || 'Email ou mot de passe incorrect',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      })
+    }
   } catch (err) {
     Swal.fire({
       icon: 'error',
-      title: err.response?.data?.message || 'Email ou mot de passe incorrect',
+      title: err.response?.data?.message || 'Erreur lors de la connexion',
       toast: true,
       position: 'top-end',
       showConfirmButton: false,

@@ -21,3 +21,7 @@ Route::apiResource('category', CategoryController::class);
 Route::apiResource('pub-type', PubTypeController::class);
 Route::apiResource('attribute', AttributController::class);
 Route::apiResource('publication', PublicationController::class);
+
+//USER
+
+

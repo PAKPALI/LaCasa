@@ -1,6 +1,9 @@
 import { createApp } from 'vue';
 import App from '../components/Index.vue';
 import router from '../router'; // Import du routeur
+import axios from 'axios'
+
+axios.defaults.withCredentials = true
 
 // Charger Bootstrap CSS
 // import 'bootstrap/dist/css/bootstrap.min.css';
