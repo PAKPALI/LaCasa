@@ -353,6 +353,11 @@
   import { Modal, Carousel } from 'bootstrap'
   import vSelect from "vue-select"
   import "vue-select/dist/vue-select.css"
+  import { user, isAuthenticated } from '../../auth/auth.js'
+
+  console.log(user.value)            // données de l'utilisateur connecté
+  console.log(isAuthenticated.value) // true/false
+
 
   // -----------------
   // REFS

@@ -57,6 +57,8 @@ import { ref } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'vue-router'
+import { setUser } from './auth.js'
+
 
 // 🔧 Important : pour que Laravel puisse stocker la session (cookie)
 axios.defaults.withCredentials = true
@@ -78,9 +80,10 @@ const loginUser = async () => {
     isSubmitting.value = true
 
     await axios.get('/sanctum/csrf-cookie');
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const res = await axios.post('/myLogin', form.value, { withCredentials: true })
 
-    axios.post('/myLogin', form.value, { withCredentials: true })
+    // On stocke l'utilisateur globalement
+    setUser(res.data.user)
 
     if (res.data.status) {
       Swal.fire({

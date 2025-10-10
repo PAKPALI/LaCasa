@@ -7,7 +7,7 @@
 
     <!-- 🧾 FORMULAIRE D'INSCRIPTION -->
     <div class="register-card p-4 mt-5 mb-5 p-md-5 rounded shadow-lg position-relative bg-opacity-75">
-      <h2 class="fw-bold text-center border-bottom mb-4  text-uppercase text-accent">Créer un compte</h2>
+      <h2 class="fw-bold text-center border-bottom mb-4  text-uppercase text-light">Créer un compte</h2>
 
       <form @submit.prevent="registerUser">
         <div class="row">

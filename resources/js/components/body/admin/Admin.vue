@@ -28,6 +28,10 @@
 </template>
 
 <script setup>
+ import { user, isAuthenticated } from '../../auth/auth.js'
+
+  console.log(user.value)            // données de l'utilisateur connecté
+  console.log(isAuthenticated.value)
   import Country from './content/Country.vue'
   import Town from './content/Town.vue'
   import District from './content/District.vue'

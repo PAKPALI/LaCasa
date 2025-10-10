@@ -40,7 +40,7 @@
                             Publications
                         </router-link>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="isAuthenticated" class="nav-item">
                         <router-link 
                             to='/admin' 
                             class="nav-link text-white"
@@ -100,6 +100,7 @@
 import { ref } from 'vue'
 import logo from '@images/logo.jpeg'
 import logo2 from '@images/logo2.png'
+import { user, isAuthenticated } from '../auth/auth.js'
 // import ParticleJs from '../partial/Particles.vue'
 
 const navbarCollapse = ref(null)
