@@ -19,7 +19,8 @@
           <Category accordionId="adminAccordion" />
           <PubType accordionId="adminAccordion" />
           <Attribute accordionId="adminAccordion" />
-          <User accordionId="adminAccordion" />
+          <User v-if="isAuthenticated && (user.role == 1 || user.role == 2)" accordionId="adminAccordion" />
+          {{ user.role }}
         </div>
       </div>
 

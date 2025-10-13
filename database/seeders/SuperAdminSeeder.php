@@ -17,9 +17,9 @@ class SuperAdminSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'Super Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password123'), // mot de passe
+            'name' => 'Didier PAKPALI',
+            'email' => 'pakpalididier@gmail.com',
+            'password' => Hash::make('Didier@95'), // mot de passe
             'user_type' => 1, // 1: personne, 2: agence
             'role' => 1,      // 1: super admin
             'country_id' => null, // si tu veux renseigner un pays, mets son ID

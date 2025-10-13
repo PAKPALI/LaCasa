@@ -10,6 +10,7 @@ use App\Http\Controllers\AttributController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\AuthController;
 
 // ADMIN
 Route::apiResource('country', CountryController::class);
@@ -23,5 +24,10 @@ Route::apiResource('attribute', AttributController::class);
 Route::apiResource('publication', PublicationController::class);
 
 //USER
+// routes/api.php
+// Route::get('/me', function () {
+//     return response()->json(auth()->user());
+// })->middleware('auth:sanctum'); // ou 'auth' selon ta config
+
 
 

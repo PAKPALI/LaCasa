@@ -40,7 +40,7 @@
                             Publications
                         </router-link>
                     </li>
-                    <li v-if="isAuthenticated" class="nav-item">
+                    <li v-if="isAuthenticated && (user.role == 1 || user.role == 2)" class="nav-item">
                         <router-link 
                             to='/admin' 
                             class="nav-link text-white"
@@ -65,6 +65,15 @@
                             @mouseenter="hoverLink($event)" 
                             @mouseleave="leaveLink($event)">
                             Login
+                        </router-link>
+                    </li>
+                    <li v-if="isAuthenticated" class="nav-item">
+                        <router-link 
+                            to='/Profile'
+                            class="nav-link text-white"
+                            @mouseenter="hoverLink($event)" 
+                            @mouseleave="leaveLink($event)">
+                            Profil
                         </router-link>
                     </li>
                     <li><a href="" class="nav-item nav-link"></a></li>
@@ -101,6 +110,7 @@ import { ref } from 'vue'
 import logo from '@images/logo.jpeg'
 import logo2 from '@images/logo2.png'
 import { user, isAuthenticated } from '../auth/auth.js'
+
 // import ParticleJs from '../partial/Particles.vue'
 
 const navbarCollapse = ref(null)

@@ -1,4 +1,3 @@
-// src/stores/auth.js
 import { ref } from 'vue'
 import axios from 'axios'
 
@@ -8,7 +7,7 @@ export const isAuthenticated = ref(false)
 // fonction pour récupérer les infos utilisateur depuis le backend
 export async function fetchUser() {
   try {
-    const res = await axios.get('/api/me', { withCredentials: true })
+    const res = await axios.get('/me', { withCredentials: true })
     user.value = res.data
     isAuthenticated.value = true
   } catch (err) {

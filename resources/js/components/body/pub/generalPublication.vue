@@ -238,7 +238,7 @@
             <h5 class="modal-title">{{ selectedPublication?.title }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-dark">
             <!-- Carrousel d'images modal -->
             <div v-if="selectedPublication?.images?.length" id="carouselImages" class="carousel slide"
               data-bs-ride="carousel" data-bs-interval="5000">
@@ -258,7 +258,7 @@
             </div>
 
             <!-- Infos détaillées -->
-            <div class="mt-4">
+            <div class="mt-4 bg-dark">
               <table class="table custom-info-table">
                 <tbody>
                   <tr>
@@ -607,16 +607,16 @@
   .custom-info-table th {
     width: 35%;
     font-weight: 600;
-    color: #ffffff;
-    background-color: #00050a;
+    color: #000000;
+    background-color: #ffffff;
     padding: 10px 15px;
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
   }
 
   .custom-info-table td {
-    color: #ffffff;
-    background-color: #000000;
+    color: #000000;
+    background-color: #ffffff;
     padding: 10px 15px;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -625,7 +625,7 @@
 
   .custom-info-table tr:nth-child(even) td,
   .custom-info-table tr:nth-child(even) th {
-    background-color: #000301;
+    background-color: #ffffff;
   }
 
   @keyframes blink {

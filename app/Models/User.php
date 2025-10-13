@@ -24,6 +24,8 @@ class User extends Authenticatable
         'district_id',
         'user_type',
         'role',
+        'phone1',
+        'phone2',
         'is_active',
         'profile_image', // ← ajouté
     ];
@@ -75,7 +77,6 @@ class User extends Authenticatable
     // 🎯 MÉTHODES UTILES
     // ----------------------
 
-    // Dans ton modèle User.php
     protected $appends = ['role_name'];
 
     public function getRoleNameAttribute()

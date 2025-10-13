@@ -7,6 +7,7 @@ import CreatePublication from '../components/body/pub/create.vue'
 import Admin from '../components/body/admin/Admin.vue'
 import Register from '../components/auth/Register.vue'
 import Login from '../components/auth/Login.vue'
+import Profile from '../components/auth/Profile.vue'
 
 const routes = [
   // { path: '', name: 'home2', component: Home2 },
@@ -16,6 +17,7 @@ const routes = [
   { path: '/admin', name: 'admin', component: Admin },
   { path: '/register', name: 'register', component: Register },
   { path: '/login', name: 'login', component: Login },
+  { path: '/profile', name: 'profile', component: Profile },
 ]
 
 const router = createRouter({

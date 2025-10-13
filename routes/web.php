@@ -6,6 +6,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 
 Route::post('/myLogin', [AuthController::class, 'login'])->name('myLogin');
+Route::middleware('auth')->group(function () {
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/me/update', [AuthController::class, 'update']);
+    Route::post('/me/updateEmail', [AuthController::class, 'updateEmail']);
+    Route::post('/me/update-password', [AuthController::class, 'updatePassword']);
+});
 Route::get('/{any}', function () {
     return view('index');
     // return view('index2');
