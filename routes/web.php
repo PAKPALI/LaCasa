@@ -11,6 +11,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/me/update', [AuthController::class, 'update']);
     Route::post('/me/updateEmail', [AuthController::class, 'updateEmail']);
     Route::post('/me/update-password', [AuthController::class, 'updatePassword']);
+    Route::delete('/me/remove-image', [AuthController::class, 'removeProfileImage']);
 });
 Route::get('/{any}', function () {
     return view('index');

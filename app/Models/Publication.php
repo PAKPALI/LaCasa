@@ -18,9 +18,13 @@ class Publication extends Model
     use HasFactory;
 
     protected $fillable = [
-        'country_id','town_id','district_id','category_id','pub_type_id','price','bathroom','surface',
+        'user_id','country_id','town_id','district_id','category_id','pub_type_id','price','bathroom','surface',
         'advance','deposit','description','visit','offer_type','is_active','phone1','phone2'
     ];
+
+    public function user()
+    { return $this->belongsTo(User::class);}
+
 
     public function country()  { return $this->belongsTo(Country::class); }
     public function town()     { return $this->belongsTo(Town::class); }

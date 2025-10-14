@@ -28,6 +28,3 @@ Route::apiResource('publication', PublicationController::class);
 // Route::get('/me', function () {
 //     return response()->json(auth()->user());
 // })->middleware('auth:sanctum'); // ou 'auth' selon ta config
-
-
-

@@ -12,11 +12,28 @@
           width="120"
           height="120"
         />
+        <button v-if="user?.profile_image" class="btn btn-danger btn-sm mt-2" @click="removeImage"> Supprimer la photo </button>
         <input type="file" class="form-control mt-3 w-100" @change="onImageChange" />
         <marquee class="border text-light mt-1" behavior="scroll" direction="left" scrollamount="6">
             <strong>Veuillez appuyez sur "enregistrer" pour mettre a jour la photo</strong>
         </marquee>
       </div>
+      <!-- <table class="table border custom-info-table text-light">
+        <tbody>
+          <tr>
+            <th>PAYS : </th>
+            <td><span class="badge bg-success me-1"> {{ user.country.name }} </span></td>
+          </tr>
+          <tr>
+            <th>VILLE : </th>
+            <td><span class="badge bg-success me-1"> {{ user.town.name }} </span></td>
+          </tr>
+          <tr>
+            <th>QUARTIER : </th>
+            <td><span class="badge bg-success me-1"> {{ user.district.name }} </span></td>
+          </tr>
+        </tbody>
+      </table> -->
 
       <!-- Onglets -->
       <ul class="nav nav-tabs mb-4">
@@ -212,6 +229,33 @@ async function updateProfile() {
     )
   }
 }
+
+// 🗑️ Supprimer l’image de profil
+async function removeImage() {
+  const result = await Swal.fire({
+    title: "Supprimer la photo de profil ?",
+    text: "Cette action est irréversible. La photo sera définitivement supprimée.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Oui, supprimer",
+    cancelButtonText: "Annuler",
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    const res = await axios.delete("/me/remove-image", { withCredentials: true });
+    Swal.fire("Supprimée ✅", res.data.message, "success");
+    previewImage.value = null;
+    await fetchUser(); // 🔄 recharge les infos utilisateur
+  } catch (err) {
+    Swal.fire("Erreur ❌", err.response?.data?.message || "Impossible de supprimer l'image", "error");
+  }
+}
+
+
 
 // 📧 Mettre à jour l’email
 async function updateEmail() {

@@ -103,4 +103,10 @@ class User extends Authenticatable
     {
         return $this->user_type === 1;
     }
+
+    public function publications()
+    {
+        return $this->hasMany(Publication::class);
+    }
+
 }

@@ -197,6 +197,24 @@ class AuthController extends Controller
         ]);
     }
 
+    public function removeProfileImage()
+    {
+        $user = Auth::user();
+
+        if ($user->profile_image && file_exists(public_path($user->profile_image))) {
+            unlink(public_path($user->profile_image)); // 🔥 Supprime physiquement l'image
+        }
+
+        $user->profile_image = null;
+        $user->save();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Photo de profil supprimée avec succès.',
+            'user'    => $user
+        ]);
+    }
+
     /**
      * Déconnexion utilisateur
      */

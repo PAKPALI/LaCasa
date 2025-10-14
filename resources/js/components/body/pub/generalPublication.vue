@@ -177,28 +177,47 @@
 
                 <!-- ATTRIBUTES -->
                 <div class="mb-2 d-flex flex-wrap px-4 pt-3">
-                  <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-dark me-1 mb-1">{{ attr.name
+                  <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-success me-1 mb-1">{{ attr.name
                     }}</span>
                 </div>
 
                 <!-- DESCRIPTION -->
                 <div class="p-2 pb-0">
                   <div class="row bg-dark text-light border-top gx-2">
-                    <div class="col-12 col-md-10 text-center">
+                    <div class="col-12 col-md-12 text-center">
                       <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }} / Mois</h5>
                       <a class="d-block h4 text-light mb-2" href="#">{{ p.title || 'Titre non défini' }}</a>
-                      <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{
-                        p.town_name }}</p>
+                      <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{p.town_name }}</p>
+                    </div>
+                    <marquee class="border" behavior="scroll" direction="left" scrollamount="6">
+                      <strong>Publiée {{ formatRelativeDate(p.created_at) }} .</strong>
+                    </marquee>
+                    
+                  </div>
+                  <div v-if="isAuthenticated" class="d-flex align-items-center justify-content-center mt-2">
+                    <!-- <p><strong>Publié par :</strong></p> -->
+                    <img :src="p.user.profile_image" class="rounded-circle" alt="Profil"
+                      style="width: 50px; height: 50px; object-fit: cover;"
+                    >
+                    <div>
+                      <small class="d-block fw-bold text-dark">{{ p.user?.name || 'Utilisateur inconnu' }}</small>
+                      <small class="text-success">
+                        {{ p.user?.user_type === 2 ? 'Agence immobilière' : 'Particulier' }}
+                      </small>
                     </div>
                   </div>
                 </div>
 
                 <!-- CONTACT -->
                 <div class="d-flex bg-dark text-light border-light border-top">
-                  <small v-if="p.phone1?.trim()" class="flex-fill text-center py-2"><i
-                      class="fa fa-phone text-primary me-2"></i>{{ p.phone1 }}</small>
-                  <small v-if="p.phone2?.trim()" class="flex-fill text-center py-2"><i
-                      class="fa fa-phone text-primary me-2"></i>{{ p.phone2 }}</small>
+                  <small v-if="p.phone1?.trim()" class="flex-fill text-center py-2">
+                    <i class="fa fa-phone text-primary me-2"></i>
+                    <span :class="{ 'blur-phone': !isAuthenticated.value }">{{ p.phone1 }}</span>
+                  </small>
+                  <small v-if="p.phone2?.trim()" class="flex-fill text-center py-2">
+                    <i class="fa fa-phone text-primary me-2"></i>
+                    <span :class="{ 'blur-phone': !isAuthenticated.value }">{{ p.phone2 }}</span>
+                  </small>
                 </div>
 
                 <!-- SURFACE / CHAMBRES -->
@@ -234,11 +253,11 @@
     <div class="modal fade" id="publicationModal" tabindex="-1">
       <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-          <div class="modal-header bg-dark text-light">
+          <div class="modal-header text-light">
             <h5 class="modal-title">{{ selectedPublication?.title }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <div class="modal-body bg-dark">
+          <div class="modal-body">
             <!-- Carrousel d'images modal -->
             <div v-if="selectedPublication?.images?.length" id="carouselImages" class="carousel slide"
               data-bs-ride="carousel" data-bs-interval="5000">
@@ -316,13 +335,13 @@
                   <tr>
                     <th>Téléphones</th>
                     <td>
-                      <p
-                        v-if="selectedPublication?.phone1 && selectedPublication.phone1 !== 'null' && selectedPublication.phone1.trim() !== ''">
-                        <i class="fa fa-phone text-primary me-2">1</i>: {{ selectedPublication.phone1 }}
+                      <p v-if="selectedPublication?.phone1">
+                        <i class="fa fa-phone text-primary me-2">1</i>: 
+                        <span :class="{ 'blur-phone': !isAuthenticated.value }">{{ selectedPublication.phone1 }}</span>
                       </p>
-                      <p
-                        v-if="selectedPublication?.phone2 && selectedPublication.phone2 !== 'null' && selectedPublication.phone2.trim() !== ''">
-                        <i class="fa fa-phone text-primary me-2">2</i>: {{ selectedPublication.phone2 }}
+                      <p v-if="selectedPublication?.phone2">
+                        <i class="fa fa-phone text-primary me-2">2</i>: 
+                        <span :class="{ 'blur-phone': !isAuthenticated.value }">{{ selectedPublication.phone2 }}</span>
                       </p>
                       <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Pas de Numéro
                         Disponible</span>
@@ -566,9 +585,6 @@
     })
   }
 
-
-
-
   // -----------------
   // FORMAT PRIX
   // -----------------
@@ -583,6 +599,23 @@
   fetchCountries()
   fetchCategories()
   fetchPublicationsInitial()
+
+  const formatRelativeDate = (date) => {
+    const now = new Date();
+    const published = new Date(date);
+    const diff = now - published; // différence en ms
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours   = Math.floor(minutes / 60);
+    const days    = Math.floor(hours / 24);
+
+    if (days > 0) return `il y a ${days} jour${days > 1 ? 's' : ''}`;
+    if (hours > 0) return `il y a ${hours} heure${hours > 1 ? 's' : ''}`;
+    if (minutes > 0) return `il y a ${minutes} minute${minutes > 1 ? 's' : ''}`;
+    return `il y a quelques secondes`;
+  }
+
 </script>
 
 <style scoped>
@@ -607,16 +640,16 @@
   .custom-info-table th {
     width: 35%;
     font-weight: 600;
-    color: #000000;
-    background-color: #ffffff;
+    color: #ffffff;
+    background-color: rgba(14, 46, 80);
     padding: 10px 15px;
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
   }
 
   .custom-info-table td {
-    color: #000000;
-    background-color: #ffffff;
+    color: #ffffff;
+    background-color: rgba(14, 46, 80);
     padding: 10px 15px;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -625,7 +658,7 @@
 
   .custom-info-table tr:nth-child(even) td,
   .custom-info-table tr:nth-child(even) th {
-    background-color: #ffffff;
+    background-color: rgba(14, 46, 80);
   }
 
   @keyframes blink {
@@ -667,8 +700,6 @@
   .blink-btn span {
     background-size: 100% 100%;
   }
-
-
 
   /* Bord du select */
   ::v-deep(.vs__dropdown-toggle) {
@@ -727,4 +758,24 @@
     fill: #f1f4f8;
     transform: rotate(180deg);
   }
+
+  .blur-phone {
+  filter: blur(5px);
+  cursor: not-allowed;
+  user-select: none;
+  transition: filter 0.3s ease;
+}
+
+/* Optionnel : on peut afficher un tooltip au hover */
+.blur-phone:hover::after {
+  content: "Connectez-vous pour voir le numéro";
+  position: absolute;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
 </style>

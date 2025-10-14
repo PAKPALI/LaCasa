@@ -14,6 +14,7 @@ class PublicationController extends Controller
     public function index(Request $request)
     {
         $query = Publication::with([
+            'user:id,name,profile_image,user_type,phone1,phone2',
             'pubType:id,name',
             'category:id,name',
             'district:id,name',
@@ -21,7 +22,7 @@ class PublicationController extends Controller
             'country:id,name',
             'images',
             'attributes:id,name'
-        ]);
+        ])->latest();
 
         // 🔹 FILTRAGE DYNAMIQUE
         if ($request->filled('country_id')) {
@@ -69,6 +70,8 @@ class PublicationController extends Controller
         $publications = $query->get();
 
         $formatted = $publications->map(function ($pub) {
+            $defaultUserImage = $pub->user && $pub->user->user_type == 2 ?  'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'   // agence
+        : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; 
             return [
                 'id' => $pub->id,
                 'title' => $pub->pubType->name ?? 'Type inconnu',
@@ -81,6 +84,7 @@ class PublicationController extends Controller
                 'visit' => $pub->visit,
                 'offer_type' => $pub->offer_type,
                 'is_active' => $pub->is_active,
+                'created_at' => $pub->created_at,
                 'category_name' => $pub->category->name ?? 'Catégorie inconnue',
                 'district_name' => $pub->district->name ?? 'Non défini',
                 'town_name' => $pub->town->name ?? 'Non défini',
@@ -88,7 +92,22 @@ class PublicationController extends Controller
                 'images' => $pub->images->map(fn($img) => '/'.$img->path),
                 'phone1' => ($pub->phone1 && $pub->phone1 !== 'null') ? $pub->phone1 : null,
                 'phone2' => ($pub->phone2 && $pub->phone2 !== 'null') ? $pub->phone2 : null,
-                'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name])
+                'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name]),
+                'user' => $pub->user ? [
+                    'id' => $pub->user->id,
+                    'name' => $pub->user->name,
+                    'profile_image' => $pub->user->profile_image ?? $defaultUserImage,
+                    'user_type' => $pub->user->user_type,
+                    'phone1' => $pub->user->phone1,
+                    'phone2' => $pub->user->phone2,
+                ] : [
+                    'name' => 'Utilisateur inconnu',
+                    'profile_image' => $defaultUserImage,
+                    'user_type' => null,
+                    'phone1' => null,
+                    'phone2' => null,
+                ],
+                
             ];
         });
 
@@ -165,9 +184,10 @@ class PublicationController extends Controller
         }
 
         $validated = $validator->validated();
+        $validated['user_id '] = true;
 
         if (!isset($validated['is_active'])) {
-            $validated['is_active'] = true;
+            $validated['is_active'] = auth()->id();
         }
 
         $publication = Publication::create($validated);
@@ -287,8 +307,6 @@ class PublicationController extends Controller
             'publication' => $publication->load(['country','town','district','category','pubType','attributes','images'])
         ]);
     }
-
-
 
     public function destroy($id)
     {

@@ -136,7 +136,7 @@
   <div class="modal fade" id="publicationModal" tabindex="-1" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header bg-light">
+        <div class="modal-header bg-dark">
           <h5 class="modal-title">{{ selectedPublication?.title || 'Détails de la publication' }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
@@ -364,21 +364,21 @@ const deletePublication = async (id) => {
   width: 35%;
   font-weight: 600;
   color: #ffffff;
-  background-color: #00050a;
+  background-color: rgba(14, 46, 80);
   padding: 10px 15px;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
 .custom-info-table td {
   color: #ffffff;
-  background-color: #000000;
+  background-color: rgba(14, 46, 80);
   padding: 10px 15px;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
   box-shadow: 0 1px 3px rgba(247, 246, 246, 0.842);
 }
 .custom-info-table tr:nth-child(even) td,
-.custom-info-table tr:nth-child(even) th { background-color: #000301; }
+.custom-info-table tr:nth-child(even) th { background-color: rgba(14, 46, 80); }
 
 @keyframes blink {
   0%, 100% { background-color: white; color: black; opacity: 1; }
