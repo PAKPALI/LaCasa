@@ -99,9 +99,15 @@
             <h1 class="mb-3">Les publications</h1>
             <p>La liste des publications s'affichera ci-dessous.</p>
           </div>
-          <div class="text-end mx-auto mb-3">
+          <!-- <div class="text-end mx-auto mb-3">
             <router-link to='/createPub' class="btn btn-dark border-0 w-15"> + Ajouter publication </router-link>
+          </div> -->
+          <div class="text-end mx-auto mb-3">
+            <button class="btn btn-dark border-0 w-15" @click="handleAddPublication" :disabled="loadingPublications">
+              + Ajouter publication
+            </button>
           </div>
+
         </div>
         
         <marquee class="bg-dark text-light mb-2" behavior="scroll" direction="left" scrollamount="6">
@@ -212,11 +218,11 @@
                 <div class="d-flex bg-dark text-light border-light border-top">
                   <small v-if="p.phone1?.trim()" class="flex-fill text-center py-2">
                     <i class="fa fa-phone text-primary me-2"></i>
-                    <span :class="{ 'blur-phone': !isAuthenticated.value }">{{ p.phone1 }}</span>
+                    <span :class="{ 'blur-phone': !isAuthResp }">{{ p.phone1 }}</span>
                   </small>
                   <small v-if="p.phone2?.trim()" class="flex-fill text-center py-2">
                     <i class="fa fa-phone text-primary me-2"></i>
-                    <span :class="{ 'blur-phone': !isAuthenticated.value }">{{ p.phone2 }}</span>
+                    <span :class="{ 'blur-phone': !isAuthResp }">{{ p.phone2 }}</span>
                   </small>
                 </div>
 
@@ -337,11 +343,11 @@
                     <td>
                       <p v-if="selectedPublication?.phone1">
                         <i class="fa fa-phone text-primary me-2">1</i>: 
-                        <span :class="{ 'blur-phone': !isAuthenticated.value }">{{ selectedPublication.phone1 }}</span>
+                        <span :class="{ 'blur-phone': !isAuthResp }">{{ selectedPublication.phone1 }}</span>
                       </p>
                       <p v-if="selectedPublication?.phone2">
                         <i class="fa fa-phone text-primary me-2">2</i>: 
-                        <span :class="{ 'blur-phone': !isAuthenticated.value }">{{ selectedPublication.phone2 }}</span>
+                        <span :class="{ 'blur-phone': !isAuthResp }">{{ selectedPublication.phone2 }}</span>
                       </p>
                       <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Pas de Numéro
                         Disponible</span>
@@ -373,11 +379,77 @@
   import vSelect from "vue-select"
   import "vue-select/dist/vue-select.css"
   import { user, isAuthenticated } from '../../auth/auth.js'
+  import Swal from 'sweetalert2'
+  import 'sweetalert2/dist/sweetalert2.min.css'
+  import { useRouter } from 'vue-router'
+  const router = useRouter()
+
+  const isAuthResp = isAuthenticated.value
 
   console.log(user.value)            // données de l'utilisateur connecté
   console.log(isAuthenticated.value) // true/false
 
-
+  const handleAddPublication = () => {
+    if (isAuthenticated.value) {
+      // ✅ Utilisateur connecté → on le redirige directement
+      router.push('/createPub')
+    } else {
+      // ❌ Pas connecté → afficher une SweetAlert stylée
+      Swal.fire({
+        title: "Connexion requise",
+        html: `
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <img width="94" height="94" src="https://img.icons8.com/3d-fluency/94/user-male-circle.png" alt="user-male-circle"/>
+            <p style="font-size:16px; color:#0e2e50; font-weight:500; margin-top:15px;">
+              Vous devez être connecté pour ajouter une publication.<br>
+              Voulez-vous vous connecter maintenant ?
+            </p>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: "Oui, se connecter",
+        cancelButtonText: "Plus tard",
+        background: '#f9f9f9',
+        color: '#0e2e50',
+        confirmButtonColor: '#00b88d',
+        cancelButtonColor: '#0e2e50',
+        customClass: {
+          popup: 'animated fadeInDown faster',
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // 👇 Deuxième étape : demande s’il a déjà un compte
+          Swal.fire({
+            title: "Avez-vous déjà un compte ?",
+             html: `
+              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <img width="94" height="94" src="https://img.icons8.com/3d-fluency/94/user-shield.png" alt="user-shield"/>
+                <p style="font-size:16px; color:#0e2e50; font-weight:500; margin-top:15px;">
+                  Vous n'avez pas encore de compte ?<br>
+                  Créez-en un maintenant pour publier vos annonces !
+                </p>
+              </div>
+            `,
+            showDenyButton: true,
+            confirmButtonText: "Oui, j'ai un compte",
+            denyButtonText: "Non, je veux m'inscrire",
+            confirmButtonColor: '#00b88d',
+            denyButtonColor: '#0e2e50',
+            background: '#f9f9f9',
+            color: '#0e2e50',
+          }).then((choice) => {
+            if (choice.isConfirmed) {
+              // 👉 Redirige vers connexion
+              router.push('/login')
+            } else if (choice.isDenied) {
+              // 👉 Redirige vers inscription
+              router.push('/register')
+            }
+          })
+        }
+      })
+    }
+  }
   // -----------------
   // REFS
   // -----------------
@@ -549,8 +621,6 @@
     } finally { loadingPublications.value = false }
   }
 
-
-
   // -----------------
   // WATCHERS OPTIONS
   // -----------------
@@ -615,6 +685,51 @@
     if (minutes > 0) return `il y a ${minutes} minute${minutes > 1 ? 's' : ''}`;
     return `il y a quelques secondes`;
   }
+
+    // -----------------
+  // MESSAGE AUTO APRÈS 10 SECONDES SI NON CONNECTÉ
+  // -----------------
+  if (!isAuthenticated.value) {
+    setTimeout(() => {
+      Swal.fire({
+        title: "Connexion requise",
+        html: `
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <img width="94" height="94" src="https://img.icons8.com/3d-fluency/94/info-1.png" alt="info-1"/>
+            <p style="font-size:16px; color:#0e2e50; font-weight:500; margin-top:15px;">
+              Connectez-vous pour accéder à plus de fonctionnalités :<br>
+              <strong>voir les numéros, publier des annonces, et plus encore.</strong>
+            </p>
+          </div>
+        `,
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Se connecter",
+        denyButtonText: "Créer un compte",
+        cancelButtonText: "Plus tard",
+        confirmButtonColor: "#00b88d",
+        denyButtonColor: "#007bff",
+        cancelButtonColor: "#888",
+        background: "#fff",
+        color: "#0e2e50",
+        customClass: {
+          popup: 'animated fadeInDown faster',
+        },
+        allowOutsideClick: false,
+        allowEscapeKey: false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push('/login')
+        } else if (result.isDenied) {
+          router.push('/register')
+        } else if (result.isDismissed) {
+          // Rien, l’utilisateur a choisi "Plus tard"
+          console.log("L’utilisateur a choisi d’être rappelé plus tard.")
+        }
+      })
+  }, 10000) // ⏳ après 10 secondes
+}
+
 
 </script>
 
@@ -776,6 +891,15 @@
   border-radius: 4px;
   font-size: 12px;
   margin-left: 5px;
+}
+
+/* Dans ton <style scoped> */
+.swal2-popup.animated.fadeInDown.faster {
+  animation: fadeInDown 0.5s ease both;
+}
+@keyframes fadeInDown {
+  from {opacity: 0; transform: translate3d(0, -20%, 0);}
+  to {opacity: 1; transform: translate3d(0, 0, 0);}
 }
 
 </style>

@@ -2,7 +2,10 @@
   <div class="login-page d-flex align-items-center justify-content-center min-vh-100 text-light">
     <div class="overlay"></div>
 
-    <div class="login-card p-4 rounded shadow-lg position-relative bg-opacity-75">
+    <div class="login-card  p-4 rounded shadow-lg position-relative bg-opacity-75">
+      <div class="text-center mb-2">
+        <img width="94" height="94"  src="https://img.icons8.com/3d-fluency/94/user-male-circle.png" alt="user-male-circle"/>
+      </div>
       <h2 class="fw-bold text-center border-bottom mb-4 text-uppercase text-light">Connexion</h2>
 
       <form @submit.prevent="loginUser">
@@ -13,7 +16,6 @@
             v-model="form.email"
             class="form-control"
             placeholder="Ex: exemple@mail.com"
-            
           />
         </div>
 
@@ -45,7 +47,8 @@
         </div>
 
         <div class="text-center mt-3">
-          <a href="/forgot-password" class="text-accent">Mot de passe oublié ?</a>
+          <router-link to='/register' class="nav-link text-white"> Créer un compte? </router-link>
+          <a href="#" class="text-accent">Mot de passe oublié ?</a>
         </div>
       </form>
     </div>

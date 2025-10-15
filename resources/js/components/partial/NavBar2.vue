@@ -14,6 +14,7 @@
                 </div>
                 <h1 class="m-0 text-primary">La Casa</h1>
             </a>
+            <span class="text-white text-center fs-2 ms-1">{{ currentTime }}</span>
 
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -40,6 +41,7 @@
                             Publications
                         </router-link>
                     </li>
+                    <!-- admin -->
                     <li v-if="isAuthenticated && (user.role == 1 || user.role == 2)" class="nav-item">
                         <router-link 
                             to='/admin' 
@@ -49,7 +51,8 @@
                             Admin
                         </router-link>
                     </li>
-                    <li class="nav-item">
+
+                    <!-- <li class="nav-item">
                         <router-link 
                             to='/register' 
                             class="nav-link text-white"
@@ -57,8 +60,10 @@
                             @mouseleave="leaveLink($event)">
                             Register
                         </router-link>
-                    </li>
-                    <li class="nav-item">
+                    </li> -->
+
+                    <!-- login -->
+                    <li v-if="!isAuthenticated"  class="nav-item">
                         <router-link 
                             to='/login' 
                             class="nav-link text-white"
@@ -67,6 +72,8 @@
                             Login
                         </router-link>
                     </li>
+
+                    <!-- profil -->
                     <li v-if="isAuthenticated" class="nav-item">
                         <router-link 
                             to='/Profile'
@@ -106,7 +113,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import logo from '@images/logo.jpeg'
 import logo2 from '@images/logo2.png'
 import { user, isAuthenticated } from '../auth/auth.js'
@@ -147,6 +154,29 @@ function handleMenuClick(e) {
         }
     }
 }
+
+const currentTime = ref('')
+
+// Fonction pour formater et mettre à jour l’heure
+function updateTime() {
+  const now = new Date()
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  const seconds = String(now.getSeconds()).padStart(2, '0')
+  currentTime.value = `${hours}:${minutes}:${seconds}`
+}
+
+// Met à jour chaque seconde
+let intervalId = null
+onMounted(() => {
+  updateTime()
+  intervalId = setInterval(updateTime, 1000)
+})
+
+// Nettoyage à la destruction du composant
+onBeforeUnmount(() => {
+  clearInterval(intervalId)
+})
 </script>
 
 <style scoped>

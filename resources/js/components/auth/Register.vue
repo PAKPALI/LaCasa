@@ -6,7 +6,10 @@
     <div class="overlay"></div>
 
     <!-- 🧾 FORMULAIRE D'INSCRIPTION -->
-    <div class="register-card p-4 mt-5 mb-5 p-md-5 rounded shadow-lg position-relative bg-opacity-75">
+    <div class="register-card p-5 mt-5 mb-5 p-md-3 rounded shadow-lg position-relative bg-opacity-75">
+      <div class="text-center mb-2">
+        <img width="94" height="94" src="https://img.icons8.com/3d-fluency/94/user-shield.png" alt="user-shield"/>
+      </div>
       <h2 class="fw-bold text-center border-bottom mb-4  text-uppercase text-light">Créer un compte</h2>
 
       <form @submit.prevent="registerUser">
@@ -69,7 +72,7 @@
             </div>
 
           <!-- Localisation -->
-          <div class="col-12 mt-5">
+          <div class="col-12 mt-3">
             <h5 class="border-bottom border-accent pb-2 fw-bold text-light">Localisation</h5>
           </div>
 
@@ -130,6 +133,10 @@
               <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
               S'inscrire
             </button>
+          </div>
+
+          <div class="text-center mt-3">
+            <router-link to='/login' class="nav-link text-white"> Se connecter? </router-link>
           </div>
         </div>
       </form>
