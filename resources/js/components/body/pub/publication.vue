@@ -58,7 +58,7 @@
 
                   <!-- Catégorie -->
                   <div class="bg-dark text-light rounded-top text-primary position-absolute start-0 bottom-0 mx-0 pt-1 px-5">
-                    {{ p.category_name || 'Type inconnu' }}
+                    {{ p.category_name || 'Type inconnu' }} {{ p.code || ' - JHSHS4568D45SDJ' }}
                   </div>
 
                   <!-- 👁 Bouton voir plus avec animation -->
@@ -161,6 +161,7 @@
           <div class="mt-4">
             <table class="table custom-info-table">
               <tbody>
+                <tr><th>Code</th><td>{{ selectedPublication?.code || 'JHSHS4568D45SDJ' }}</td></tr>
                 <tr><th>Catégorie</th><td>{{ selectedPublication?.category_name || 'Catégorie inconnue' }}</td></tr>
                 <tr><th>Type d'offre</th><td>{{ selectedPublication?.offer_type === 'sale' ? 'À vendre' : 'À louer' }}</td></tr>
                 <tr v-if="selectedPublication?.attributes?.length">
@@ -176,10 +177,11 @@
                 <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }}</td></tr>
                 <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} Mois</td></tr>
                 <tr><th>Avance</th><td>{{ selectedPublication?.advance }} Mois</td></tr>
+                <tr><th>Commission</th><td>{{ selectedPublication?.commission || '-'}}</td></tr>
                 <tr><th>Visit</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
                 <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
-                <tr><th>Superficie</th><td>{{ selectedPublication?.surface || 0 }} m²</td></tr>
-                <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || 0 }}</td></tr>
+                <tr><th>Superficie</th><td>{{ selectedPublication?.surface || '-'}} m²</td></tr>
+                <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || '-' }}</td></tr>
                 <tr><th>Description</th><td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td></tr>
                 <tr>
                   <th>Téléphones</th>

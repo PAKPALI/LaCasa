@@ -9,6 +9,7 @@ use App\Models\PubType;
 use App\Models\Attribut;
 use App\Models\Category;
 use App\Models\District;
+use Illuminate\Support\Str;
 use App\Models\PublicationImage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,12 +20,11 @@ class Publication extends Model
 
     protected $fillable = [
         'user_id','country_id','town_id','district_id','category_id','pub_type_id','price','bathroom','surface',
-        'advance','deposit','description','visit','offer_type','is_active','phone1','phone2'
+        'advance','deposit','description','visit','offer_type','is_active','phone1','phone2','code','commission'
     ];
 
     public function user()
     { return $this->belongsTo(User::class);}
-
 
     public function country()  { return $this->belongsTo(Country::class); }
     public function town()     { return $this->belongsTo(Town::class); }
@@ -44,5 +44,15 @@ class Publication extends Model
     public function images() {
         return $this->hasMany(PublicationImage::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($publication) {
+            $publication->code = strtoupper(Str::random(15));
+        });
+    }
+
 }
 

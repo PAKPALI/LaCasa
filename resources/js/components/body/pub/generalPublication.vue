@@ -61,6 +61,11 @@
                     placeholder="Sélectionner des attributs" :multiple="true" :filterable="true"
                     :loading="loadingAttributes" :disabled="!filters.pub_type_id || attributes.length === 0"></v-select>
                 </div>
+                <!-- code -->
+                <div class="col-md-12 mb-2">
+                  <label class="form-label fw-semibold text-light"><strong>Code</strong></label>
+                  <input type="text" class="form-control" placeholder="Code" v-model.code="code" />
+                </div>
                 <!-- Prix 1 -->
                 <div class="col-md-6 mb-2">
                   <label class="form-label fw-semibold text-light"><strong>Prix 1 (FCFA)</strong></label>
@@ -174,7 +179,7 @@
                   </div>
                   <div
                     class="bg-dark text-light rounded-top text-primary position-absolute start-0 bottom-0 mx-0 pt-1 px-5">
-                    {{ p.category_name || 'Type inconnu' }}
+                    {{ p.category_name || 'Type inconnu' }} {{ p.code || 'JHSHS4568D45SDJ' }}
                   </div>
                   <button class="btn eye-alert-btn position-absolute end-0 top-0 m-2 shadow" @click="openModal(p)">
                     <i class="fa fa-eye"></i>
@@ -286,58 +291,28 @@
             <div class="mt-4 bg-dark">
               <table class="table custom-info-table">
                 <tbody>
-                  <tr>
-                    <th>Catégorie</th>
-                    <td>{{ selectedPublication?.category_name || 'Catégorie inconnue' }}</td>
-                  </tr>
-                  <tr>
-                    <th>Type d'offre</th>
-                    <td>{{ selectedPublication?.offer_type === 'sale' ? 'À vendre' : 'À louer' }}</td>
-                  </tr>
-                  <tr v-if="selectedPublication?.attributes?.length">
-                    <th>Attributs</th>
-                    <td>
-                      <div class="d-flex flex-wrap">
-                        <span v-for="attr in selectedPublication.attributes" :key="attr.id"
-                          class="badge bg-success me-1 mb-1">
-                          {{ attr.name }}
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>Prix</th>
-                    <td>{{ formatPrice(selectedPublication?.price) }}</td>
-                  </tr>
-                  <tr>
-                    <th>Caution</th>
-                    <td>{{ selectedPublication?.deposit }} Mois</td>
-                  </tr>
-                  <tr>
-                    <th>Avance</th>
-                    <td>{{ selectedPublication?.advance }} Mois</td>
-                  </tr>
-                  <tr>
-                    <th>Visit</th>
-                    <td>{{ formatPrice(selectedPublication?.visit) }}</td>
-                  </tr>
-                  <tr>
-                    <th>Localisation</th>
-                    <td>{{ selectedPublication?.district_name || selectedPublication?.town_name ||
-                      selectedPublication?.country_name || 'Non définie' }}</td>
-                  </tr>
-                  <tr>
-                    <th>Superficie</th>
-                    <td>{{ selectedPublication?.surface || 0 }} m²</td>
-                  </tr>
-                  <tr>
-                    <th>Chambres</th>
-                    <td>{{ selectedPublication?.bathroom || 0 }}</td>
-                  </tr>
-                  <tr>
-                    <th>Description</th>
-                    <td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td>
-                  </tr>
+                  <tr><th>Code</th><td>{{ selectedPublication?.code || 'JHSHS4568D45SDJ' }}</td></tr>
+                <tr><th>Catégorie</th><td>{{ selectedPublication?.category_name || 'Catégorie inconnue' }}</td></tr>
+                <tr><th>Type d'offre</th><td>{{ selectedPublication?.offer_type === 'sale' ? 'À vendre' : 'À louer' }}</td></tr>
+                <tr v-if="selectedPublication?.attributes?.length">
+                  <th>Attributs</th>
+                  <td>
+                    <div class="d-flex flex-wrap">
+                      <span v-for="attr in selectedPublication.attributes" :key="attr.id" class="badge bg-success me-1 mb-1">
+                        {{ attr.name }}
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+                <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }}</td></tr>
+                <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} Mois</td></tr>
+                <tr><th>Avance</th><td>{{ selectedPublication?.advance }} Mois</td></tr>
+                <tr><th>Commission</th><td>{{ selectedPublication?.commission || '-'}}</td></tr>
+                <tr><th>Visit</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
+                <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
+                <tr><th>Superficie</th><td>{{ selectedPublication?.surface || '-'}} m²</td></tr>
+                <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || '-' }}</td></tr>
+                <tr><th>Description</th><td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td></tr>
                   <tr>
                     <th>Téléphones</th>
                     <td>
@@ -464,6 +439,7 @@
   })
   const price1 = ref(null)
   const price2 = ref(null)
+  const code = ref(null)
 
 
   const countries = ref([])
@@ -608,6 +584,7 @@
           category_id: filters.value.category_id,
           pub_type_id: filters.value.pub_type_id,
           attribute_ids: filters.value.attribute_ids,
+          code: code.value,
           price1: price1.value,
           price2: price2.value
         }

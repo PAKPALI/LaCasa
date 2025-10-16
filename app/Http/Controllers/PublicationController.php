@@ -31,7 +31,6 @@ class PublicationController extends Controller
         if ($request->filled('town_id')) {
             $query->where('town_id', $request->town_id);
         }
-        Log::info('🏙️ FILTRE QUARTIER', $request->all());
         if ($request->filled('district_id')) {
             $districtIds = is_array($request->district_id) 
                 ? $request->district_id 
@@ -43,9 +42,11 @@ class PublicationController extends Controller
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
+
         if ($request->filled('pub_type_id')) {
             $query->where('pub_type_id', $request->pub_type_id);
         }
+
         if ($request->filled('attribute_ids')) {
             $attributeIds = $request->attribute_ids;
 
@@ -53,7 +54,7 @@ class PublicationController extends Controller
                 $q->whereIn('attributes.id', $attributeIds);
             }, '=', count($attributeIds));
         }
-        log::info('🔍 FILTRES REÇUS', $request->all());
+
         if ($request->filled('price1') && $request->filled('price2')) {
             $query->whereBetween('price', [$request->price1, $request->price2]);
         } elseif ($request->filled('price1')) {
@@ -67,6 +68,12 @@ class PublicationController extends Controller
             $query->latest()->take($request->limit);
         }
 
+        log::info('🔍 FILTRAGE DES PUBLICATIONS', $request->all());
+
+        if ($request->filled('code')) {
+            $query->where('code', $request->code);
+        }
+
         $publications = $query->get();
 
         $formatted = $publications->map(function ($pub) {
@@ -74,8 +81,10 @@ class PublicationController extends Controller
         : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; 
             return [
                 'id' => $pub->id,
+                'code' => $pub->code,
                 'title' => $pub->pubType->name ?? 'Type inconnu',
                 'price' => $pub->price,
+                'commission' => $pub->commission,
                 'bathroom' => $pub->bathroom,
                 'surface' => $pub->surface,
                 'advance' => $pub->advance,
@@ -113,8 +122,6 @@ class PublicationController extends Controller
 
         return response()->json($formatted);
     }
-
-
     public function show($id)
     {
         $publication = Publication::with([
@@ -129,7 +136,6 @@ class PublicationController extends Controller
 
         return response()->json($publication);
     }
-
     public function store(Request $request)
     {
         $validator = Validator::make(
@@ -141,6 +147,7 @@ class PublicationController extends Controller
                 'category_id' => ['required','exists:categories,id'],
                 'pub_type_id' => ['required','exists:pub_types,id'],
                 'price'       => ['nullable','numeric'],
+                'commission' => ['nullable','numeric'],
                 'bathroom'    => ['nullable','integer'],
                 'surface'     => ['nullable','numeric'],
                 'advance'     => ['nullable','numeric'],
@@ -184,10 +191,10 @@ class PublicationController extends Controller
         }
 
         $validated = $validator->validated();
-        $validated['user_id '] = true;
+        $validated['user_id'] = auth()->id();
 
         if (!isset($validated['is_active'])) {
-            $validated['is_active'] = auth()->id();
+            $validated['is_active'] = true;
         }
 
         $publication = Publication::create($validated);

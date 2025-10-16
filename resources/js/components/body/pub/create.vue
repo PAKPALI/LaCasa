@@ -143,17 +143,27 @@
             <label class="form-label">Surface (m²)</label>
             <input type="number" class="form-control" v-model="form.surface" />
           </div>
-          <div class="col-md-4 mb-3">
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
             <label class="form-label">Avance (En mois)</label>
             <input type="number" class="form-control" v-model="form.advance" />
           </div>
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label class="form-label">Caution (En mois)</label>
             <input type="number" class="form-control" v-model="form.deposit" />
           </div>
-          <div class="col-md-4 mb-3">
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
             <label class="form-label">Prix de la visite (FCFA)</label>
             <input type="number" class="form-control" v-model="form.visit" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Commission (FCFA)</label>
+            <input type="number" class="form-control" v-model="form.commission" />
           </div>
         </div>
 
@@ -390,7 +400,7 @@ const submitPublication = async () => {
   if (form.value.images.length === 0 || form.value.images.includes(null)) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez ajouter au moins une photo', showConfirmButton:false, timer:3000 })
   if (!form.value.price) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le prix', showConfirmButton:false, timer:3000 })
   if (!form.value.bathroom) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le nombre de chambres', showConfirmButton:false, timer:3000 })
-  if (!form.value.surface) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner la surface', showConfirmButton:false, timer:3000 })
+  // if (!form.value.surface) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner la surface', showConfirmButton:false, timer:3000 })
   if (!form.value.advance) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner l\'avance', showConfirmButton:false, timer:3000 })
   if (!form.value.deposit) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner la caution', showConfirmButton:false, timer:3000 })
   if (!form.value.sale_or_rent) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner si c\'est à vendre ou à louer', showConfirmButton:false, timer:3000 })
