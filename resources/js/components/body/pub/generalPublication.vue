@@ -179,7 +179,7 @@
                   </div>
                   <div
                     class="bg-dark text-light rounded-top text-primary position-absolute start-0 bottom-0 mx-0 pt-1 px-5">
-                    {{ p.category_name || 'Type inconnu' }} {{ p.code || 'JHSHS4568D45SDJ' }}
+                    {{ p.category_name || 'Type inconnu' }} - {{ p.code || 'JHSHS4568D45SDJ' }}
                   </div>
                   <button class="btn eye-alert-btn position-absolute end-0 top-0 m-2 shadow" @click="openModal(p)">
                     <i class="fa fa-eye"></i>
@@ -188,17 +188,18 @@
 
                 <!-- ATTRIBUTES -->
                 <div class="mb-2 d-flex flex-wrap px-4 pt-3">
-                  <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-success me-1 mb-1">{{ attr.name
-                    }}</span>
+                  <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-success me-1 mb-1">{{ attr.name}}</span>
                 </div>
 
                 <!-- DESCRIPTION -->
                 <div class="p-2 pb-0">
                   <div class="row bg-dark text-light border-top gx-2">
                     <div class="col-12 col-md-12 text-center">
+                      
+                      <u class="d-block h4 text-light mb-2" href="#">{{ p.title || 'Titre non défini' }}</u>
                       <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }} / Mois</h5>
-                      <a class="d-block h4 text-light mb-2" href="#">{{ p.title || 'Titre non défini' }}</a>
                       <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{p.town_name }}</p>
+                      
                     </div>
                     <marquee class="border" behavior="scroll" direction="left" scrollamount="6">
                       <strong>Publiée {{ formatRelativeDate(p.created_at) }} .</strong>
@@ -207,9 +208,7 @@
                   </div>
                   <div v-if="isAuthenticated" class="d-flex align-items-center justify-content-center mt-2">
                     <!-- <p><strong>Publié par :</strong></p> -->
-                    <img :src="p.user.profile_image" class="rounded-circle" alt="Profil"
-                      style="width: 50px; height: 50px; object-fit: cover;"
-                    >
+                    <img :src="p.user.profile_image" class="rounded-circle" alt="Profil" style="width: 50px; height: 50px; object-fit: cover;">
                     <div>
                       <small class="d-block fw-bold text-dark">{{ p.user?.name || 'Utilisateur inconnu' }}</small>
                       <small class="text-success">
@@ -360,9 +359,6 @@
   const router = useRouter()
 
   const isAuthResp = isAuthenticated.value
-
-  console.log(user.value)            // données de l'utilisateur connecté
-  console.log(isAuthenticated.value) // true/false
 
   const handleAddPublication = () => {
     if (isAuthenticated.value) {
@@ -564,7 +560,7 @@
   const fetchPublicationsInitial = async () => {
     loadingPublications.value = true
     try {
-      const res = await axios.get('/api/publication', { params: { limit: 150 } })
+      const res = await axios.get('/api/publication', { params: { limit: 150 },  withCredentials: true })
       publicationsList.value = res.data
       nextTick(initCarousels)
     } catch (err) {

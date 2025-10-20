@@ -10,7 +10,6 @@ use App\Http\Controllers\AttributController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\PublicationController;
-use App\Http\Controllers\AuthController;
 
 // ADMIN
 Route::apiResource('country', CountryController::class);

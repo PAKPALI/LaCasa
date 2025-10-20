@@ -82,6 +82,12 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        if ($category->PubType()->exists()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Cette catégorie ne peut pas être supprimée car elle est liée à une ou plusieurs type de publication.'
+            ]);
+        }
         $category->delete();
 
         return response()->json([

@@ -20,6 +20,12 @@ class Attribut extends Model
 
     public function publications()
     {
-        return $this->belongsToMany(Publication::class, 'publication_attribute');
+        return $this->belongsToMany(
+            Publication::class,
+            'publication_attribute',
+            'attribute_id',   // clé locale dans la table pivot
+            'publication_id'  // clé étrangère de la table publication
+        );
     }
+
 }

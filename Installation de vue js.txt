@@ -24,6 +24,7 @@ npm install vue-toastification
 npm install swiper
 
 En prod HTTPS, tu pourras remettre 'secure' => true et 'same_site' => 'lax' ou 'strict' selon ton domaine.
+composer require laravel/sanctum
 
 
 👉 Explication :
@@ -40,6 +41,7 @@ Modifier
 import { defineConfig } from 'vite'
 import laravel from 'laravel-vite-plugin'
 import vue from '@vitejs/plugin-vue'
+
 
 export default defineConfig({
     plugins: [

@@ -114,7 +114,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import logo from '@images/logo.jpeg'
+// import logo from '@images/logo.jpeg'
 import logo2 from '@images/logo2.png'
 import { user, isAuthenticated } from '../auth/auth.js'
 

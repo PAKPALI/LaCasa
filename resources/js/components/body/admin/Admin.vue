@@ -1,5 +1,5 @@
 <template>
-  <div class="site-section mt-5">
+  <div v-if="isAuthenticated && (user.role == 1 || user.role == 2)" class="site-section mt-5">
     <div class="container">
 
       <div class="row justify-content-center mt-5">
@@ -20,10 +20,13 @@
           <PubType accordionId="adminAccordion" />
           <Attribute accordionId="adminAccordion" />
           <User v-if="isAuthenticated && (user.role == 1 || user.role == 2)" accordionId="adminAccordion" />
-          {{ user.role }}
         </div>
       </div>
-
+    </div>
+  </div>
+  <div  class="site-section bg-danger mt-5">
+    <div class="col-md-7 text-center mt-5">
+      <p class="text-danger">Désolée, aucune publication correspondante au filtrage n'a été trouvée!</p>
     </div>
   </div>
 </template>
@@ -31,8 +34,6 @@
 <script setup>
  import { user, isAuthenticated } from '../../auth/auth.js'
 
-  console.log(user.value)            // données de l'utilisateur connecté
-  console.log(isAuthenticated.value)
   import Country from './content/Country.vue'
   import Town from './content/Town.vue'
   import District from './content/District.vue'

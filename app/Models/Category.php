@@ -15,4 +15,9 @@ class Category extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function PubType()
+    {
+        return $this->hasMany(PubType::class);
+    }
 }

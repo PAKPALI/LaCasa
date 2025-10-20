@@ -119,5 +119,4 @@ class CountryController extends Controller
             'message' => 'Pays supprimé avec succès'
         ]);
     }
-
 }

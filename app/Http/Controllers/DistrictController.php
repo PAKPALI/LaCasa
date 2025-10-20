@@ -83,6 +83,15 @@ class DistrictController extends Controller
 
     public function destroy(District $district)
     {
+        // Vérifier si le quartier est lié à une ou plusieurs publications
+        if ($district->publications()->exists()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Ce quartier ne peut pas être supprimé car il est lié à une ou plusieurs publications.'
+            ], 400);
+        }
+
+        // Si aucune publication ne dépend de ce quartier
         $district->delete();
 
         return response()->json([

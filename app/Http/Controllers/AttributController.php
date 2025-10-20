@@ -93,6 +93,13 @@ class AttributController extends Controller
             ]);
         }
 
+        if ($attribute->publications()->exists()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Cet attribut ne peut pas être supprimé car il est lié à une ou plusieurs publications.'
+            ], 400);
+        }
+
         $attribute->delete();
 
         return response()->json([

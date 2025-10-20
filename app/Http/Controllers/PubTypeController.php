@@ -93,6 +93,13 @@ class PubTypeController extends Controller
             ]);
         }
 
+        if ($pubType->Attribut()->exists()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Cet type de pub ne peut pas être supprimé car il est lié à une ou plusieurs attributs.'
+            ], 400);
+        }
+
         $pubType->delete();
 
         return response()->json([
