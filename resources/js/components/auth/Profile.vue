@@ -2,7 +2,7 @@
   <div class="container py-5">
     <h2 class="text-center mb-4">Mon profil</h2>
 
-    <div class="card shadow-lg bg-dark p-4 rounded">
+    <div v-if="isAuthenticated" class="card shadow-lg bg-dark p-4 rounded">
       <!-- Image de profil -->
       <div class="d-flex flex-column align-items-center mb-4">
         <img
@@ -149,6 +149,25 @@
         </form>
       </div>
     </div>
+
+    <div v-if="!isAuthenticated" class="card shadow-lg p-4 rounded">
+      <!-- <h4 class="text-center text-light">Veuillez vous connecter pour accéder à votre profil.</h4> -->
+      <!-- 404 Start -->
+      <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+          <div class="container text-center">
+              <div class="row justify-content-center">
+                  <div class="col-lg-6 text-danger">
+                      <i class="bi bi-exclamation-triangle display-1 text-danger"></i>
+                      <h1 class="display-1 ">Erreur 404</h1>
+                      <h1 class="mb-4">Liste non trouvée</h1>
+                      <p class="mb-4">Veuillez vous connecter pour accéder à votre profil.</p>
+                      <a class="btn btn-primary py-3 px-5" @click="goToLogin">Se connecter</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- 404 End -->
+    </div>
   </div>
 </template>
 
@@ -156,12 +175,19 @@
 import { ref, onMounted } from "vue"
 import axios from "axios"
 import Swal from "sweetalert2"
-import { user, fetchUser } from "../auth/auth.js"
+import { user, fetchUser, isAuthenticated } from "../auth/auth.js"
 
 const activeTab = ref("info")
 const defaultImage = "https://cdn-icons-png.flaticon.com/512/847/847969.png"
 const previewImage = ref(null)
 const uploadedFile = ref(null)
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const goToLogin = () => {
+  router.push('/login')
+}
 
 const form = ref({
   name: "",

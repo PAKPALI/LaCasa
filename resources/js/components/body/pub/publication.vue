@@ -1,6 +1,6 @@
 <template>
   <!-- Liste des propriétés Début -->
-  <div class="container-xxl py-5">
+  <div v-if="isAuthenticated" class="container-xxl py-5">
     <div class="container">
       <!-- 📌 En-tête + Boutons de filtre -->
       <div class="row g-0 gx-5 align-items-end">
@@ -132,6 +132,25 @@
     </div>
   </div>
 
+  <div v-if="!isAuthenticated" class="card shadow-lg bg p-4 rounded">
+    <!-- <h4 class="text-center text-light">Veuillez vous connecter pour accéder à votre liste de publications.</h4> -->
+    <!-- 404 Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 text-danger">
+                    <i class="bi bi-exclamation-triangle display-1 text-danger"></i>
+                    <h1 class="display-1 ">Erreur 404</h1>
+                    <h1 class="mb-4">Liste non trouvée</h1>
+                    <p class="mb-4">Veuillez vous connecter pour accéder à votre liste de publications.</p>
+                    <a class="btn btn-primary py-3 px-5" @click="goToLogin">Se connecter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 404 End -->
+  </div>
+
   <!-- 📌 Modal de détails de la publication -->
   <div class="modal fade" id="publicationModal" tabindex="-1" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -226,6 +245,13 @@ import { Modal, Carousel } from 'bootstrap'
 import EditPublication from './edit.vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { user, isAuthenticated } from '../../auth/auth.js'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const goToLogin = () => {
+  router.push('/login')
+}
 
 const showEditModal = ref(false)
 const editingPubId = ref(null)
@@ -255,11 +281,26 @@ const initCarousels = () => {
   })
 }
 
+if (!isAuthenticated.value) {
+  console.warn("Page accessible uniquement aux utilisateurs connectés.")
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'error',
+    title: 'Page accessible uniquement aux utilisateurs connectés.',
+    showConfirmButton: false,
+    timer: 3000
+  })
+}
+
 // Charger les publications
 const fetchPublications = async () => {
   loadingPublications.value = true
   try {
-    const res = await axios.get('/api/publication')
+    const res = await axios.get('/api/publication', {
+      params: { user_only: true },
+      withCredentials: true
+    })
     publicationsList.value = res.data
     initCarousels()
   } catch (err) {

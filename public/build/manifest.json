@@ -19,10 +19,6 @@
     "file": "assets/icon1-qbiIWmXk.jpg",
     "src": "resources/js/images/icon1.jpg"
   },
-  "resources/js/images/logo.jpeg": {
-    "file": "assets/logo-BKP-YoEy.jpeg",
-    "src": "resources/js/images/logo.jpeg"
-  },
   "resources/js/images/logo2.png": {
     "file": "assets/logo2-BjkGqu9a.png",
     "src": "resources/js/images/logo2.png"
@@ -104,12 +100,12 @@
     "src": "resources/js/images/template/team-3.jpg"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-5wPLisAs.js",
+    "file": "assets/app2-BqhKByQi.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-ChzudyvO.css"
+      "assets/app2-CVWGzhnt.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",

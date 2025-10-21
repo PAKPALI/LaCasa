@@ -74,6 +74,11 @@ class PublicationController extends Controller
             $query->where('code', $request->code);
         }
 
+        // Mes publications uniquement
+        if ($request->has('user_only')) {
+            $query->where('user_id', auth()->id());
+        }
+
         $publications = $query->get();
 
         $formatted = $publications->map(function ($pub) {

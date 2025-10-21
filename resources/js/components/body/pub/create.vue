@@ -202,8 +202,12 @@
       </div>
 
       <div class="text-end">
-        <button type="submit" class="btn btn-primary btn-lg px-4" :disabled="isSubmitting">
+        <button v-if="isUserAuth" type="submit" class="btn btn-primary btn-lg px-4" :disabled="isSubmitting">
           <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          💾 Enregistrer
+        </button>
+
+        <button v-if="!isUserAuth" class="btn btn-dark btn-lg px-4" disabled>
           💾 Enregistrer
         </button>
       </div>
@@ -221,6 +225,9 @@ import vSelect from "vue-select"
 import "vue-select/dist/vue-select.css"
 import Swal from 'sweetalert2'
 import Publication from './publication.vue'
+import { user, isAuthenticated } from '../../auth/auth.js'
+
+const isUserAuth = isAuthenticated.value
 
 const saleOrRentOptions = [
   { value: 'sale', label: 'À vendre' },

@@ -86,13 +86,13 @@
                     <li><a href="" class="nav-item nav-link"></a></li>
 
                     <!-- Dropdown Pages -->
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <!--<div class="nav-item dropdown">
+                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu rounded-0 m-0">
-                            <!-- <a href="testimonial.html" class="dropdown-item">Testimonial</a> -->
+                             <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                             <a href="" class="dropdown-item">404 Error</a>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Autres liens/commentaires conservés -->
                     <!-- <div class="nav-item dropdown">
