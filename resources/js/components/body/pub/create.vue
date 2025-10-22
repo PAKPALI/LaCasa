@@ -280,7 +280,7 @@ fetchCountries()
 // Fetch Publications
 const fetchPublications = async () => {
   try {
-    const res = await axios.get('/api/publication')
+    const res = await axios.get('getMyPublication')
     publicationsList.value = res.data
   } catch (err) {
     console.error('Erreur lors de la récupération des publications :', err)

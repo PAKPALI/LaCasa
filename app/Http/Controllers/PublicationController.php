@@ -68,16 +68,89 @@ class PublicationController extends Controller
             $query->latest()->take($request->limit);
         }
 
-        log::info('🔍 FILTRAGE DES PUBLICATIONS', $request->all());
+        // log::info('🔍 FILTRAGE DES PUBLICATIONS', $request->all());
 
         if ($request->filled('code')) {
             $query->where('code', $request->code);
         }
 
         // Mes publications uniquement
+        Log::info('Paramètre user_only présent ?', ['user_only' => $request->has('user_only')]);
+
         if ($request->has('user_only')) {
             $query->where('user_id', auth()->id());
         }
+
+        $publications = $query->get();
+
+        $formatted = $publications->map(function ($pub) {
+            $defaultUserImage = $pub->user && $pub->user->user_type == 2 ?  'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'   // agence
+        : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; 
+            return [
+                'id' => $pub->id,
+                'code' => $pub->code,
+                'title' => $pub->pubType->name ?? 'Type inconnu',
+                'price' => $pub->price,
+                'commission' => $pub->commission,
+                'bathroom' => $pub->bathroom,
+                'surface' => $pub->surface,
+                'advance' => $pub->advance,
+                'deposit' => $pub->deposit,
+                'description' => $pub->description,
+                'visit' => $pub->visit,
+                'offer_type' => $pub->offer_type,
+                'is_active' => $pub->is_active,
+                'created_at' => $pub->created_at,
+                'category_name' => $pub->category->name ?? 'Catégorie inconnue',
+                'district_name' => $pub->district->name ?? 'Non défini',
+                'town_name' => $pub->town->name ?? 'Non défini',
+                'country_name' => $pub->country->name ?? 'Non défini',
+                'images' => $pub->images->map(fn($img) => '/'.$img->path),
+                'phone1' => ($pub->phone1 && $pub->phone1 !== 'null') ? $pub->phone1 : null,
+                'phone2' => ($pub->phone2 && $pub->phone2 !== 'null') ? $pub->phone2 : null,
+                'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name]),
+                'user' => $pub->user ? [
+                    'id' => $pub->user->id,
+                    'name' => $pub->user->name,
+                    'profile_image' => $pub->user->profile_image ?? $defaultUserImage,
+                    'user_type' => $pub->user->user_type,
+                    'phone1' => $pub->user->phone1,
+                    'phone2' => $pub->user->phone2,
+                ] : [
+                    'name' => 'Utilisateur inconnu',
+                    'profile_image' => $defaultUserImage,
+                    'user_type' => null,
+                    'phone1' => null,
+                    'phone2' => null,
+                ],
+                
+            ];
+        });
+
+        return response()->json($formatted);
+    }
+
+    public function getMyPublication(Request $request)
+    {
+        $query = Publication::with([
+            'user:id,name,profile_image,user_type,phone1,phone2',
+            'pubType:id,name',
+            'category:id,name',
+            'district:id,name',
+            'town:id,name',
+            'country:id,name',
+            'images',
+            'attributes:id,name'
+        ])->latest();
+
+        // 🔹 LIMITATION AU CHARGEMENT INITIAL
+        if ($request->filled('limit')) {
+            $query->latest()->take($request->limit);
+        }
+        // Mes publications uniquement
+        Log::info('Paramètre user_only présent ?', ['user_only' => $request->has('user_only')]);
+
+        $query->where('user_id', auth()->id());
 
         $publications = $query->get();
 

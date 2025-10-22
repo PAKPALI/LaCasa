@@ -85,7 +85,7 @@
                   </div>
                 </div>
 
-                <!-- Boutons Modifier/Supprimer -->
+                <!-- Boutons Modifier -->
                 <div class="d-flex border-top">
                   <small class="flex-fill text-center py-2">
                     <button title="Modifier"
@@ -97,6 +97,15 @@
                       <i class="fa fa-edit text-light me-0"></i>
                     </button>
                   </small>
+                  <!-- Nouveau bouton Statut -->
+                  <small class="flex-fill text-center py-2">
+                    <button
+                      :title="p.is_active ? 'Publication active' : 'Publication inactive'"
+                      class="status-indicator-btn mb-2"
+                      :class="{ active: p.is_active, inactive: !p.is_active }"
+                    ></button>
+                  </small>
+                  <!-- Boutons Supprimer -->
                   <small class="flex-fill text-center py-2">
                     <button title="Supprimer" class="btn btn-sm btn-danger" @click="deletePublication(p.id)"><i class="fa fa-trash text-light me-0"></i></button>
                   </small>
@@ -297,10 +306,7 @@ if (!isAuthenticated.value) {
 const fetchPublications = async () => {
   loadingPublications.value = true
   try {
-    const res = await axios.get('/api/publication', {
-      params: { user_only: true },
-      withCredentials: true
-    })
+    const res = await axios.get('/api/publication')
     publicationsList.value = res.data
     initCarousels()
   } catch (err) {
@@ -441,4 +447,41 @@ const deletePublication = async (id) => {
 .carousel-control-prev.blink-btn { left: 10px; }
 .carousel-control-next.blink-btn { right: 10px; }
 .blink-btn span { background-size: 100% 100%; }
+
+/* ✅ Bouton indicateur de statut (actif/inactif) */
+.status-indicator-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  outline: none;
+  cursor: default;
+  display: inline-block;
+  animation: blink 1s infinite;
+}
+
+/* Vert clignotant si actif */
+.status-indicator-btn.active {
+  background-color: #1fad6b;
+  box-shadow: 0 0 10px #1fad6b;
+}
+
+/* Rouge clignotant si inactif */
+.status-indicator-btn.inactive {
+  background-color: #ff2e2e;
+  box-shadow: 0 0 10px #ff2e2e;
+}
+
+/* Animation de clignotement */
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
 </style>
