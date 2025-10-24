@@ -21,6 +21,5 @@ Route::get('/{any}', function () {
     // return view('index2');
 })->where('any', '^(?!api).*$');
 
-
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
