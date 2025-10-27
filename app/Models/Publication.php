@@ -3,6 +3,7 @@
 // app/Models/Publication.php
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\Town;
 use App\Models\Country;
 use App\Models\PubType;
@@ -52,6 +53,21 @@ class Publication extends Model
         static::creating(function ($publication) {
             $publication->code = strtoupper(Str::random(15));
         });
+    }
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'reactivated_at' => 'datetime',
+        'deactivated_at' => 'datetime',
+    ];
+
+    // Vérifie si elle doit être désactivée
+
+    public function shouldBeDeactivated()
+    {
+        $referenceDate = $this->reactivated_at ?? $this->created_at;
+        return (bool)$this->is_active && Carbon::now()->greaterThanOrEqualTo(Carbon::parse($referenceDate)->addDays(30));
     }
 
 }

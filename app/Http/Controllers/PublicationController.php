@@ -22,7 +22,7 @@ class PublicationController extends Controller
             'country:id,name',
             'images',
             'attributes:id,name'
-        ])->latest();
+        ])->where('is_active',true)->latest();
 
         // 🔹 FILTRAGE DYNAMIQUE
         if ($request->filled('country_id')) {
@@ -75,7 +75,7 @@ class PublicationController extends Controller
         }
 
         // Mes publications uniquement
-        Log::info('Paramètre user_only présent ?', ['user_only' => $request->has('user_only')]);
+        // Log::info('Paramètre user_only présent ?', ['user_only' => $request->has('user_only')]);
 
         if ($request->has('user_only')) {
             $query->where('user_id', auth()->id());
@@ -148,7 +148,7 @@ class PublicationController extends Controller
             $query->latest()->take($request->limit);
         }
         // Mes publications uniquement
-        Log::info('Paramètre user_only présent ?', ['user_only' => $request->has('user_only')]);
+        // Log::info('Paramètre user_only présent ?', ['user_only' => $request->has('user_only')]);
 
         $query->where('user_id', auth()->id());
 
@@ -359,6 +359,16 @@ class PublicationController extends Controller
         }
 
         $validated = $validator->validated();
+
+        // ✅ Mise à jour de la reactivation si is_active passe à true
+        if ($validated['is_active']==1 && $publication->is_active==false) {
+            $publication->reactivated_at = now();
+        }
+
+        // ✅ Mise à jour de la desactivation si is_active passe à false
+        if ($validated['is_active']==0 && $publication->is_active==true) {
+            $publication->deactivated_at = now();
+        }
 
         // ✅ Mise à jour des champs principaux
         $publication->update($validated);
