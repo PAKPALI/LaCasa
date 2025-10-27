@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use App\Jobs\DeleteInactivePublications;
 use Illuminate\Support\Facades\Schedule;
 use App\Jobs\DeactivateExpiredPublications;
 
@@ -15,4 +16,4 @@ Schedule::job(new DeactivateExpiredPublications())->dailyAt('00:00');
 // Schedule::job(new DeactivateExpiredPublications())->everyMinute();
 
  // Suppression quotidienne à 01h
-$schedule->job(new \App\Jobs\DeleteInactivePublications())->dailyAt('01:00');
+Schedule::job(new DeleteInactivePublications())->dailyAt('01:00');
