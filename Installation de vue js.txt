@@ -26,6 +26,11 @@ npm install swiper
 En prod HTTPS, tu pourras remettre 'secure' => true et 'same_site' => 'lax' ou 'strict' selon ton domaine.
 composer require laravel/sanctum
 
+php artisan schedule:run
+php artisan queue:work
+
+configurez les donnes .env pour le mail (nom et url)
+
 
 👉 Explication :
 
