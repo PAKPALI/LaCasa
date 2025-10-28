@@ -12,8 +12,8 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 // 🔔 Planification du job de désactivation automatique
-Schedule::job(new DeactivateExpiredPublications())->dailyAt('00:00');
-// Schedule::job(new DeactivateExpiredPublications())->everyMinute();
+// Schedule::job(new DeactivateExpiredPublications())->dailyAt('00:00');
+Schedule::job(new DeactivateExpiredPublications())->everyMinute();
 
  // Suppression quotidienne à 01h
 Schedule::job(new DeleteInactivePublications())->dailyAt('01:00');
