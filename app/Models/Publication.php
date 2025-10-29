@@ -20,8 +20,9 @@ class Publication extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','country_id','town_id','district_id','category_id','pub_type_id','price','bathroom','surface',
-        'advance','deposit','description','visit','offer_type','is_active','phone1','phone2','code','commission'
+        'user_id','country_id','town_id','district_id','category_id','pub_type_id','price',
+        'bathroom','surface','advance','deposit','description','visit','offer_type','is_active',
+        'phone1','phone2','code','commission','deactivated_at','reactivated_at'
     ];
 
     public function user()
