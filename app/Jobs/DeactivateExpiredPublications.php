@@ -20,17 +20,17 @@ class DeactivateExpiredPublications implements ShouldQueue
         Log::info('Début du job de désactivation à : ' . now());
 
         $publications = Publication::where('is_active', true)->get();
-        Log::info('count: ' . $publications->count());
+        Log::info('counts: ' . $publications->count());
 
         foreach ($publications as $publication) {
             if ($publication->shouldBeDeactivated()) {
-                $publication->update(['is_active' => false]);
+                $publication->update(['is_active' => false, 'deactivated_at' => now()] );
                 if ($publication->user && $publication->user->email) {
                     $this->sendEmailMargin($publication->user->name, $publication->user->email, $publication->code);
                 }
             }
         }
-        Log::info('Fin du job à : ' . now());
+        Log::info('Fin du job de désactivation à : ' . now());
     }
 
     public function sendEmailMargin($user_name, $email, $code)
