@@ -25,12 +25,7 @@ class DeactivateExpiredPublications implements ShouldQueue
         foreach ($publications as $publication) {
             if ($publication->shouldBeDeactivated()) {
                 $publication->update(['is_active' => false]);
-                Log::info("Publication {$publication->price} désactivée !");
-
                 if ($publication->user && $publication->user->email) {
-                    Log::info("Email envoyé !");
-                    // Mail::to($publication->user->email)
-                    //     ->send(new PublicationDeactivatedMail($publication));
                     $this->sendEmailMargin($publication->user->name, $publication->user->email, $publication->code);
                 }
             }
@@ -40,11 +35,17 @@ class DeactivateExpiredPublications implements ShouldQueue
 
     public function sendEmailMargin($user_name, $email, $code)
     {
-        Log::info('send2');
+        log::info("Envoi de l'email de désactivation à : " . $email);
         // Envoyez l'e-mail avec le code généré
         Mail::send('emails.publication.deactivated', ['user_name' => $user_name, 'code' => $code], function($message) use ($email){
             $message->to($email);
-            $message->subject(config('app.name'));
+            $message->subject(config('app.name') . ' - Publication désactivée');
+
+            // ✅ Ajout manuel des en-têtes de priorité
+            // $headers = $message->getHeaders();
+            // $headers->addTextHeader('X-Priority', '1');
+            // $headers->addTextHeader('X-MSMail-Priority', 'High');
+            // $headers->addTextHeader('Importance', 'High');
         });
     }
 }

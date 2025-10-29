@@ -4,23 +4,23 @@ namespace App\Jobs;
 
 use App\Models\Publication;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class DeleteInactivePublications implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function handle(): void
     {
         $publications = Publication::where('is_active', false)->get();
 
         foreach ($publications as $publication) {
-            $deactivationDate = $publication->deactivated_at ?? $publication->updated_at;
-
-            if (\Carbon\Carbon::now()->greaterThanOrEqualTo($deactivationDate->copy()->addDays(30))) {
+            if ($publication->shouldBeDeleted()) {
 
                 // Supprimer les images
                 foreach ($publication->images as $img) {
@@ -29,11 +29,23 @@ class DeleteInactivePublications implements ShouldQueue
                     $img->delete();
                 }
 
+                if ($publication->user && $publication->user->email) {
+                    $this->sendEmailMargin($publication->user->name, $publication->user->email, $publication->code);
+                }
+
                 $publication->delete();
 
                 Log::info("Publication {$publication->code} supprimée après 30 jours d'inactivité.");
             }
         }
+    }
+    public function sendEmailMargin($user_name, $email, $code)
+    {
+        // Envoyez l'e-mail avec le code généré
+        Mail::send('emails.publication.deleted', ['user_name' => $user_name, 'code' => $code], function($message) use ($email){
+            $message->to($email);
+            $message->subject(config('app.name') . ' - Publication supprimée');
+        });
     }
 }
 

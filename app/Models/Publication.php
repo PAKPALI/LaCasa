@@ -70,5 +70,25 @@ class Publication extends Model
         return (bool)$this->is_active && Carbon::now()->greaterThanOrEqualTo(Carbon::parse($referenceDate)->addDays(30));
     }
 
+    public function shouldBeDeleted()
+    {
+        // Vérifie que la publication est désactivée
+        if ($this->is_active) {
+            return false;
+        }
+
+        // On prend la date de désactivation comme référence
+        $referenceDate = $this->deactivated_at;
+
+        // Si elle n’a pas de date de désactivation, on ne supprime pas
+        if (!$referenceDate) {
+            return false;
+        }
+
+        // Si 30 jours se sont écoulés depuis la désactivation → suppression
+        return Carbon::now()->greaterThanOrEqualTo(Carbon::parse($referenceDate)->addDays(30));
+    }
+
+
 }
 

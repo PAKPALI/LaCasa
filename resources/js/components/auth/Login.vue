@@ -74,13 +74,13 @@ const loginUser = async () => {
     const res = await axios.post('/myLogin', form.value, { withCredentials:true })
     setUser(res.data.user)
     if(res.data.status){
-      Swal.fire({icon:'success', title:res.data.message||'Connexion réussie ✅', toast:true, position:'top-end', showConfirmButton:false, timer:2500})
+      Swal.fire({icon:'success', title:res.data.message||'Connexion réussie ✅', toast:true, position:'top', showConfirmButton:false, timer:2500})
       setTimeout(()=>{res.data.user.role===1?router.push('/admin'):router.push('/home')},800)
     } else {
-      Swal.fire({icon:'error', title:res.data.message||'Email ou mot de passe incorrect', toast:true, position:'top-end', showConfirmButton:false, timer:3000})
+      Swal.fire({icon:'error', title:res.data.message||'Email ou mot de passe incorrect', toast:true, position:'top', showConfirmButton:false, timer:3000})
     }
   } catch(err) {
-    Swal.fire({icon:'error', title:err.response?.data?.message||'Erreur lors de la connexion', toast:true, position:'top-end', showConfirmButton:false, timer:3000})
+    Swal.fire({icon:'error', title:err.response?.data?.message||'Erreur lors de la connexion', toast:true, position:'top', showConfirmButton:false, timer:3000})
   } finally { isSubmitting.value=false }
 }
 </script>

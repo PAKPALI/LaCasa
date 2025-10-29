@@ -16,4 +16,5 @@ Artisan::command('inspire', function () {
 Schedule::job(new DeactivateExpiredPublications())->everyMinute();
 
  // Suppression quotidienne à 01h
-Schedule::job(new DeleteInactivePublications())->dailyAt('01:00');
+// Schedule::job(new DeleteInactivePublications())->dailyAt('01:00');
+Schedule::job(new DeleteInactivePublications())->everyMinute();

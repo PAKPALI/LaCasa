@@ -306,7 +306,7 @@ if (!isAuthenticated.value) {
 const fetchPublications = async () => {
   loadingPublications.value = true
   try {
-    const res = await axios.get('/api/publication')
+    const res = await axios.get('/getMyPublication')
     publicationsList.value = res.data
     initCarousels()
   } catch (err) {
