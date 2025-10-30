@@ -7,7 +7,7 @@
         <div class="col-lg-6">
           <div class="text-start mx-auto mb-5">
             <h1 class="mb-3">Mes publications</h1>
-            <p>La liste de vos publications s'affichera ci-dessous une fois créées.</p>
+            <p><h6>La liste de vos publications s'affichera ci-dessous une fois créées.</h6></p>
           </div>
         </div>
         <div class="col-lg-6 text-start text-lg-end">
@@ -23,6 +23,12 @@
             </li>
           </ul>
         </div>
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <input type="text" class="form-control" placeholder="#Collez le code de la publication pour filtrer...." v-model="codeFilter"/>
+          </div>
+      </div>
+
       </div>
 
       <!-- 📌 Liste des publications -->
@@ -257,6 +263,7 @@ import Swal from 'sweetalert2'
 import { user, isAuthenticated } from '../../auth/auth.js'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+const codeFilter = ref('')
 
 const goToLogin = () => {
   router.push('/login')
@@ -318,13 +325,13 @@ const fetchPublications = async () => {
 
 // Filtrage par onglet
 const activeTab = ref('featured')
-const filteredPublications = computed(() => {
-  if (!publicationsList.value) return []
-  if (activeTab.value === 'featured') return publicationsList.value
-  if (activeTab.value === 'sell') return publicationsList.value.filter(p => p.offer_type === 'sale')
-  if (activeTab.value === 'rent') return publicationsList.value.filter(p => p.offer_type === 'rent')
-  return publicationsList.value
-})
+// const filteredPublications = computed(() => {
+//   if (!publicationsList.value) return []
+//   if (activeTab.value === 'featured') return publicationsList.value
+//   if (activeTab.value === 'sell') return publicationsList.value.filter(p => p.offer_type === 'sale')
+//   if (activeTab.value === 'rent') return publicationsList.value.filter(p => p.offer_type === 'rent')
+//   return publicationsList.value
+// })
 
 // Ouvrir le modal et initialiser le carrousel
 const openModal = (pub) => {
@@ -391,6 +398,24 @@ const deletePublication = async (id) => {
     }
   }
 }
+
+const filteredPublications = computed(() => {
+  if (!publicationsList.value) return []
+
+  let list = publicationsList.value
+
+  // Filtre par onglet
+  if (activeTab.value === 'sell') list = list.filter(p => p.offer_type === 'sale')
+  else if (activeTab.value === 'rent') list = list.filter(p => p.offer_type === 'rent')
+
+  // Filtre par code uniquement si longueur > 5
+  if (codeFilter.value.trim().length > 5) {
+    list = list.filter(p => p.code?.toLowerCase() === codeFilter.value.trim().toLowerCase())
+  }
+
+  return list
+})
+
 </script>
 
 

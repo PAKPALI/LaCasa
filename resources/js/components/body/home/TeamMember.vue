@@ -1,12 +1,21 @@
 <template>
   <!-- Team Start -->
-  <div class="container-xxl py-5">
+  <div class="container-xxl py-5" >
     <div class="container">
       <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
         <h1 class="mb-3">L’Équipe LaCasa</h1>
-        <p>
-          Découvrez les talents et professionnels qui ont travaillé avec passion pour créer LaCasa et rendre la recherche de logements plus simple et sécurisée.
-        </p>
+        <!-- <p>
+          <strong>
+            Découvrez les talents et professionnels qui ont travaillé avec passion
+            pour créer LaCasa et rendre la recherche de logements plus simple et sécurisée.
+          </strong>
+        </p> -->
+        <h6>
+          <strong class="text-dark">
+            Découvrez les talents et professionnels qui ont travaillé avec passion
+            pour créer LaCasa et rendre la recherche de logements plus simple et sécurisée.
+          </strong>
+        </h6>
       </div>
 
       <div class="row g-4">

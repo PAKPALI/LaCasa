@@ -1,9 +1,11 @@
 <template>
-  <div class="container-xxl opacity bg-white p-0">
+  <div class="container-xxl p-0" style="background-color: rgba(255, 255, 255, 0.8);">
+    <!-- Background Starfall -->
+     <Starfall />
+    
     <!-- Spinner Start -->
     <div
-      id="spinner"
-      :class="{ show: loading, hide: !loading }"
+      id="spinner" :class="{ show: loading, hide: !loading }"
       class="bg-white position-fixed w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
     >
       <!-- ======== NOUVEAU LOADER ======== -->
@@ -11,6 +13,8 @@
         <div class="ring"></div>
         <div class="ring"></div>
       </div>
+
+      
       <!-- ======== FIN NOUVEAU LOADER ======== -->
 
       <!-- ======== ANCIEN SPINNER (COMMENTÉ) ========
@@ -34,6 +38,8 @@
 <script setup>
 import NavBar from './partial/NavBar2.vue'
 import Footer from './partial/Footer.vue'
+import Starfall from './partial/Starfall.vue'
+import Particles from './partial/Particles.vue'
 import { ref, onMounted } from 'vue'
 
 const loading = ref(true)

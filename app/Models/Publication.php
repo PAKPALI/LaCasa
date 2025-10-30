@@ -89,7 +89,5 @@ class Publication extends Model
         // Si 30 jours se sont écoulés depuis la désactivation → suppression
         return Carbon::now()->greaterThanOrEqualTo(Carbon::parse($referenceDate)->addDays(30));
     }
-
-
 }
 

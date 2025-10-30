@@ -6,10 +6,12 @@
         <div class="col-lg-6">
           <div class="text-start mx-auto mb-5">
             <h1 class="mb-3">Les Propriétés</h1>
-            <p>
-              Découvrez une sélection de biens immobiliers disponibles à la vente et à la location.
-              Trouvez facilement la maison, la villa ou le bureau qui correspond à vos besoins.
-            </p>
+            <h6>
+              <strong class="text-dark">
+                Découvrez une sélection de biens immobiliers disponibles à la vente et à la location.
+                Trouvez facilement la maison, la villa ou le bureau qui correspond à vos besoins.
+              </strong>
+            </h6>
           </div>
         </div>
         <div class="col-lg-6 text-start text-lg-end">
