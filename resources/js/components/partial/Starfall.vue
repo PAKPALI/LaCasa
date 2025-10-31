@@ -10,7 +10,7 @@ let ctx, animationId
 let stars = []
 
 const MAX_STARS_DESKTOP = 200
-const MAX_STARS_MOBILE = 80
+const MAX_STARS_MOBILE = 100
 
 // Initialisation des étoiles
 function initStars(width, height) {
