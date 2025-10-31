@@ -12,15 +12,16 @@
             </div>
             <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
               <div class="mb-4">
-                <h1 class="">Pourquoi Choisir LaCasa ?</h1>
+                <h1 class="mb-4">Pourquoi Choisir LaCasa ?</h1>
                   <strong class="mb-4">
                     <h6>
-                      LaCasa révolutionne la recherche de logements au Togo. 
+                      LaCasa apporte une solution précise et simplifiée pour vous aider. 
                     </h6>
                   </strong>
                   <p class="mt-4"><i class="fa fa-check text-primary me-3"></i><strong>Plus besoin de courir derrière des tableaux physiques exposés en plein air</strong></p>
-                  <p><i class="fa fa-check text-primary me-3"></i><strong>Trouvez votre maison idéale rapidement avec précision</strong></p>
-                  <p><i class="fa fa-check text-primary me-3"></i><strong>Trouvez votre maison idéale quelque soit votre position</strong></p>
+                  <p><i class="fa fa-check text-primary me-3"></i><strong>Trouvez votre maison idéale rapidement avec précision(ville,quartier,prix..)</strong></p>
+                  <p><i class="fa fa-check text-primary me-3"></i><strong>Quelque soit votre position, LaCasa simplifie tout</strong></p>
+                  <!-- <p><i class="fa fa-check text-primary me-3"></i><strong></strong></p> -->
               </div>
               <!-- <a href="#" class="btn btn-primary py-3 px-4 me-2">
                 <i class="fa fa-phone-alt me-2"></i>Appeler maintenant
