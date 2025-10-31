@@ -7,7 +7,7 @@
         <div class="col-lg-6">
           <div class="text-start mx-auto mb-5">
             <h1 class="mb-3">Mes publications</h1>
-            <p><h6>La liste de vos publications s'affichera ci-dessous une fois créées.</h6></p>
+            <h6>La liste de vos publications s'affichera ci-dessous une fois créées.</h6>
           </div>
         </div>
         <div class="col-lg-6 text-start text-lg-end">
@@ -137,7 +137,8 @@
                 </div>
               </div>
               <div v-else-if="filteredPublications.length === 0">
-                <p class="text-muted">Aucune publication pour cette catégorie pour le moment.</p>
+                <img class="img-fluid" :src="gif" alt="gif" style="width: auto;">
+                 <p class="text-danger"><strong>Aucune publication pour ce code saisi.</strong> </p>
               </div>
             </div>
 
@@ -255,6 +256,7 @@
 </template>
 
 <script setup>
+import gif from '@images2/empty.gif'
 import { ref, computed, watch, nextTick } from 'vue'
 import { Modal, Carousel } from 'bootstrap'
 import EditPublication from './edit.vue'

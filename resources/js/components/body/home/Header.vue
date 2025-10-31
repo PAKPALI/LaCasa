@@ -5,11 +5,9 @@
         <h1 class="display-5 animated fadeIn mb-2">
           Trouvez <span class="text-primary">la maison idéale</span> pour vous et votre famille
         </h1>
-        <p class="animated fadeIn mb-2 text-primary pb-1">
-          <h6 class="text-dark">
+          <h6 class="animated fadeIn mb-2 text-dark pb-1">
             LaCasa simplifie la recherche de logements au Togo. Consultez des annonces fiables, mises à jour et adaptées à vos besoins.
           </h6>
-        </p>
         <!-- <a href="#" class="btn btn-primary py-3 px-5 me-3 animated fadeIn">Commencer</a> -->
       </div>
      <div class="col-md-6 animated fadeIn">

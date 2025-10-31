@@ -14,15 +14,13 @@
         <!-- Texte -->
         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
           <h1 class="mb-4">La meilleure plateforme pour trouver votre bien idéal</h1>
-          <p class="mb-4">
-            <h6>
+            <h6 class="mb-4">
               <strong class="text-dark">
                 Découvrez un large choix de propriétés adaptées à vos besoins. Que vous souhaitiez acheter,
                 louer, notre équipe met à votre disposition des annonces fiables et vérifiées
                 afin de vous garantir la meilleure expérience.
               </strong>
             </h6>
-          </p>
           
           <p><i class="fa fa-check text-primary me-3"></i><strong>Des offres variées et mises à jour</strong></p>
           <p><i class="fa fa-check text-primary me-3"></i><strong>Des agents certifiés à votre écoute</strong></p>

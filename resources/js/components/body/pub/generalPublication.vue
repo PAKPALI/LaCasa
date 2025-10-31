@@ -3,7 +3,7 @@
     <div class="container">
 
       <!-- FILTRAGE -->
-      <div class="container-fluid bg-dark mb-5 p-3">
+      <div class="container-fluid mb-5 p-3" style="background-color: rgba(14, 46, 80, 0.85);">
         <div class="container">
           <div class="row g-2">
             <div class="col-md-12">
@@ -249,7 +249,8 @@
                 </div>
               </div>
               <div v-else-if="filteredPublications.length === 0">
-                <p class="text-danger">Désolée, aucune publication correspondante au filtrage n'a été trouvée!</p>
+                <img class="img-fluid" :src="gif" alt="À propos LaCasa" style="width: auto;">
+                <p class="text-danger"><strong>Désolée, aucune publication correspondante au filtrage n'a été trouvée!</strong></p>
               </div>
             </div>
 
@@ -347,6 +348,9 @@
 </template>
 
 <script setup>
+  import gif from '@images2/empty.gif'
+  import disconnect from '@images2/disconnect.png'
+
   import { ref, computed, watch, nextTick } from 'vue'
   import axios from 'axios'
   import { Modal, Carousel } from 'bootstrap'
@@ -668,7 +672,7 @@
         title: "Connexion requise",
         html: `
           <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
-            <img width="94" height="94" src="https://img.icons8.com/3d-fluency/94/info-1.png" alt="info-1"/>
+            <img width="120" height=120" src="${disconnect}" alt="info-1"/>
             <p style="font-size:16px; color:#0e2e50; font-weight:500; margin-top:15px;">
               Connectez-vous pour accéder à plus de fonctionnalités :<br>
               <strong>voir les numéros, publier des annonces, et plus encore.</strong>

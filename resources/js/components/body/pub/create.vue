@@ -1,10 +1,10 @@
 <template>
   <div class="container mt-5 my-5">
-    <h2 class="mb-4 mt-5 pt-5 border-bottom fw-bold text-primary">Créer une publication</h2>
+    <h2 class="mb-4 mt-5 pt-5 fw-bold text-dark">Créer une publication</h2> <hr></hr>
     <form @submit.prevent="submitPublication" class="border-bottom pb-5">
 
       <!-- 🔵 SECTION : Informations obligatoires -->
-      <div class="p-3 mb-4 rounded shadow-sm border bg-dark ">
+      <div class="p-3 mb-4 rounded shadow-sm border " style="background-color: rgba(14, 46, 80, 0.85);">
         <h5 class="fw-bold text-light border-bottom mb-3">Informations obligatoires</h5>
 
         <div class="row">
@@ -128,7 +128,7 @@
       </div>
 
       <!-- 🟢 SECTION : Informations complémentaires -->
-      <div class="p-3 mb-4 rounded shadow-sm bg-dark text-light border">
+      <div class="p-3 mb-4 rounded shadow-sm text-light border" style="background-color: rgba(14, 46, 80, 0.85);">
         <h5 class="fw-bold text-light border-bottom mb-3">Informations complémentaires</h5>
         <div class="row">
           <div class="col-md-4 mb-3">
@@ -175,7 +175,7 @@
       </div>
 
       <!-- 🟠 SECTION : Statuts -->
-      <div class="p-3 mb-4 rounded shadow-sm bg-dark border text-light">
+      <div class="p-3 mb-4 rounded shadow-sm  border text-light" style="background-color: rgba(14, 46, 80, 0.85);">
         <h5 class="fw-bold text-light border-bottom mb-3">Statuts</h5>
         <div class="row">
           <div class="col-md-6">

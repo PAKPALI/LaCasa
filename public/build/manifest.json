@@ -39,6 +39,14 @@
     "file": "assets/carousel-2-DiQZ5U25.jpg",
     "src": "resources/js/images/template/carousel-2.jpg"
   },
+  "resources/js/images/template/disconnect.png": {
+    "file": "assets/disconnect-DA4azbkO.png",
+    "src": "resources/js/images/template/disconnect.png"
+  },
+  "resources/js/images/template/empty.gif": {
+    "file": "assets/empty-ChuaEKUH.gif",
+    "src": "resources/js/images/template/empty.gif"
+  },
   "resources/js/images/template/icon-apartment.png": {
     "file": "assets/icon-apartment-CzoS5fJG.png",
     "src": "resources/js/images/template/icon-apartment.png"
@@ -100,12 +108,12 @@
     "src": "resources/js/images/template/team-3.jpg"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-pxTZoARt.js",
+    "file": "assets/app2-DhCnwTcj.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-BXNap4Ne.css"
+      "assets/app2-8aBiKJeQ.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
@@ -125,7 +133,9 @@
       "assets/icon-condominium-Bl6drNCS.png",
       "assets/about-cr2Rp6N1.jpg",
       "assets/call-to-action--rE-WJM8.jpg",
-      "assets/icon1-qbiIWmXk.jpg"
+      "assets/icon1-qbiIWmXk.jpg",
+      "assets/empty-ChuaEKUH.gif",
+      "assets/disconnect-DA4azbkO.png"
     ]
   }
 }

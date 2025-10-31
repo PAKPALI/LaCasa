@@ -32,7 +32,7 @@ function initStars(width, height) {
 // Animation 3D
 function animateStars(width, height) {
   // Fond blanc
-  ctx.fillStyle = '#00b88d'
+  ctx.fillStyle = '#ffffff'
   ctx.fillRect(0, 0, width, height)
 
   stars.forEach(star => {
@@ -43,7 +43,7 @@ function animateStars(width, height) {
     const pr = star.r * scale * 3
 
     // Dessin étoile noire
-    ctx.fillStyle = '#0e2e50'
+    ctx.fillStyle = '#00b88d'
     ctx.beginPath()
     ctx.arc(px, py, pr, 0, Math.PI * 2)
     ctx.fill()

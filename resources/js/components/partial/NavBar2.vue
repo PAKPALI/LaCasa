@@ -7,14 +7,14 @@
         <span class="navbar-icon icon-user w-25"></span>
         <span class="navbar-icon icon-map w-25"></span>
 
-        <nav class="navbar fixed-top navbar-expand-lg bg-dark navbar-light py-0 px-4">
+        <nav class="navbar fixed-top navbar-expand-lg navbar-light py-0 px-4" style="background-color: rgba(14, 46, 80, 0.9);">
             <a href="index.html" class="navbar-brand bg-light d-flex align-items-center text-center">
                 <div class="icon p-3 me-2">
                     <img class="img-fluid" :src="logo2" alt="Icon" style="width: 30px; height: 30px;">
                 </div>
                 <h1 class="m-0 text-primary">La Casa</h1>
             </a>
-            <span class="text-white text-center fs-6 ms-2">{{ currentTime }}</span>
+            <span class="text-white text-start fs-6 ms-2">{{ currentTime }}</span>
 
             <button type="button" class="navbar-toggler bg-light " data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>

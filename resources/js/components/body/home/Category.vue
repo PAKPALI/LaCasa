@@ -3,7 +3,7 @@
     <div class="container">
       <div class="text-center mx-auto mb-5" style="max-width: 600px;">
         <h1 class="mb-3">Types de logements</h1>
-        <p><h6>Découvrez les catégories de logements disponibles sur LaCasa.</h6></p>
+        <h6>Découvrez les catégories de logements disponibles sur LaCasa.</h6>
       </div>
       <div class="row g-4">
         <div class="col-lg-4 col-md-4 col-sm-6" v-for="(item, index) in categories" :key="index">

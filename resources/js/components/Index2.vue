@@ -1,7 +1,8 @@
 <template>
-  <div class="container-xxl p-0" style="background-color: rgba(255, 255, 255, 0.8);">
+  <div class="container-fluid p-0" style="background-color: rgba(255, 255, 255, 0.75);">
     <!-- Background Starfall -->
      <Starfall />
+      <!-- <Starfall2 /> -->
     
     <!-- Spinner Start -->
     <div
@@ -39,7 +40,8 @@
 import NavBar from './partial/NavBar2.vue'
 import Footer from './partial/Footer.vue'
 import Starfall from './partial/Starfall.vue'
-import Particles from './partial/Particles.vue'
+// import Starfall2 from './partial/Starfall2.vue'
+// import Particles from './partial/Particles.vue'
 import { ref, onMounted } from 'vue'
 
 const loading = ref(true)
