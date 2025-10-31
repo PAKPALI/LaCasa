@@ -14,7 +14,7 @@
                 </div>
                 <h1 class="m-0 text-primary">La Casa</h1>
             </a>
-            <span class="text-white text-start fs-6 ms-2">{{ currentTime }}</span>
+            <!-- <span class="text-white text-start fs-6 ms-2">{{ currentTime }}</span> -->
 
             <button type="button" class="navbar-toggler bg-light " data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
