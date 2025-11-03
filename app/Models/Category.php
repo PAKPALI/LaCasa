@@ -20,4 +20,9 @@ class Category extends Model
     {
         return $this->hasMany(PubType::class);
     }
+
+    public function publications()
+    {
+        return $this->hasMany(Publication::class);
+    }
 }

@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Category::with('country');
+        $query = Category::with('country')->withCount('publications');
 
         // Filtrer si district_id passé (pour le formulaire)
         if ($request->has('country_id')) {

@@ -2,10 +2,10 @@
   <!-- <ParticleJs /> -->
   <Header />
   <!-- <SearchBar /> -->
-  <Category />
   <About />
   <PropertyList />
   <Agent/>
+  <Category />
   <Team />
   <Testimonials />
   <!-- <Footer /> -->

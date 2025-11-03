@@ -1,40 +1,144 @@
 <template>
   <!-- À propos Début -->
-  <div class="container-xxl py-5" style="background-color: rgba(255, 255, 255, 0.6);">
+  <section ref="aboutSection" class="container-xxl py-5" style="background-color: rgba(255, 255, 255, 0.85);">
     <div class="container">
       <div class="row g-5 align-items-center">
 
         <!-- Image -->
         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-          <div class="about-img position-relative overflow-hidden p-5 pe-0">
-            <img class="img-fluid w-100" :src="aboutImage" alt="À propos LaCasa">
+          <div class="position-relative overflow-hidden rounded-4 shadow-sm">
+            <img
+              class="img-fluid w-100"
+              :src="aboutImage"
+              alt="À propos LaCasa"
+              style="transition: transform 0.5s;"
+              @mouseover="hoverImage = true"
+              @mouseleave="hoverImage = false"
+              :style="{ transform: hoverImage ? 'scale(1.05)' : 'scale(1)' }"
+            />
           </div>
         </div>
 
         <!-- Texte -->
         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-          <h1 class="mb-4">La meilleure plateforme pour trouver votre bien idéal</h1>
-            <h6 class="mb-4">
-              <strong class="text-dark">
-                Découvrez un large choix de propriétés adaptées à vos besoins. Que vous souhaitiez acheter,
-                louer, notre équipe met à votre disposition des annonces fiables et vérifiées
-                afin de vous garantir la meilleure expérience.
-              </strong>
-            </h6>
+          <h1 class="mb-4 fw-bold text-dark">
+            Trouvez rapidement le logement qui vous correspond
+          </h1>
+          <p class="mb-4 text-muted fs-5">
+            LaCasa met à votre disposition une plateforme fiable et intuitive, avec un large choix
+            de logements adaptés à vos besoins : location, achat ou investissement. Nos annonces sont
+            vérifiées pour vous offrir une expérience transparente et sécurisée.
+          </p>
           
-          <p><i class="fa fa-check text-primary me-3"></i><strong>Des offres variées et mises à jour</strong></p>
-          <p><i class="fa fa-check text-primary me-3"></i><strong>Des agents certifiés à votre écoute</strong></p>
-          <p><i class="fa fa-check text-primary me-3"></i><strong>Une recherche simple et personnalisée</strong></p>
-          <a class="btn btn-primary py-3 px-5 mt-3" href="#">En savoir plus</a>
+          <!-- Features avec icônes flottantes et texte animé -->
+          <div class="mb-3 d-flex align-items-start gap-3" v-for="(feature, idx) in features" :key="idx">
+            <i :class="feature.icon + ' floating-icon'"></i>
+            <p class="mb-0 fw-semibold text-dark typing-text">{{ animatedTexts[idx] }}</p>
+          </div>
+
+          <a class="btn btn-primary py-3 px-5 mt-3 shadow-sm" href="#">
+            En savoir plus
+          </a>
         </div>
 
       </div>
     </div>
-  </div>
+  </section>
   <!-- À propos Fin -->
 </template>
 
 <script setup>
-// Import de l'image
+import { ref, onMounted } from 'vue'
 import aboutImage from '@images2/about.jpg'
+
+const hoverImage = ref(false)
+
+const features = [
+  { icon: 'fa fa-check-circle', text: 'Des annonces vérifiées et fiables' },
+  { icon: 'fa fa-user-tie', text: 'Des agents expérimentés et disponibles' },
+  { icon: 'fa fa-search', text: 'Recherche intelligente et personnalisée' },
+  { icon: 'fa fa-mobile-alt', text: 'Accessible depuis mobile et desktop' },
+]
+
+const animatedTexts = ref(features.map(() => ""))
+
+const aboutSection = ref(null)
+
+// Fonction typewriter avec pause 3s
+function startTypeWriter() {
+  features.forEach((feature, idx) => {
+    let charIndex = 0
+    let paused = false
+
+    const typeWriter = () => {
+      if (!paused) {
+        if (charIndex <= feature.text.length) {
+          animatedTexts.value[idx] = feature.text.slice(0, charIndex)
+          charIndex++
+        } else {
+          paused = true
+          setTimeout(() => {
+            charIndex = 0
+            animatedTexts.value[idx] = ""
+            paused = false
+          }, 3000)
+        }
+      }
+    }
+
+    setInterval(typeWriter, 100 + idx*50)
+  })
+}
+
+onMounted(() => {
+  // Détecter l’arrivée sur la section
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          startTypeWriter()
+          observer.disconnect()
+        }
+      })
+    },
+    { threshold: 0.5 }
+  )
+
+  if (aboutSection.value) observer.observe(aboutSection.value)
+})
 </script>
+
+<style scoped>
+section {
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+
+/* Animation flottement icônes */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating-icon {
+  font-size: 1.5rem;
+  color: #00b98e;
+  animation: float 3s ease-in-out infinite;
+  transition: transform 0.3s, color 0.3s;
+}
+
+.floating-icon:hover {
+  transform: scale(1.4);
+  color: #0ea47e;
+  cursor: pointer;
+}
+
+/* Curseur machine à écrire */
+.typing-text {
+  border-right: 2px solid #0ea47e;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 2px;
+}
+</style>

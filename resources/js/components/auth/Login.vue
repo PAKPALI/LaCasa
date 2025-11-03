@@ -43,13 +43,7 @@
             Se connecter
           </button>
         </div>
-        <div class="toggle-switch">
-  <input class="guard" type="checkbox">
-  <span class="guard-sides"></span>
-  <input class="switch" type="checkbox">
-  <span class="knob"></span>
-  <span class="light"></span>
-</div>
+
 
         <div class="text-center mt-3">
           <router-link to='/register' class="nav-link neon-text">Créer un compte?</router-link>

@@ -4,6 +4,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PublicationController;
 
 Route::post('/myLogin', [AuthController::class, 'login'])->name('myLogin');
@@ -16,6 +17,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('getMyPublication', [PublicationController::class, 'getMyPublication']);
 });
+Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/{any}', function () {
     return view('index');
     // return view('index2');

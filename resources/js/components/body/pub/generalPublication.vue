@@ -3,7 +3,7 @@
     <div class="container">
 
       <!-- FILTRAGE -->
-      <div class="container-fluid mb-5 p-3" style="background-color: rgba(14, 46, 80, 0.85);">
+      <div class="container-fluid mb-5 p-3" style="background-color: rgba(14, 46, 80, 0.9);">
         <div class="container">
           <div class="row g-2">
             <div class="col-md-12">
@@ -650,19 +650,31 @@
   const formatRelativeDate = (date) => {
     const now = new Date();
     const published = new Date(date);
+    
     const diff = now - published; // différence en ms
 
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours   = Math.floor(minutes / 60);
     const days    = Math.floor(hours / 24);
+    const months  = Math.floor(days / 30);
+    const years   = Math.floor(days / 365);
+
+    if (years > 0) {
+      const remainingMonths = Math.floor((days % 365) / 30);
+      return `il y a ${years} an${years > 1 ? 's' : ''}${remainingMonths > 0 ? ` ${remainingMonths} mois` : ''}`;
+    }
+
+    if (months > 0) {
+      const remainingDays = days % 30;
+      return `il y a ${months} mois${remainingDays > 0 ? ` ${remainingDays} jour${remainingDays > 1 ? 's' : ''}` : ''}`;
+    }
 
     if (days > 0) return `il y a ${days} jour${days > 1 ? 's' : ''}`;
     if (hours > 0) return `il y a ${hours} heure${hours > 1 ? 's' : ''}`;
     if (minutes > 0) return `il y a ${minutes} minute${minutes > 1 ? 's' : ''}`;
     return `il y a quelques secondes`;
-  }
-
+  };
     // -----------------
   // MESSAGE AUTO APRÈS 10 SECONDES SI NON CONNECTÉ
   // -----------------

@@ -20,10 +20,20 @@ const routes = [
   { path: '/profile', name: 'profile', component: Profile },
 ]
 
+
+
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition // revenir à la position précédente
+    } else {
+      return { top: 0 } // aller en haut de la page
+    }
+  }
 })
+
 
 export default router
 
