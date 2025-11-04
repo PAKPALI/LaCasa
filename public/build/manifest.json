@@ -7,14 +7,6 @@
       "app2.css"
     ]
   },
-  "resources/js/images/hero_bg_1.jpg": {
-    "file": "assets/hero_bg_1-VAm-BHjj.jpg",
-    "src": "resources/js/images/hero_bg_1.jpg"
-  },
-  "resources/js/images/hero_bg_2.jpg": {
-    "file": "assets/hero_bg_2-DLJdILv4.jpg",
-    "src": "resources/js/images/hero_bg_2.jpg"
-  },
   "resources/js/images/icon1.jpg": {
     "file": "assets/icon1-qbiIWmXk.jpg",
     "src": "resources/js/images/icon1.jpg"
@@ -26,10 +18,6 @@
   "resources/js/images/template/about.jpg": {
     "file": "assets/about-cr2Rp6N1.jpg",
     "src": "resources/js/images/template/about.jpg"
-  },
-  "resources/js/images/template/call-to-action.jpg": {
-    "file": "assets/call-to-action--rE-WJM8.jpg",
-    "src": "resources/js/images/template/call-to-action.jpg"
   },
   "resources/js/images/template/carousel-1.jpg": {
     "file": "assets/carousel-1-BEvSPtMg.jpg",
@@ -95,6 +83,10 @@
     "file": "assets/property-6-Csj_vv0E.jpg",
     "src": "resources/js/images/template/property-6.jpg"
   },
+  "resources/js/images/template/son.avif": {
+    "file": "assets/son-Ccz_J6P1.avif",
+    "src": "resources/js/images/template/son.avif"
+  },
   "resources/js/images/template/team-1.jpg": {
     "file": "assets/team-1-DPqAy9Wv.jpg",
     "src": "resources/js/images/template/team-1.jpg"
@@ -108,12 +100,12 @@
     "src": "resources/js/images/template/team-3.jpg"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-_BQS1Azc.js",
+    "file": "assets/app2-DNPZplFh.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-R0ghxz2y.css"
+      "assets/app2-CNazJYeO.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
@@ -132,7 +124,7 @@
       "assets/icon-building-DTY53NhC.png",
       "assets/icon-condominium-Bl6drNCS.png",
       "assets/about-cr2Rp6N1.jpg",
-      "assets/call-to-action--rE-WJM8.jpg",
+      "assets/son-Ccz_J6P1.avif",
       "assets/icon1-qbiIWmXk.jpg",
       "assets/empty-ChuaEKUH.gif",
       "assets/disconnect-DA4azbkO.png"

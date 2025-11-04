@@ -1,15 +1,20 @@
 <template>
-  <div class="container-xxl py-5">
+  <div class="container-xxl py-5 testimonials-section">
     <div class="container">
       <!-- Titre section -->
-      <div class="text-center mx-auto mb-5" style="max-width: 600px;">
-        <h1 class="mb-3">Témoignages</h1>
-        <p>Découvrez ce que nos utilisateurs disent de LaCasa</p>
+      <div class="text-center mx-auto mb-5 section-header">
+        <h1 class="mb-3 fw-bold">Témoignages</h1>
+        <p>Découvrez ce que nos utilisateurs disent de <strong>LaCasa</strong></p>
       </div>
 
       <!-- Carousel -->
-      <div class="carousel shadow-lg rounded bg-white">
-        <div class="carousel-item" v-for="(t, i) in testimonials" :key="i" :class="{ active: i === currentIndex }">
+      <div class="carousel shadow-lg rounded">
+        <div
+          class="carousel-item"
+          v-for="(t, i) in testimonials"
+          :key="i"
+          :class="{ active: i === currentIndex }"
+        >
           <p class="message">"{{ t.message }}"</p>
           <h6 class="name">{{ t.name }}</h6>
           <small class="role">{{ t.role }}</small>
@@ -18,16 +23,6 @@
         <!-- Boutons -->
         <button class="carousel-btn prev" @click="prevSlide">&#10094;</button>
         <button class="carousel-btn next" @click="nextSlide">&#10095;</button>
-
-        <!-- Dots -->
-        <!-- <div class="carousel-dots">
-          <span 
-            v-for="(t, i) in testimonials" 
-            :key="i" 
-            :class="{ active: i === currentIndex }" 
-            @click="currentIndex = i"
-          ></span>
-        </div> -->
       </div>
     </div>
   </div>
@@ -52,22 +47,69 @@ const prevSlide = () => {
   currentIndex.value = (currentIndex.value - 1 + testimonials.length) % testimonials.length
 }
 
-// Auto-slide toutes les 5 secondes
 onMounted(() => {
   setInterval(nextSlide, 5000)
 })
 </script>
 
 <style scoped>
+/* --- SECTION GLOBALE --- */
+.testimonials-section {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  backdrop-filter: blur(1px);
+  transition: all 0.6s ease;
+  padding: 60px 0;
+}
+
+/* --- HEADER SECTION --- */
+.section-header h1 {
+  font-size: 2.2rem;
+  background: linear-gradient(90deg, #00b98e, #007f6c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.5s ease;
+}
+
+.section-header p {
+  color: #333;
+  transition: all 0.5s ease;
+}
+
+/* Quand on survole toute la section */
+.testimonials-section:hover {
+  background: linear-gradient(135deg, #00b98e, #007f6c);
+  color: #fff;
+  box-shadow: 0 15px 35px rgba(0, 185, 142, 0.3);
+}
+
+/* Rendre le texte extérieur blanc */
+.testimonials-section:hover .section-header h1,
+.testimonials-section:hover .section-header p,
+.testimonials-section:hover .section-header strong {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  background: none;
+}
+
+/* --- CAROUSEL --- */
 .carousel {
   position: relative;
   max-width: 700px;
-  width: 90%; /* rend le carousel flexible */
+  width: 90%;
   margin: 0 auto;
   overflow: hidden;
   padding: 40px 20px;
-  background-color: #f9f9f9;
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.6s ease;
+}
+
+/* Quand la section est survolée → le fond devient translucide */
+.testimonials-section:hover .carousel {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 /* Slide */
@@ -89,25 +131,36 @@ onMounted(() => {
   color: #333;
   margin-bottom: 15px;
   font-style: italic;
+  line-height: 1.6;
+  transition: color 0.4s ease;
 }
 
 .name {
   font-weight: 600;
   color: #006400;
   margin-bottom: 5px;
+  transition: color 0.4s ease;
 }
 
 .role {
   font-size: 0.9rem;
   color: #666;
+  transition: color 0.4s ease;
 }
 
-/* Boutons */
+/* Quand survolé, texte du carousel devient blanc */
+.testimonials-section:hover .message,
+.testimonials-section:hover .name,
+.testimonials-section:hover .role {
+  color: #fff !important;
+}
+
+/* --- BOUTONS --- */
 .carousel-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(0, 100, 0, 0.6);
+  background: linear-gradient(135deg, #00b98e, #007f6c);
   color: white;
   border: none;
   padding: 12px;
@@ -122,32 +175,13 @@ onMounted(() => {
 .carousel-btn.next { right: 5px; }
 
 .carousel-btn:hover {
-  background-color: rgba(0, 100, 0, 0.9);
+  transform: translateY(-50%) scale(1.2);
+  background: white;
+  color: #00b98e;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
-/* Dots */
-.carousel-dots {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.carousel-dots span {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin: 0 6px;
-  background-color: #ccc;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.carousel-dots span.active {
-  background-color: #006400;
-  transform: scale(1.2);
-}
-
-/* RESPONSIVE */
+/* --- RESPONSIVE --- */
 @media (max-width: 992px) {
   .carousel {
     padding: 30px 15px;
@@ -189,5 +223,4 @@ onMounted(() => {
     font-size: 0.9rem;
   }
 }
-
 </style>
