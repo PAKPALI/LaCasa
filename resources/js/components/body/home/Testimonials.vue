@@ -100,7 +100,7 @@ onMounted(() => {
   margin: 0 auto;
   overflow: hidden;
   padding: 40px 20px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 15px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: all 0.6s ease;
@@ -108,7 +108,7 @@ onMounted(() => {
 
 /* Quand la section est survolée → le fond devient translucide */
 .testimonials-section:hover .carousel {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
@@ -166,7 +166,7 @@ onMounted(() => {
   padding: 12px;
   cursor: pointer;
   font-size: 22px;
-  border-radius: 50%;
+  border-radius: 90%;
   transition: all 0.3s ease;
   z-index: 2;
 }
