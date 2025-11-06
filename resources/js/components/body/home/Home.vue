@@ -3,9 +3,9 @@
   <Header />
   <!-- <SearchBar /> -->
   <About />
-  <PropertyList />
   <Agent/>
   <Category />
+  <Partners />
   <Team />
   <Testimonials />
   <!-- <Footer /> -->
@@ -19,7 +19,7 @@
   import SearchBar from '@/components/body/home/SearchForm.vue'
   import Category from '@/components/body/home/Category.vue'
   import About from '@/components/body/home/About.vue'
-  import PropertyList from '@/components/body/home/PropertyList.vue'
+  import Partners from '@/components/body/home/Partners.vue'
   import Agent from '@/components/body/home/Agent.vue'
   import Team from '@/components/body/home/TeamMember.vue'
   import Testimonials from '@/components/body/home/Testimonials.vue'

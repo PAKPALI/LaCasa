@@ -52,7 +52,7 @@ import carousel2 from '@images2/carousel-2.jpg'
   position: relative;
   height: 100vh;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(10, 10, 10, 0.9));
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(10, 10, 10, 0.8));
   color: #fff;
 }
 
@@ -64,10 +64,10 @@ import carousel2 from '@images2/carousel-2.jpg'
     center/cover no-repeat;
   z-index: 0;
   animation: backgroundMove 30s linear infinite;
-  filter: brightness(0.6);
+  filter: brightness(1);
 }
 
-.flash {
+/* .flash {
   position: absolute;
   inset: 0;
   background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
@@ -76,13 +76,13 @@ import carousel2 from '@images2/carousel-2.jpg'
 }
 
 .flash:nth-child(2) { animation-delay: 5s; }
-.flash:nth-child(3) { animation-delay: 9s; }
+.flash:nth-child(3) { animation-delay: 9s; } */
 
-@keyframes flashThunder {
+/* @keyframes flashThunder {
   0%, 97%, 100% { opacity: 0; }
   98% { opacity: 1; }
   99% { opacity: 0.3; }
-}
+} */
 
 @keyframes backgroundMove {
   0% { background-position: center; }
@@ -98,7 +98,7 @@ import carousel2 from '@images2/carousel-2.jpg'
   border-radius: 20px;
   padding: 3rem;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(1px);
 }
 
 /* effet flottant aléatoire */

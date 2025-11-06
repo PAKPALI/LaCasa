@@ -3,18 +3,13 @@
     <div class="container">
       <!-- Titre section -->
       <div class="text-center mx-auto mb-5 section-header">
-        <h1 class="mb-3 fw-bold">Témoignages</h1>
-        <p>Découvrez ce que nos utilisateurs disent de <strong>LaCasa</strong></p>
+        <h1 class="mb-3 text-dark">Témoignages</h1>
+        <h6>Découvrez ce que nos utilisateurs disent de LaCasa</h6>
       </div>
 
       <!-- Carousel -->
       <div class="carousel shadow-lg rounded">
-        <div
-          class="carousel-item"
-          v-for="(t, i) in testimonials"
-          :key="i"
-          :class="{ active: i === currentIndex }"
-        >
+        <div class="carousel-item" v-for="(t, i) in testimonials" :key="i" :class="{ active: i === currentIndex }">
           <p class="message">"{{ t.message }}"</p>
           <h6 class="name">{{ t.name }}</h6>
           <small class="role">{{ t.role }}</small>
@@ -26,10 +21,13 @@
       </div>
     </div>
   </div>
+  
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import avis from '@images/avis.avif'
+
 
 const testimonials = [
   { name: "Jean K.", role: "Client", message: "J’ai trouvé un appartement en 2 jours grâce à LaCasa !" },
@@ -54,31 +52,60 @@ onMounted(() => {
 
 <style scoped>
 /* --- SECTION GLOBALE --- */
-.testimonials-section {
-  background: rgba(255, 255, 255, 0.5);
+/* .testimonials-section {
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 20px;
+  backdrop-filter: blur(5px);
+  transition: all 0.6s ease;
+  padding: 60px 0;
+} */
+
+.testimonials-section {
+  background-image: url('@/images/avis.avif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
   backdrop-filter: blur(1px);
   transition: all 0.6s ease;
   padding: 60px 0;
 }
 
+/* Ajoute un voile semi-transparent par-dessus l'image */
+.testimonials-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 107, 79, 0.5);
+  z-index: 0;
+  transition: background 0.6s ease;
+}
+
+/* S’assure que tout le contenu est au-dessus */
+.testimonials-section > .container {
+  position: relative;
+  z-index: 1;
+}
+
 /* --- HEADER SECTION --- */
 .section-header h1 {
   font-size: 2.2rem;
-  background: linear-gradient(90deg, #00b98e, #007f6c);
+  background: white;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: all 0.5s ease;
 }
 
-.section-header p {
-  color: #333;
+.section-header h6 {
+  color: #ffffff;
   transition: all 0.5s ease;
 }
 
 /* Quand on survole toute la section */
 .testimonials-section:hover {
-  background: linear-gradient(135deg, #00b98e, #007f6c);
+  background: rgba(0, 185, 142, 0.5);
   color: #fff;
   box-shadow: 0 15px 35px rgba(0, 185, 142, 0.3);
 }
@@ -171,8 +198,13 @@ onMounted(() => {
   z-index: 2;
 }
 
-.carousel-btn.prev { left: 5px; }
-.carousel-btn.next { right: 5px; }
+.carousel-btn.prev {
+  left: 5px;
+}
+
+.carousel-btn.next {
+  right: 5px;
+}
 
 .carousel-btn:hover {
   transform: translateY(-50%) scale(1.2);
