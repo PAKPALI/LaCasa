@@ -14,7 +14,6 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        
         $error_messages = [
             "email.required"    => "L'adresse email est requise.",
             "email.email"       => "L'adresse email est invalide.",
@@ -36,6 +35,25 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->boolean('remember');
 
+        // 🔍 On vérifie d'abord si l'utilisateur existe
+        $user = \App\Models\User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return response()->json([
+                "status"  => false,
+                "message" => "Aucun utilisateur trouvé avec cet email.",
+            ], 404);
+        }
+
+        // 🚫 Vérifie si le compte est inactif
+        if (!$user->is_active) {
+            return response()->json([
+                "status"  => false,
+                "message" => "Votre compte est inactif. Veuillez contacter l'administration pour le réactiver.",
+            ], 403);
+        }
+
+        // 🔐 Auth::attempt vérifie le mot de passe
         if (!Auth::attempt($credentials, $remember)) {
             return response()->json([
                 "status"  => false,
@@ -43,11 +61,9 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // 🔐 Auth::attempt a connecté l'utilisateur
+        // ✅ L'utilisateur est connecté
         $user = Auth::user();
-        Log::info(Auth::check());
 
-        // Réponse JSON pour Vue
         return response()->json([
             "status"  => true,
             "message" => "Connexion réussie ✅",

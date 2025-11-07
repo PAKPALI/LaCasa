@@ -19,11 +19,6 @@
         <div class="modal-body">
           <form>
             <div class="mb-3">
-              <label class="form-label">Nom</label>
-              <input type="text" class="form-control" v-model="name">
-              <label :class="labelNameLog">{{ nameLog }}</label>
-            </div>
-            <div class="mb-3">
               <label class="form-label">Pays</label>
               <v-select
                 v-model="countryId"
@@ -35,6 +30,11 @@
                 :loading="loadingCountries"
               />
               <label :class="labelCountryLog">{{ countryLog }}</label>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Nom</label>
+              <input type="text" class="form-control" v-model="name">
+              <label :class="labelNameLog">{{ nameLog }}</label>
             </div>
           </form>
         </div>
@@ -160,7 +160,7 @@
                   <span v-if="loadingButton==='update'" class="spinner-border spinner-border-sm text-dark"></span>
                   <span v-if="loadingButton!=='update'"><i class="bi bi-pencil-square"></i></span>
                 </button>
-                <button class="btn btn-sm btn-danger" @click="deletedTown(town.id)" :disabled="loadingButton===town.id">
+                <button v-if="isAuthenticated && user.role == 1"  class="btn btn-sm btn-danger" @click="deletedTown(town.id)" :disabled="loadingButton===town.id">
                   <span v-if="loadingButton===town.id" class="spinner-border spinner-border-sm text-light"></span>
                   <span v-if="loadingButton!==town.id"><i class="bi bi-trash"></i></span>
                 </button>
@@ -190,6 +190,8 @@
   import Swal from 'sweetalert2'
   import vSelect from "vue-select"
   import "vue-select/dist/vue-select.css"
+
+  import { user, isAuthenticated } from '../../../auth/auth.js'
 
   // Données
   const name = ref('')

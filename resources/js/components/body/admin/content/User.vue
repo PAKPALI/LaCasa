@@ -149,10 +149,10 @@
                 <button class="btn btn-sm btn-info me-1" @click="viewUser(user)">
                   <i class="bi bi-eye"></i>
                 </button>
-                <button class="btn btn-sm btn-warning me-1" @click="editUser(user)" :disabled="loadingButton==='update'">
+                <button v-if="isAuthenticated && user.role == 1" class="btn btn-sm btn-warning me-1" @click="editUser(user)" :disabled="loadingButton==='update'">
                   <i class="bi bi-pencil-square"></i>
                 </button>
-                <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)" :disabled="loadingButton===user.id">
+                <button v-if="isAuthenticated && user.role == 1" class="btn btn-sm btn-danger" @click="deleteUser(user.id)" :disabled="loadingButton===user.id">
                   <span v-if="loadingButton===user.id" class="spinner-border spinner-border-sm text-light"></span>
                   <span v-else><i class="bi bi-trash"></i></span>
                 </button>
@@ -180,6 +180,7 @@ import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { Modal } from 'bootstrap'
+import { user, isAuthenticated } from '../../../auth/auth.js'
 
 const Users = ref([])
 const selectedUser = ref(null)

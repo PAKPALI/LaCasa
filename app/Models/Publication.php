@@ -52,7 +52,7 @@ class Publication extends Model
         parent::boot();
 
         static::creating(function ($publication) {
-            $publication->code = strtoupper(Str::random(15));
+            $publication->code = strtoupper(Str::random(5));
         });
     }
 

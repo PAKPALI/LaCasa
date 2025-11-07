@@ -151,7 +151,7 @@
                   <span v-if="loadingButton==='update'" class="spinner-border spinner-border-sm text-dark"></span>
                   <span v-else><i class="bi bi-pencil-square"></i></span>
                 </button>
-                <button class="btn btn-sm btn-danger" @click="deletedCategory(category.id)" :disabled="loadingButton===category.id">
+                <button class="btn btn-sm btn-danger" v-if="isAuthenticated && user.role == 1"  @click="deletedCategory(category.id)" :disabled="loadingButton===category.id">
                   <span v-if="loadingButton===category.id" class="spinner-border spinner-border-sm text-light"></span>
                   <span v-else><i class="bi bi-trash"></i></span>
                 </button>
@@ -180,6 +180,7 @@
   import Swal from 'sweetalert2'
   import vSelect from "vue-select"
   import "vue-select/dist/vue-select.css"
+  import { user, isAuthenticated } from '../../../auth/auth.js'
 
   const name = ref('')
   const countryId = ref('')

@@ -131,7 +131,7 @@
                   <span v-if="loadingButton==='update'" class="spinner-border spinner-border-sm text-dark"></span>
                   <span v-if="loadingButton!=='update'"><i class="bi bi-pencil-square"></i></span>
                 </button>
-                <button class="btn btn-sm btn-danger" @click="deletedCountry(country.id)" :disabled="loadingButton===country.id">
+                <button class="btn btn-sm btn-danger" v-if="isAuthenticated && user.role == 1"  @click="deletedCountry(country.id)" :disabled="loadingButton===country.id">
                   <span v-if="loadingButton===country.id" class="spinner-border spinner-border-sm text-light"></span>
                   <span v-if="loadingButton!==country.id"><i class="bi bi-trash"></i></span>
                 </button>
@@ -160,6 +160,7 @@
   import { Modal } from 'bootstrap'
   import axios from 'axios'
   import Swal from 'sweetalert2'
+  import { user, isAuthenticated } from '../../../auth/auth.js'
 
   // Données
   const name = ref('')
@@ -258,7 +259,7 @@
         Swal.fire({ icon:'error', title:response.data.title, text:response.data.message })
       }
     } catch(error){
-      Swal.fire({ icon:'error', title:"Erreur Serveur", text:error.response?.data?.message || "Une erreur est survenue." })
+      Swal.fire({ icon:'error', title:"Erreur", text:error.response?.data?.message || "Une erreur est survenue." })
       console.error(error)
     }
     loadingButton.value = ''
@@ -276,7 +277,7 @@
         Swal.fire({ icon:'error', title:response.data.title, text:response.data.message })
       }
     } catch(error){
-      Swal.fire({ icon:'error', title:"Erreur Serveur", text:error.response?.data?.message || "Une erreur est survenue." })
+      Swal.fire({ icon:'error', title:"Erreur", text:error.response?.data?.message || "Une erreur est survenue." })
       console.error(error)
     }
     loadingButton.value = ''

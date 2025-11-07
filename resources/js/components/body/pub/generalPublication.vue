@@ -108,7 +108,7 @@
             <router-link to='/createPub' class="btn btn-dark border-0 w-15"> + Ajouter publication </router-link>
           </div> -->
           <div class="text-end mx-auto mb-3">
-            <button class="btn btn-dark border-0 w-15" @click="handleAddPublication" :disabled="loadingPublications">
+            <button class="btn-lg btn-dark border-0 w-50" @click="handleAddPublication" :disabled="loadingPublications">
               + Ajouter publication
             </button>
           </div>

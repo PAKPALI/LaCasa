@@ -176,7 +176,7 @@
                                         class="spinner-border spinner-border-sm text-dark"></span>
                                     <span v-if="loadingButton !== 'update'"><i class="bi bi-pencil-square"></i></span>
                                 </button>
-                                <button class="btn btn-sm btn-danger" @click="deletedAttribute(attribute.id)"
+                                <button class="btn btn-sm btn-danger" v-if="isAuthenticated && user.role == 1"  @click="deletedAttribute(attribute.id)"
                                     :disabled="loadingButton === attribute.id">
                                     <span v-if="loadingButton === attribute.id"
                                         class="spinner-border spinner-border-sm text-light"></span>
@@ -209,6 +209,7 @@
     import Swal from 'sweetalert2'
     import vSelect from "vue-select"
     import "vue-select/dist/vue-select.css"
+    import { user, isAuthenticated } from '../../../auth/auth.js'
 
     // Données
     const name = ref('')
@@ -313,7 +314,7 @@
                 Swal.fire({ icon: 'error', title: 'Erreur', text: response.data.message })
             }
         } catch (e) {
-            Swal.fire({ icon: 'error', title: 'Erreur Serveur', text: e.response?.data?.message || 'Erreur' })
+            Swal.fire({ icon: 'error', title: 'Erreur', text: e.response?.data?.message || 'Erreur' })
         }
         loadingButton.value = ''
     }
@@ -329,7 +330,7 @@
             } else {
                 Swal.fire({ icon: 'error', title: 'Erreur', text: response.data.message })
             }
-        } catch (e) { Swal.fire({ icon: 'error', title: 'Erreur Serveur', text: e.response?.data?.message || 'Erreur' }) }
+        } catch (e) { Swal.fire({ icon: 'error', title: 'Erreur', text: e.response?.data?.message || 'Erreur' }) }
         loadingButton.value = ''
     }
 
@@ -345,7 +346,7 @@
                     Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: response.data.message || 'Attribut supprimé', showConfirmButton: false, timer: 3000 })
                     await getAttributes()
                 }
-            } catch (e) { Swal.fire({ icon: 'error', title: 'Erreur Serveur', text: e.response?.data?.message || 'Erreur' }) }
+            } catch (e) { Swal.fire({ icon: 'error', title: 'Erreur', text: e.response?.data?.message || 'Erreur' }) }
             loadingButton.value = ''
         }
     }

@@ -150,7 +150,7 @@
                   <span v-if="loadingButton === 'update'" class="spinner-border spinner-border-sm text-dark"></span>
                   <span v-if="loadingButton !== 'update'"><i class="bi bi-pencil-square"></i></span>
                 </button>
-                <button class="btn btn-sm btn-danger" @click="deletedPubType(pubType.id)"
+                <button class="btn btn-sm btn-danger" v-if="isAuthenticated && user.role == 1"  @click="deletedPubType(pubType.id)"
                   :disabled="loadingButton === pubType.id">
                   <span v-if="loadingButton === pubType.id" class="spinner-border spinner-border-sm text-light"></span>
                   <span v-if="loadingButton !== pubType.id"><i class="bi bi-trash"></i></span>
@@ -181,6 +181,8 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import vSelect from "vue-select"
 import "vue-select/dist/vue-select.css"
+
+import { user, isAuthenticated } from '../../../auth/auth.js'
 
 // Données
 const name = ref('')
@@ -280,7 +282,7 @@ async function savePubType() {
       Swal.fire({ icon: 'error', title: res.data.title || 'Erreur', text: res.data.message })
     }
   } catch (e) {
-    Swal.fire({ icon: 'error', title: 'Erreur Serveur', text: e.response?.data?.message || 'Une erreur est survenue.' })
+    Swal.fire({ icon: 'error', title: 'Erreur', text: e.response?.data?.message || 'Une erreur est survenue.' })
   }
   loadingButton.value = ''
 }
@@ -297,7 +299,7 @@ async function updatePubType() {
       Swal.fire({ icon: 'error', title: res.data.title || 'Erreur', text: res.data.message })
     }
   } catch (e) {
-    Swal.fire({ icon: 'error', title: 'Erreur Serveur', text: e.response?.data?.message || 'Une erreur est survenue.' })
+    Swal.fire({ icon: 'error', title: 'Erreur', text: e.response?.data?.message || 'Une erreur est survenue.' })
   }
   loadingButton.value = ''
 }
@@ -324,7 +326,7 @@ async function deletedPubType(id) {
         await getPubTypes()
       }
     } catch (e) {
-      Swal.fire({ icon: 'error', title: 'Erreur Serveur', text: e.response?.data?.message || 'Une erreur est survenue.' })
+      Swal.fire({ icon: 'error', title: 'Erreur', text: e.response?.data?.message || 'Une erreur est survenue.' })
     }
     loadingButton.value = ''
   }

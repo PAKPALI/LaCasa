@@ -79,12 +79,12 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               <label>Téléphone principal</label>
-              <input v-model="form.phone1" type="text" class="form-control" />
+              <input v-model="form.phone1" type="number" class="form-control" />
             </div>
 
             <div class="col-md-6 mb-3">
               <label>Téléphone secondaire</label>
-              <input v-model="form.phone2" type="text" class="form-control" />
+              <input v-model="form.phone2" type="number" class="form-control" />
             </div>
             <!-- <div class="col-md-6 mb-3">
               <label>Rôle</label>

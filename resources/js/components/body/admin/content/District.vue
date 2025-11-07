@@ -177,7 +177,7 @@
               <td>
                 <button class="btn btn-sm btn-info me-1" @click="viewDistrict(district)"><i class="bi bi-eye"></i></button>
                 <button class="btn btn-sm btn-warning me-1" @click="districtUpdated(district)" :disabled="loadingButton==='update'"><i class="bi bi-pencil-square"></i></button>
-                <button class="btn btn-sm btn-danger" @click="deletedDistrict(district.id)" :disabled="loadingButton===district.id"><i class="bi bi-trash"></i></button>
+                <button class="btn btn-sm btn-danger" v-if="isAuthenticated && user.role == 1"  @click="deletedDistrict(district.id)" :disabled="loadingButton===district.id"><i class="bi bi-trash"></i></button>
               </td>
             </tr>
             <tr v-if="filteredDistricts.length===0">
@@ -205,6 +205,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
+import { user, isAuthenticated } from '../../../auth/auth.js'
 
 // Données
 const name = ref('')
@@ -333,7 +334,7 @@ async function updateDistrict() {
       await getDistricts()
       Modal.getInstance(document.getElementById('updateDistrictModal')).hide()
     } else Swal.fire({icon:'error',title:res.data.title||'Erreur',text:res.data.message})
-  } catch(e){ Swal.fire({icon:'error',title:'Erreur Serveur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
+  } catch(e){ Swal.fire({icon:'error',title:'Erreur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
   loadingButton.value=''
 }
 
@@ -345,7 +346,7 @@ async function deletedDistrict(id) {
       const res = await axios.delete('/api/district/'+id)
       if(res.data?.status===false) Swal.fire({icon:'error',title:res.data.title||'Suppression refusée',text:res.data.message})
       else { Swal.fire({toast:true,position:'top-end',icon:'success',title:res.data.message||'Quartier supprimé ✅',showConfirmButton:false,timer:3000}); await getDistricts() }
-    } catch(e){ Swal.fire({icon:'error',title:'Erreur Serveur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
+    } catch(e){ Swal.fire({icon:'error',title:'Erreur',text:e.response?.data?.message||'Une erreur est survenue.'}) }
     loadingButton.value=''
   }
 }
