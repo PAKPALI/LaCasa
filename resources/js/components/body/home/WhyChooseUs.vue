@@ -1,243 +1,168 @@
 <template>
-  <div class="site-section">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-7 text-center">
-          <div class="site-section-title">
-            <h2>Pourquoi Choisir LaCasa ?</h2>
-          </div>
-          <p>
-            <strong>
-              LaCasa révolutionne la recherche de logements au Togo. 
-              Plus besoin de courir derrière des tableaux physiques exposés en plein air : 
-              trouvez votre maison idéale rapidement, en toute sécurité, depuis votre téléphone ou ordinateur.
-            </strong>
-          </p>
-        </div>
-      </div>
+  <!-- Appel à l'action Début -->
+  <section class="cta-section py-5 position-relative">
+    <!-- Icônes flottants -->
+    <i class="fa fa-home floating-icon icon-1"></i>
+    <i class="fa fa-map-marker-alt floating-icon icon-2"></i>
+    <i class="fa fa-key floating-icon icon-3"></i>
 
-      <div class="row mt-5">
-        <div class="col-md-6 col-lg-4" v-for="(service, i) in services" :key="i">
-          <div class="service text-center">
-            <span :class="service.icon"></span>
-            <h2 class="service-heading">{{ service.title }}</h2>
-            <p><strong>{{ service.description }}</strong></p>
-            <!-- <a href="#">
-              <p><span class="read-more">En savoir plus</span></p>
-            </a> -->
+    <div class="container position-relative">
+      <div class="rounded p-3">
+        <div class="rounded-4 p-4 content-box">
+          <div class="row g-5 align-items-center">
+            <!-- Image -->
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+              <img
+                class="img-fluid rounded-4 shadow-lg w-100"
+                :src="ctaImage"
+                alt="Agent immobilier"
+              />
+            </div>
+
+            <!-- Texte -->
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+              <div class="mb-4 text-dark text-container">
+                <h1 class="fw-bold mb-3 text-gradient">Pourquoi choisir LaCasa ?</h1>
+                <p class="fs-5 text-muted">
+                  <strong>LaCasa</strong> transforme la façon de chercher un logement au Togo.
+                  Grâce à une plateforme intuitive, chaque utilisateur accède rapidement à des
+                  annonces <strong>fiables, vérifiées et actualisées en temps réel</strong>.
+                </p>
+
+                <ul class="list-unstyled mt-4">
+                  <li class="mb-3">
+                    <i class="fa fa-check-circle text-success me-2"></i>
+                    <strong>Fini les longues recherches sur le terrain : trouvez tout depuis votre téléphone.</strong>
+                  </li>
+                  <li class="mb-3">
+                    <i class="fa fa-check-circle text-success me-2"></i>
+                    <strong>Filtrez par ville, quartier, budget ou type de bien en quelques secondes.</strong>
+                  </li>
+                  <li class="mb-3">
+                    <i class="fa fa-check-circle text-success me-2"></i>
+                    <strong>Des agents partenaires certifiés pour un accompagnement personnalisé.</strong>
+                  </li>
+                </ul>
+                <router-link to='/about' class="nav-link">
+                  <a href="#" class="btn btn-primary py-3 px-4 mt-3 shadow-lg cta-btn">
+                    <i class="fa fa-plus me-2"></i> En savoir plus
+                  </a>
+                </router-link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+  <!-- Appel à l'action Fin -->
 </template>
 
 <script setup>
-  const services = [
-    {
-      icon: 'icon flaticon-location',
-      title: 'Recherche ciblée',
-      description: 'Filtrez les annonces par ville, quartier, type de logement et budget pour trouver rapidement ce qui vous convient.'
-    },
-    {
-      icon: 'icon flaticon-house',
-      title: 'Annonces fiables',
-      description: 'Les annonces sont actualisées régulièrement avec expiration automatique pour éviter les logements loués.'
-    },
-    {
-      icon: 'icon flaticon-camera',
-      title: 'Sécurité et confiance',
-      description: 'Profitez d’une plateforme sécurisée, adaptée aux réalités locales, pour des informations transparentes et sans stress.'
-    }
-  ]
+import ctaImage from '@images2/son.avif'
 </script>
 
 <style scoped>
-  .site-section {
-    padding: 60px 0;
-    /* background: #f9f9f9; */
-    opacity: 1; /* 1 = opaque, 0 = transparent */
-  }
-
-  .site-section-title h2 {
-    font-size: 2.2rem;
-    font-weight: bold;
-    color: #fff;
-    padding: 15px 30px;
-    border-radius: 12px;
-    text-align: center;
-    background: linear-gradient(135deg, #122f02, rgb(0, 0, 0) 70%, #0e2501d9);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 15px rgba(89,165,44,0.3);
-    display: inline-block;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  /* Effet au survol */
-  .site-section-title h2:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.832), 0 0 20px rgba(89,165,44,0.4);
-  }
-
-  .site-section-title p {
-    color: #555;
-    font-size: 1.05rem;
-  }
-
-  .service {
-    background: #fff;
-    border-radius: 15px;
-    padding: 35px 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .service span.icon {
-    font-size: 45px;
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #050303;
-    transition: transform 0.4s ease, color 0.4s ease;
-  }
-
-  .service:hover span.icon {
-    transform: rotate(10deg) scale(1.2);
-    color: #173f0130;
-  }
-
-  .service-heading {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-  }
-
-  /* Effet au survol */
-  .site-section-title h2:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 20px rgba(89,165,44,0.4);
-  }
-
-  .site-section p {
-    color: #555;
-    font-size: 1.05rem;
-  }
-
-  .service {
-    background: #fff;
-    border-radius: 15px;
-    padding: 35px 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .service::after {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    border-radius: 15px;
-    background: linear-gradient(90deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3), rgba(0,0,0,0.1));
-    animation: rotateBorder 4s linear infinite;
-    z-index: 0;
-  }
-
-  /* Animation rotation */
-  @keyframes rotateBorder {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-  /* Faire passer le contenu au-dessus */
-  .service > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .service span.icon {
-    font-size: 45px;
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #050303;
-    transition: transform 0.4s ease, color 0.4s ease;
-  }
-
-  .service:hover span.icon {
-    transform: rotate(10deg) scale(1.2);
-    color: #173f0130;
-  }
-
-  .service-heading {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-  }
-
-  .read-more {
-    font-weight: 600;
-    color: #59A52C;
-    transition: color 0.3s ease;
-  }
-
-  /* Effet hover futuriste */
-  .service::before {
-    content: "";
-    position: absolute;
-    top: -100%;
-    left: -100%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(135deg, rgba(89, 165, 44, 0.1), rgba(89, 165, 44, 0.3));
-    transform: rotate(45deg);
-    transition: all 0.6s ease;
-  }
-
-  .service:hover::before {
-    top: 0;
-    left: 0;
-  }
-
-  .service:hover {
-    transform: translateY(-10px) scale(1.03);
-    box-shadow: 0 0 20px rgba(89, 165, 44, 0.6),
-                0 0 40px rgba(89, 165, 44, 0.4),
-                0 0 60px rgba(89, 165, 44, 0.2); /* Glow néon */
-  }
-
-  .service:hover span.icon {
-    transform: rotate(10deg) scale(1.2);
-    color: #173f0130;
-  }
-
-  .service:hover .read-more {
-    color: #4b8d27;
-  }
-
-  .site-section p {
-    position: relative;
-    display: inline-block;
-    padding: 25px 30px;
-    font-size: 1.05rem;
-    color: #fff;
-    background: linear-gradient(135deg, rgb(22, 52, 3), rgba(46, 111, 9, 0.793));
-    /* background: radial-gradient(circle, rgba(89,165,44,0.15) 0%, transparent 60%); */
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    backdrop-filter: blur(5px);
-  }
-
-/* effet au survol */
-.site-section p:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 12px 35px rgba(246, 248, 244, 0.917);
+/* --- Section principale --- */
+.cta-section {
+  background: radial-gradient(
+    circle at top left,
+    rgba(0, 185, 142, 0.15),
+    rgba(255, 255, 255, 0.9)
+  );
+  position: relative;
+  overflow: hidden;
+  transition: all 0.6s ease;
 }
 
+/* --- Boîte de contenu --- */
+.content-box {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px dashed rgba(0, 185, 142, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6px);
+  transition: all 0.8s ease;
+}
+
+/* --- Texte et boutons --- */
+.text-gradient {
+  background: linear-gradient(90deg, #00b98e, #007f6c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cta-btn {
+  background: linear-gradient(90deg, #00b98e, #007f6c);
+  border: none;
+  transition: all 0.5s ease;
+}
+.cta-btn:hover {
+  background: linear-gradient(90deg, #fff, #fff);
+  color: #007f6c !important;
+}
+
+/* --- Effet hover global (inversion des couleurs) --- */
+.content-box:hover {
+  background: linear-gradient(120deg, #00b98e, #007f6c);
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transform: scale(1.02);
+  box-shadow: 0 15px 35px rgba(0, 185, 142, 0.3);
+}
+
+.content-box:hover .text-gradient,
+.content-box:hover p,
+.content-box:hover li,
+.content-box:hover strong {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+
+.content-box:hover .fa-check-circle {
+  color: #fff !important;
+}
+
+.content-box:hover .cta-btn {
+  background: #fff;
+  color: #00b98e !important;
+}
+
+/* --- Icônes flottants --- */
+.floating-icon {
+  position: absolute;
+  font-size: 2.5rem;
+  color: rgba(3, 84, 65, 0.25);
+  z-index: 0;
+  animation: floatIcon 8s ease-in-out infinite;
+}
+
+.icon-1 { top: 10%; left: 5%; animation-delay: 0s; }
+.icon-2 { top: 50%; right: 10%; animation-delay: 3s; }
+.icon-3 { bottom: 2%; left: 40%; animation-delay: 5s; }
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(10deg); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 992px) {
+  .text-container {
+    text-align: center;
+  }
+  .content-box {
+    padding: 2rem;
+  }
+}
+@media (max-width: 576px) {
+  .content-box {
+    background: rgba(255, 255, 255, 0.95);
+  }
+  .floating-icon {
+    display: none;
+  }
+  .cta-btn {
+    width: 100%;
+  }
+}
 </style>

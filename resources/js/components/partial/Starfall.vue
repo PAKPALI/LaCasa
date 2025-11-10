@@ -43,7 +43,7 @@ function animateStars(width, height) {
     const pr = star.r * scale * 3
 
     // Dessin étoile noire
-    ctx.fillStyle = '#0e2e50'
+    ctx.fillStyle = 'black'
     ctx.beginPath()
     ctx.arc(px, py, pr, 0, Math.PI * 2)
     ctx.fill()

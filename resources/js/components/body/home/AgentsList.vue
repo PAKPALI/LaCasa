@@ -51,7 +51,7 @@ import person3 from '@images/person_3.jpg'
 const agents = [
   {
     image: icon1,
-    name: 'KONDJI Arafat',
+    name: 'KONDI Arafat',
     position: 'Analyste technicien',
     description: 'Analyste technicien avec 3 ans d\'experience',
     social: [

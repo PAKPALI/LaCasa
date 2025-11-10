@@ -19,6 +19,14 @@
     "file": "assets/avis-C-RaGPkk.avif",
     "src": "resources/js/images/avis.avif"
   },
+  "resources/js/images/city.avif": {
+    "file": "assets/city-DGKJ5AwG.avif",
+    "src": "resources/js/images/city.avif"
+  },
+  "resources/js/images/immo1.avif": {
+    "file": "assets/immo1-CVI-aI6_.avif",
+    "src": "resources/js/images/immo1.avif"
+  },
   "resources/js/images/logo2.png": {
     "file": "assets/logo2-BjkGqu9a.png",
     "src": "resources/js/images/logo2.png"
@@ -100,12 +108,12 @@
     "src": "resources/js/images/web.avif"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-CFy0JCgJ.js",
+    "file": "assets/app2-D1lZwE_8.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-B2rGUvsP.css"
+      "assets/app2-B3Q8h1GO.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
@@ -130,6 +138,8 @@
       "assets/agent-D7KwoOhe.avif",
       "assets/empty-ChuaEKUH.gif",
       "assets/disconnect-DA4azbkO.png",
+      "assets/immo1-CVI-aI6_.avif",
+      "assets/city-DGKJ5AwG.avif",
       "assets/avis-C-RaGPkk.avif"
     ]
   }

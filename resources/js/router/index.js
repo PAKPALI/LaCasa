@@ -5,6 +5,7 @@ import Home from '../components/body/home/Home.vue'
 import Publication from '../components/body/pub/Index.vue'
 import CreatePublication from '../components/body/pub/create.vue'
 import Admin from '../components/body/admin/Admin.vue'
+import About from '../components/body/admin/About.vue'
 import Register from '../components/auth/Register.vue'
 import Login from '../components/auth/Login.vue'
 import Profile from '../components/auth/Profile.vue'
@@ -15,6 +16,7 @@ const routes = [
   { path: '/publication', name: 'Publications', component: Publication },
   { path: '/createPub', name: 'Create pub', component: CreatePublication },
   { path: '/admin', name: 'admin', component: Admin },
+  { path: '/about', name: 'about', component: About },
   { path: '/register', name: 'register', component: Register },
   { path: '/login', name: 'login', component: Login },
   { path: '/profile', name: 'profile', component: Profile },

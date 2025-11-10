@@ -245,8 +245,12 @@ async function updateProfile() {
     if (uploadedFile.value) data.append("profile_image", uploadedFile.value)
 
     const res = await axios.post("/me/update", data, { withCredentials: true })
-    Swal.fire("Succès", res.data.message, "success")
-    await fetchUser()
+    if(res.data.status){
+      Swal.fire("Succès", res.data.message, "success")
+      await fetchUser()
+    }else{
+      Swal.fire("Erreur", res.data.message, "error")
+    }
   } catch (err) {
     Swal.fire(
       "Erreur",

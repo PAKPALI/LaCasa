@@ -593,6 +593,26 @@
       console.log('Publications reçues:', res.data)
       publicationsList.value = res.data
       nextTick(initCarousels)
+      if (publicationsList.value.length === 0) {
+        // 🔴 Aucune annonce trouvée → toast d’erreur
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Aucune annonce trouvée',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        })
+      } else {
+        // 🟢 Des résultats trouvés → scroll vers la liste
+        nextTick(() => {
+          const listSection = document.querySelector('.tab-content')
+          if (listSection) {
+            listSection.scrollIntoView({ behavior: 'smooth' })
+          }
+        })
+      }
     } catch (err) {
       console.error(err)
     } finally { loadingPublications.value = false }
