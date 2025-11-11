@@ -108,7 +108,7 @@
             <router-link to='/createPub' class="btn btn-dark border-0 w-15"> + Ajouter publication </router-link>
           </div> -->
           <div class="text-end mx-auto mb-3">
-            <button class="btn-lg btn-dark border-0 w-50" @click="handleAddPublication" :disabled="loadingPublications">
+            <button class="btn-lg btn-dark  pulse-btn border-0 w-50" @click="handleAddPublication" :disabled="loadingPublications">
               + Ajouter publication
             </button>
           </div>
@@ -783,6 +783,22 @@
   .custom-info-table tr:nth-child(even) td,
   .custom-info-table tr:nth-child(even) th {
     background-color: rgba(14, 46, 80);
+  }
+
+  .pulse-btn {
+  animation: pulse-bg 3s infinite;
+}
+
+  @keyframes pulse-bg {
+    0% {
+      background-color: #007bff; /* couleur initiale du bouton Bootstrap */
+    }
+    50% {
+      background-color: #3399ff; /* couleur un peu plus claire au milieu */
+    }
+    100% {
+      background-color: #007bff; /* retour à la couleur initiale */
+    }
   }
 
   @keyframes blink {

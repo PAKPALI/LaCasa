@@ -159,6 +159,7 @@
   import { ref, computed, onMounted } from 'vue'
   import { Modal } from 'bootstrap'
   import axios from 'axios'
+  // import axios from '../../../../axios.js'
   import Swal from 'sweetalert2'
   import { user, isAuthenticated } from '../../../auth/auth.js'
 
@@ -225,7 +226,7 @@
   async function getCountries() {
     loadingTable.value = true
     try {
-      const response = await axios.get('/api/country', { headers: { Accept: 'application/json' } })
+      const response = await axios.get('country', { headers: { Accept: 'application/json' } })
       Countries.value = response.data
     } catch (error) { console.error(error) }
     loadingTable.value = false
