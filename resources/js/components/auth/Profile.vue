@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-5">
+  <div class="container py-5 mt-5">
     <h2 class="text-center mb-4">Mon profil</h2>
 
     <div v-if="isAuthenticated" class="card shadow-lg bg-dark p-4 rounded">

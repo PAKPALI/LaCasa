@@ -41,26 +41,10 @@
 
           <!-- Si l'utilisateur est connecté, afficher profil -->
           <li v-if="isAuthenticated" class="nav-item">
-            <!-- <a
-              class="nav-link dropdown-toggle d-flex align-items-center"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            > -->
-            <router-link to="/profile" class="dropdown-item">
+            <router-link to="/profile" class="nav-link"  @mouseenter="hoverLink" @mouseleave="leaveLink">
               <img :src="profileImage" alt="Photo profil" class="rounded-circle profile-nav-img me-2" />
-              <span class="text-white">{{ user.name }}</span>
+              {{ user.name }}
             </router-link>
-            <!-- </a> -->
-            <!-- <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <router-link to="/profile" class="dropdown-item">Mon profil</router-link>
-              </li>
-              <li>
-                <a href="#" class="dropdown-item" @click.prevent="logout">Déconnexion</a>
-              </li>
-            </ul> -->
           </li>
         </ul>
       </div>
