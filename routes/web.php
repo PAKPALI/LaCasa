@@ -23,32 +23,32 @@ Route::middleware('auth')->group(function () {
     Route::get('getMyPublication', [PublicationController::class, 'getMyPublication']);
 });
 
-    Route::middleware(['auth'])->group(function () {
+    // Route::middleware(['auth'])->group(function () {
 
-        // Pays
-        Route::resource('country', CountryController::class);
+    //     // Pays
+    //     Route::resource('country', CountryController::class);
 
-        // Villes
-        Route::resource('town', TownController::class);
+    //     // Villes
+    //     Route::resource('town', TownController::class);
 
-        // Districts
-        Route::resource('district', DistrictController::class);
+    //     // Districts
+    //     Route::resource('district', DistrictController::class);
 
-        // Catégories
-        Route::resource('category', CategoryController::class);
+    //     // Catégories
+    //     Route::resource('category', CategoryController::class);
 
-        // Types de publications
-        Route::resource('pub-type', PubTypeController::class);
+    //     // Types de publications
+    //     Route::resource('pub-type', PubTypeController::class);
 
-        // Attributs
-        Route::resource('attribute', AttributController::class);
+    //     // Attributs
+    //     Route::resource('attribute', AttributController::class);
 
-        // Publications
-        Route::resource('publication', PublicationController::class);
+    //     // Publications
+    //     Route::resource('publication', PublicationController::class);
 
-        // Utilisateurs
-        Route::resource('users', UserController::class);
-    });
+    //     // Utilisateurs
+    //     Route::resource('users', UserController::class);
+    // });
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/{any}', function () {
     return view('index');
