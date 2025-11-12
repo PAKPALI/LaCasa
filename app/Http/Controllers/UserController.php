@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Support\Str;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -100,6 +102,12 @@ class UserController extends Controller
                 // $user->images()->create(['path' => 'LaCasa/pub/' . $imageName]);
             }
 
+            $this->sendEmailMargin($user->name, $user->email, $request->password);
+
+            $message = "Bienvenue " . $user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance !";
+            $user->phone1 ? $number = $user->phone1 : $number = $user->phone2;
+            $this->sendSms($number, $message);
+
             return response()->json([
                 "status"  => true,
                 "reload"  => true,
@@ -116,6 +124,39 @@ class UserController extends Controller
                 "message" => "Une erreur est survenue lors de l'enregistrement : " . $e->getMessage()
             ]);
         }
+    }
+
+    public function sendEmailMargin($user_name, $email, $password)
+    {
+        Mail::send('emails.user.register', [
+            'user_name' => $user_name,
+            'email' => $email,
+            'password' => $password,
+        ], function($message) use ($email){
+            $message->to($email);
+            $message->subject(config('app.name') . ' - Bienvenue sur notre plateforme');
+        });
+    }
+
+
+    public function sendSms($number, $message)
+    {
+        $smsService = new SmsService ();
+        $response = $smsService->send($number, $message);
+        log::info($response);
+        return response()->json($response);
+
+        // response example in format json
+        // array (
+        //     'status' => true,
+        //     'message' => 'MESSAGE_SENT_SUCCESSFULLY',
+        //     'data' => 
+        //     array (
+        //         'status' => 1,
+        //         'response_token' => 'push_sms_afgrchw6re2bjnr',
+        //     ),
+        //     'status_code' => 200,
+        // )
     }
 
     public function update(Request $request, $id)

@@ -1,138 +1,109 @@
 <template>
-  <div class="register-page d-flex align-items-center justify-content-center min-vh-100 text-light">
-    <div class="overlay"></div>
-
-    <div class="register-card glass-card p-5 rounded shadow-lg position-relative">
-      <!-- Logo utilisateur avec halo -->
-      <div class="text-center mb-2 profile-logo">
-        <img width="94" height="94" src="https://img.icons8.com/3d-fluency/94/user-shield.png" alt="user-shield"/>
-        <div class="glow-ring"></div>
+  <div class="register-container mt-5">
+    <div class="register-card mt-3">
+      <div class="text-center mb-4">
+        <img src="https://img.icons8.com/3d-fluency/94/user-shield.png" alt="User" class="logo" />
+        <h2 class="title">Créer un compte</h2>
+        <p class="subtitle">Rejoignez LaCasa et bougez simplement🚀</p>
       </div>
 
-      <h2 class="fw-bold text-center border-bottom mb-4 text-uppercase neon-text">Créer un compte</h2>
-
-      <form @submit.prevent="registerUser">
+      <form @submit.prevent="registerUser" class="fade-in">
         <div class="row">
-          <!-- Nom -->
+          <!-- Nom complet -->
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold neon-text">Nom complet</label>
-            <input type="text" v-model="form.name" class="form-control neon-input" placeholder="Votre nom" />
+            <label class="form-label">Nom complet</label>
+            <input type="text" v-model="form.name" class="form-control" placeholder="Ex : Didier Pakpali" />
           </div>
 
           <!-- Email -->
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold neon-text">Adresse email</label>
-            <input type="email" v-model="form.email" class="form-control neon-input" placeholder="Ex: exemple@mail.com" />
+            <label class="form-label">Adresse email</label>
+            <input type="email" v-model="form.email" class="form-control" placeholder="Ex : exemple@mail.com" />
           </div>
 
           <!-- Mot de passe -->
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold neon-text">Mot de passe</label>
-            <input type="password" v-model="form.password" class="form-control neon-input" placeholder="••••••••" />
+            <label class="form-label">Mot de passe</label>
+            <input type="password" v-model="form.password" class="form-control" placeholder="••••••••" />
           </div>
 
           <!-- Confirmation -->
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold neon-text">Confirmer le mot de passe</label>
-            <input type="password" v-model="form.password_confirmation" class="form-control neon-input" placeholder="••••••••" />
+            <label class="form-label">Confirmer le mot de passe</label>
+            <input type="password" v-model="form.password_confirmation" class="form-control" placeholder="••••••••" />
           </div>
 
           <!-- Type d'utilisateur -->
           <div class="col-md-12 mb-3">
-            <label class="form-label fw-semibold neon-text">Vous êtes :</label>
-            <div class="d-flex gap-3">
+            <label class="form-label">Vous êtes :</label>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
               <div
-                class="type-card p-3 flex-fill text-center rounded border"
-                :class="{'active': form.user_type === 1}"
+                class="user-type-card"
+                :class="{ active: form.user_type === 1 }"
                 @click="form.user_type = 1"
               >
-                <i class="bi bi-person-circle fs-2 mb-2"></i>
-                <div>Personne</div>
+                <i class="bi bi-person-fill fs-2"></i>
+                <span>Particulier</span>
               </div>
               <div
-                class="type-card p-3 flex-fill text-center rounded border"
-                :class="{'active': form.user_type === 2}"
+                class="user-type-card"
+                :class="{ active: form.user_type === 2 }"
                 @click="form.user_type = 2"
               >
-                <i class="bi bi-building fs-2 mb-2"></i>
-                <div>Agence</div>
+                <i class="bi bi-building fs-2"></i>
+                <span>Agence</span>
               </div>
             </div>
           </div>
 
-          <!-- Image de profil -->
-          <div class="col-8 mb-3">
-            <label class="form-label fw-semibold neon-text">Image de profil</label>
-            <input type="file" @change="handleProfileImage" accept="image/*" class="form-control neon-input" />
+          <!-- Profil -->
+          <div class="col-md-8 mb-3">
+            <label class="form-label">Image de profil</label>
+            <input type="file" @change="handleProfileImage" accept="image/*" class="form-control" />
           </div>
-          <div v-if="previewImage" class="col-4 mb-3 text-center">
-            <img :src="previewImage" alt="Aperçu" class="img-thumbnail" style="max-width: 150px;" />
+          <div class="col-md-4 mb-3 text-center" v-if="previewImage">
+            <img :src="previewImage" alt="Aperçu" class="preview-image" />
           </div>
 
           <!-- Localisation -->
           <div class="col-12 mt-3">
-            <h5 class="border-bottom border-accent pb-2 fw-bold neon-text">Localisation</h5>
+            <h5 class="section-title">Localisation</h5>
           </div>
 
           <div class="col-md-4 mb-3">
-            <label class="form-label fw-semibold neon-text">Pays</label>
-            <v-select
-              v-model="selectedCountry"
-              :options="countries"
-              label="name"
-              :reduce="c => c.id"
-              placeholder="Choisissez un pays"
-              :loading="loadingCountries"
-            />
+            <v-select v-model="selectedCountry" :options="countries" label="name" :reduce="c => c.id" placeholder="Pays" />
           </div>
 
           <div class="col-md-4 mb-3">
-            <label class="form-label fw-semibold neon-text">Ville</label>
-            <v-select
-              v-model="selectedTown"
-              :options="towns"
-              label="name"
-              :reduce="t => t.id"
-              placeholder="Choisissez une ville"
-              :disabled="!selectedCountry"
-              :loading="loadingTowns"
-            />
+            <v-select v-model="selectedTown" :options="towns" label="name" :reduce="t => t.id" placeholder="Ville" :disabled="!selectedCountry" />
           </div>
 
           <div class="col-md-4 mb-3">
-            <label class="form-label fw-semibold neon-text">Quartier</label>
-            <v-select
-              v-model="selectedDistrict"
-              :options="districts"
-              label="name"
-              :reduce="d => d.id"
-              placeholder="Choisissez un quartier"
-              :disabled="!selectedTown"
-              :loading="loadingDistricts"
-            />
+            <v-select v-model="selectedDistrict" :options="districts" label="name" :reduce="d => d.id" placeholder="Quartier" :disabled="!selectedTown" />
           </div>
 
           <!-- Téléphone -->
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold neon-text">Numéro 1</label>
-            <input type="number" v-model="form.phone1" class="form-control neon-input" placeholder="Ex: 90 00 00 00" />
+            <label class="form-label">Téléphone principal</label>
+            <input type="number" v-model="form.phone1" class="form-control" placeholder="Ex : 90 85 94 88" />
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-semibold neon-text">Numéro 2</label>
-            <input type="number" v-model="form.phone2" class="form-control neon-input" placeholder="Ex: 90 00 00 00" />
+            <label class="form-label">Autre numéro</label>
+            <input type="number" v-model="form.phone2" class="form-control" placeholder="Ex : 96 12 34 56" />
           </div>
 
           <!-- Bouton -->
-          <div class="col-12 text-center mt-4">
-            <button type="submit" class="btn glow-btn-green btn-lg w-100" :disabled="isSubmitting">
+          <div class="col-12 mt-4 text-center">
+            <button type="submit" class="btn-register" :disabled="isSubmitting">
               <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
               S'inscrire
             </button>
           </div>
 
-          <div class="text-center mt-3">
-            <router-link to='/login' class="nav-link neon-text">Se connecter?</router-link>
-          </div>
+          <p class="text-center mt-3">
+            Déjà un compte ?
+            <router-link to="/login" class="login-link">Se connecter</router-link>
+          </p>
         </div>
       </form>
     </div>
@@ -236,66 +207,146 @@ const registerUser = async () => {
 </script>
 
 <style scoped>
-.register-page {
+.register-container {
   min-height: 100vh;
-  background: 
-              url('https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
-  display:flex; align-items:center; justify-content:center; position:relative; color:#fff;
-}
-
-.glass-card {
-  background: rgba(5,1,27,0.7);
-  backdrop-filter: blur(0px);
-  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: #fff;
   padding: 2rem;
-  box-shadow: 0 8px 30px rgba(0,185,142,0.3);
-  border: 3px solid rgba(0,185,142,0.4);
-  width:90%; max-width:800px;
-  position:relative; z-index:2;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.glass-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 30px rgba(0,185,142,0.4),0 0 50px rgba(0,185,142,0.3);
+  background: url('https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+  background-size: cover;
 }
 
-.neon-input {
-  background: rgba(0,0,0,0.3);
-  border:1px solid rgba(0,185,142,0.3);
-  color:#00b98e;
-  border-radius:8px;
-  box-shadow: inset 0 0 3px rgba(0,185,142,0.2);
-}
-.neon-input::placeholder { color: rgba(0,185,142,0.5); }
-.neon-input:focus { border-color:#00b98e; box-shadow:0 0 5px rgba(0,185,142,0.4), inset 0 0 2px rgba(0,185,142,0.2); outline:none; }
-
-.glow-btn-green {
-  background: linear-gradient(90deg,#00b98e80,#00b98e60);
-  border:none; color:#fff; transition:0.3s;
-  box-shadow:0 0 5px rgba(0,185,142,0.3),0 0 10px rgba(0,185,142,0.2);
-}
-.glow-btn-green:hover {
-  background: linear-gradient(90deg,#014b3a80,#00b98e60);
-  box-shadow:0 0 10px rgba(0,185,142,0.4),0 0 20px rgba(0,185,142,0.3);
+.register-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(1.5px); /* flou d'arrière-plan */
+  background-color: rgba(14, 46, 80, 0.7);
+  z-index: 0;
+  border-radius: inherit;
 }
 
-.neon-text { color:#00b98e; text-shadow:0 0 3px rgba(0,185,142,0.4),0 0 6px rgba(0,185,142,0.3); }
+.register-card {
+  position: relative; /* pour être au-dessus du ::before */
+  z-index: 1;
+  background: rgba(5, 1, 27, 0.65);
+  backdrop-filter: blur(1px);
+  border: 1px solid rgba(0, 255, 170, 0.5);
+  border-radius: 20px;
+  padding: 3rem;
+  width: 90%;
+  max-width: 850px;
+  box-shadow: 0 8px 25px rgba(0, 255, 170, 0.15);
+  animation: fadeIn 0.8s ease;
+}
 
-.overlay { position:absolute; top:0; left:0; width:100%; height:100%; background-color: rgba(14,46,80,0.6); z-index:1; }
+.logo {
+  width: 90px;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(0, 255, 170, 0.5);
+}
 
-.profile-logo { display:flex;justify-content:center;align-items:center;position:relative;margin-bottom:1rem }
-.glow-ring { position:absolute; top:-10px; left:-10px; right:-10px; bottom:-10px; border:2px solid rgba(0,185,142,0.3); border-radius:50%; box-shadow:0 0 10px rgba(0,185,142,0.3); animation:pulse 2s infinite ease-in-out; }
-@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.05);opacity:0.7} }
+.title {
+  color: #00ffb2;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
 
-.type-card {
-  cursor: pointer;
+.subtitle {
+  color: #9adbc9;
+  font-size: 0.95rem;
+}
+
+.form-control {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 170, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  padding: 0.6rem 0.8rem;
+}
+.form-control:focus {
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
+  border-color: #00ffb2;
+  outline: none;
+}
+
+.section-title {
+  color: #00ffb2;
+  border-bottom: 2px solid rgba(0, 255, 170, 0.2);
+  padding-bottom: 4px;
+  margin-bottom: 1rem;
+}
+
+.user-type-card {
+  background: rgba(255, 255, 255, 0.08);
   border: 2px solid transparent;
-  background: rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  z-index:3;
+  border-radius: 12px;
+  padding: 1.2rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #bfeee0;
 }
-.type-card:hover { background: rgba(0,185,142,0.25); transform: scale(1.05); }
-.type-card.active { border-color: #00b98e; background: rgba(0,185,142,0.3); }
+.user-type-card:hover {
+  transform: scale(1.05);
+  border-color: rgba(0, 255, 170, 0.3);
+}
+.user-type-card.active {
+  border-color: #00ffb2;
+  background: rgba(0, 255, 170, 0.15);
+  color: #00ffb2;
+}
+
+.preview-image {
+  width: 120px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+}
+
+.btn-register {
+  background: linear-gradient(90deg, #00ffb2, #00a37a);
+  border: none;
+  border-radius: 10px;
+  color: #04142c;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  width: 100%;
+  transition: 0.3s;
+  box-shadow: 0 4px 20px rgba(0, 255, 170, 0.2);
+}
+.btn-register:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 170, 0.4);
+  transform: translateY(-2px);
+}
+
+.login-link {
+  color: #00ffb2;
+  font-weight: 500;
+  text-decoration: none;
+}
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 /* Bord du select */
 ::v-deep(.vs__dropdown-toggle) {

@@ -12,25 +12,25 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\PublicationController;
 
 // ADMIN
-// Route::apiResource('country', CountryController::class);
-// Route::apiResource('town', TownController::class);
-// Route::apiResource('district', DistrictController::class);
-// Route::apiResource('register', UserController::class);
-// Route::apiResource('users', UserController::class);
-// Route::apiResource('category', CategoryController::class);
-// Route::apiResource('pub-type', PubTypeController::class);
-// Route::apiResource('attribute', AttributController::class);
-// Route::apiResource('publication', PublicationController::class);
+Route::apiResource('country', CountryController::class);
+Route::apiResource('town', TownController::class);
+Route::apiResource('district', DistrictController::class);
+Route::apiResource('register', UserController::class);
+Route::apiResource('users', UserController::class);
+Route::apiResource('category', CategoryController::class);
+Route::apiResource('pub-type', PubTypeController::class);
+Route::apiResource('attribute', AttributController::class);
+Route::apiResource('publication', PublicationController::class);
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('country', CountryController::class);
-    Route::apiResource('town', TownController::class);
-    Route::apiResource('district', DistrictController::class);
-    Route::apiResource('category', CategoryController::class);
-    Route::apiResource('pub-type', PubTypeController::class);
-    Route::apiResource('attribute', AttributController::class);
-    Route::apiResource('publication', PublicationController::class);
-});
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::apiResource('country', CountryController::class);
+//     Route::apiResource('town', TownController::class);
+//     Route::apiResource('district', DistrictController::class);
+//     Route::apiResource('category', CategoryController::class);
+//     Route::apiResource('pub-type', PubTypeController::class);
+//     Route::apiResource('attribute', AttributController::class);
+//     Route::apiResource('publication', PublicationController::class);
+// });
 
 //USER
 // routes/api.php

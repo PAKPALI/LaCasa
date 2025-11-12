@@ -14,6 +14,15 @@ return [
     |
     */
 
+    'kprimesms' => [
+        'base_url' => env('KPRIME_SMS_BASE_URL'),
+        'token' => env('KPRIME_SMS_TOKEN'),
+        'key' => env('KPRIME_SMS_KEY'),
+        'sender' => env('KPRIME_SMS_SENDER'),
+        'sender_id' => env('KPRIME_SMS_SENDER_ID'),
+        'response_url' => env('KPRIME_SMS_RESPONSE_URL'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

@@ -226,7 +226,7 @@
   async function getCountries() {
     loadingTable.value = true
     try {
-      const response = await axios.get('country', { headers: { Accept: 'application/json' } })
+      const response = await axios.get('/api/country', { headers: { Accept: 'application/json' } })
       Countries.value = response.data
     } catch (error) { console.error(error) }
     loadingTable.value = false
