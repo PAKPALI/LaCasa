@@ -23,15 +23,6 @@ Route::middleware('auth')->group(function () {
     Route::get('getMyPublication', [PublicationController::class, 'getMyPublication']);
 });
 
-
-Route::get('/env', function () {
-    return response()->json([
-        'app_env' => env('APP_ENV', 'local'),
-    ]);
-});
-
-
-
     // Route::middleware(['auth'])->group(function () {
 
     //     // Pays

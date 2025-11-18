@@ -6,10 +6,7 @@
 
 <script setup>
   import { ref, onMounted, onBeforeUnmount } from 'vue'
-  import axios from 'axios'
-
-  let appEnv = 'local';
-
+  
   const canvas = ref(null)
   let ctx, animationId
   let stars = []
@@ -78,15 +75,6 @@
   }
 
   onMounted(() => {
-    // Récupération de l'environnement via Axios
-    axios.get('/env')
-      .then(res => {
-      appEnv = res.data.app_env;
-      console.log(appEnv); // ✅ ici la donnée est disponible
-    });
-
-    // Lancer l'animation uniquement en production
-    if (appEnv !== 'production') return;
     const c = canvas.value
     if (!c) return
     ctx = c.getContext('2d')
