@@ -106,7 +106,7 @@ class UserController extends Controller
 
             $message = "Bienvenue " . $user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance !";
             $user->phone1 ? $number = $user->phone1 : $number = $user->phone2;
-            $this->sendSms($number, $message);
+            // $this->sendSms($number, $message);
 
             return response()->json([
                 "status"  => true,
