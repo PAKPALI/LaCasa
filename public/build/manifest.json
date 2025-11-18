@@ -108,12 +108,12 @@
     "src": "resources/js/images/web.avif"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-B9jODYwg.js",
+    "file": "assets/app2-CwrxiVHl.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-C_cONX_U.css"
+      "assets/app2-CLVUY1lz.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
@@ -122,7 +122,6 @@
       "assets/property-3-C7tPtB-7.jpg",
       "assets/property-4-DGEO1nxR.jpg",
       "assets/property-5-Cq1GnElW.jpg",
-      "assets/property-6-Csj_vv0E.jpg",
       "assets/carousel-1-BEvSPtMg.jpg",
       "assets/carousel-2-DiQZ5U25.jpg",
       "assets/icon-apartment-CzoS5fJG.png",
