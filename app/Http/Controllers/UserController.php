@@ -104,7 +104,7 @@ class UserController extends Controller
 
             $this->sendEmailMargin($user->name, $user->email, $request->password);
 
-            $message = "Bienvenue " . $user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance !";
+            $message = "Bienvenue " . $user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance!";
             $user->phone1 ? $number = $user->phone1 : $number = $user->phone2;
             $this->sendSms($number, $message);
 
