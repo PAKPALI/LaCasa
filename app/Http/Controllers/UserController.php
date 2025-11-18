@@ -117,6 +117,7 @@ class UserController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            log::info($e->getMessage());
             return response()->json([
                 "status"  => false,
                 "reload"  => false,
@@ -164,7 +165,6 @@ class UserController extends Controller
         Log::info($request->all());
         $user = User::find($id);
         
-
         if (!$user) {
             return response()->json([
                 "status"  => false,

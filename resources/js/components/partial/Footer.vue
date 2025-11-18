@@ -34,14 +34,14 @@
         </div>
 
         <!-- Galerie -->
-        <div class="col-lg-3 col-md-6">
+        <!-- <div class="col-lg-3 col-md-6">
           <h5 class="text-light mb-4">Galerie</h5>
           <div class="row g-2">
             <div class="col-4" v-for="(img, i) in gallery" :key="i">
               <img class="img-fluid rounded bg-light p-1" :src="img" alt="Property image">
             </div>
           </div>
-        </div>
+        </div> -->
 
       </div>
     </div>
@@ -73,9 +73,9 @@ const socialIcons = [
 
 const navLinks = [
   { name: 'Accueil', link: '/home' },
-  { name: 'À propos', link: '#' },
+  { name: 'À propos', link: '/about' },
   { name: 'Publications', link: '/publication' },
-  { name: 'Contact', link: '#' },
+  // { name: 'Contact', link: '#' },
 ]
 
 
@@ -85,5 +85,5 @@ const contact = {
   email: 'support@lacasa.tg'
 }
 
-const gallery = [prop1, prop2, prop3, prop4, prop5, prop6]
+// const gallery = [prop1, prop2, prop3, prop4, prop5, prop6]
 </script>
