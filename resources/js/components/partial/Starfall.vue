@@ -7,6 +7,7 @@
 <script setup>
   import { ref, onMounted, onBeforeUnmount } from 'vue'
   const isProd = import.meta.env.VITE_APP_ENV;
+  alert(isProd)
 
 
   const canvas = ref(null)
