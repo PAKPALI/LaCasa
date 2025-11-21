@@ -118,7 +118,7 @@ class UserController extends Controller
 
             $message = "Bienvenue " . $user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance!";
             $user->phone1 ? $number = $user->phone1 : $number = $user->phone2;
-            // $this->sendSms($number, $message);
+            $this->sendSms($number, $message);
 
             return response()->json([
                 "status"  => true,
@@ -172,17 +172,32 @@ class UserController extends Controller
     }
 
     public function toggleVerification(User $user)
-{
-    $user->is_verified = !$user->is_verified;
-    $user->save();
+    {
+        $user->is_verified = !$user->is_verified;
+        $user->save();
 
-    return response()->json([
-        'status' => true,
-        'message' => $user->is_verified ? 'Agence certifiée ✅' : 'Certification retirée ❌',
-        'user' => $user
-    ]);
-}
+        $this->sendEmailVerification($user->name, $user->email);
+        $message = "Félicitations " . $user->name . "! Votre certification LaCasa est validée. Vous êtes désormais partenaire officiel.";
+        $user->phone1 ? $number = $user->phone1 : $number = $user->phone2;
+        $this->sendSms($number, $message);
 
+        return response()->json([
+            'status' => true,
+            'message' => $user->is_verified ? 'Agence certifiée ✅' : 'Certification retirée ❌',
+            'user' => $user
+        ]);
+    }
+
+    public function sendEmailVerification($user_name, $email)
+    {
+        Mail::send('emails.user.certify', [
+            'user_name' => $user_name,
+            'email' => $email,
+        ], function($message) use ($email){
+            $message->to($email);
+            $message->subject(config('app.name') . ' - Compte certifié avec succès');
+        });
+    }
 
     public function update(Request $request, $id)
     {
