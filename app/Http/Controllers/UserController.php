@@ -15,17 +15,29 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $users = User::with(['country', 'town', 'district'])
-                ->orderBy('id', 'desc')
-                ->get();
+            $query = User::with(['country', 'town', 'district']);
+
+            // Filtrer par certification
+            if ($request->has('is_verified')) {
+                $query->where('is_verified', $request->is_verified);
+            }
+
+            // Filtrer par type (ex: agence)
+            if ($request->has('user_type')) {
+                $query->where('user_type', $request->user_type);
+            }
+
+            // Tu gardes ton ordre
+            $users = $query->orderBy('id', 'desc')->get();
 
             return response()->json([
                 "status" => true,
                 "data" => $users
             ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 "status" => false,
@@ -106,7 +118,7 @@ class UserController extends Controller
 
             $message = "Bienvenue " . $user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance!";
             $user->phone1 ? $number = $user->phone1 : $number = $user->phone2;
-            $this->sendSms($number, $message);
+            // $this->sendSms($number, $message);
 
             return response()->json([
                 "status"  => true,
@@ -139,7 +151,6 @@ class UserController extends Controller
         });
     }
 
-
     public function sendSms($number, $message)
     {
         $smsService = new SmsService ();
@@ -159,6 +170,19 @@ class UserController extends Controller
         //     'status_code' => 200,
         // )
     }
+
+    public function toggleVerification(User $user)
+{
+    $user->is_verified = !$user->is_verified;
+    $user->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => $user->is_verified ? 'Agence certifiée ✅' : 'Certification retirée ❌',
+        'user' => $user
+    ]);
+}
+
 
     public function update(Request $request, $id)
     {

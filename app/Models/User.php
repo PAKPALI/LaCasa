@@ -27,9 +27,12 @@ class User extends Authenticatable
         'phone1',
         'phone2',
         'is_active',
-        'profile_image', // ← ajouté
+        'profile_image',
+        'facebook_link',
+        'tiktok_link',
+        'whatsapp_link',
+        'is_verified'
     ];
-
 
     /**
      * Les attributs cachés lors de la sérialisation.
@@ -92,7 +95,6 @@ class User extends Authenticatable
                 return 'Inconnu';
         }
     }
-
 
     public function isAgency(): bool
     {

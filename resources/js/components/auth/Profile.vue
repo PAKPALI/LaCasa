@@ -3,71 +3,46 @@
     <h2 class="text-center mb-4">Mon profil</h2>
 
     <div v-if="isAuthenticated" class="card shadow-lg bg-dark p-4 rounded">
-      <!-- Image de profil -->
+
+      <!-- PHOTO DE PROFIL -->
       <div class="d-flex flex-column align-items-center mb-4">
         <img
           :src="previewImage || imageUrl(user?.profile_image)"
-          alt="Photo de profil"
           class="rounded-circle border shadow-sm"
           width="120"
           height="120"
         />
-        <button v-if="user?.profile_image" class="btn btn-danger btn-sm mt-2" @click="removeImage"> Supprimer la photo </button>
+        <button v-if="user?.profile_image" class="btn btn-danger btn-sm mt-2" @click="removeImage" :disabled="loading.image">
+          <span v-if="loading.image" class="spinner-border spinner-border-sm"></span>
+          <span v-else>Supprimer la photo</span>
+        </button>
+
         <input type="file" class="form-control mt-3 w-100" @change="onImageChange" />
         <marquee class="border text-light mt-1" behavior="scroll" direction="left" scrollamount="6">
-            <strong>Veuillez appuyez sur "enregistrer" pour mettre a jour la photo</strong>
+          <strong>Veuillez appuyer sur "Enregistrer" pour mettre à jour la photo</strong>
         </marquee>
       </div>
-      <!-- <table class="table border custom-info-table text-light">
-        <tbody>
-          <tr>
-            <th>PAYS : </th>
-            <td><span class="badge bg-success me-1"> {{ user.country.name }} </span></td>
-          </tr>
-          <tr>
-            <th>VILLE : </th>
-            <td><span class="badge bg-success me-1"> {{ user.town.name }} </span></td>
-          </tr>
-          <tr>
-            <th>QUARTIER : </th>
-            <td><span class="badge bg-success me-1"> {{ user.district.name }} </span></td>
-          </tr>
-        </tbody>
-      </table> -->
 
-      <!-- Onglets -->
+      <!-- ONGLETS -->
       <ul class="nav nav-tabs mb-4">
         <li class="nav-item">
-          <button
-            class="nav-link"
-            :class="{ active: activeTab === 'info' }"
-            @click="activeTab = 'info'"
-          >
-            Infos 
-          </button>
+          <button class="nav-link" :class="{ active: activeTab === 'info' }" @click="activeTab='info'">Infos</button>
         </li>
         <li class="nav-item">
-          <button
-            class="nav-link"
-            :class="{ active: activeTab === 'email' }"
-            @click="activeTab = 'email'"
-          >
-            Email
-          </button>
+          <button class="nav-link" :class="{ active: activeTab === 'email' }" @click="activeTab='email'">Email</button>
         </li>
         <li class="nav-item">
-          <button
-            class="nav-link"
-            :class="{ active: activeTab === 'password' }"
-            @click="activeTab = 'password'"
-          >
-            Mot de passe
+          <button class="nav-link" :class="{ active: activeTab === 'password' }" @click="activeTab='password'">Mot de passe</button>
+        </li>
+        <li class="nav-item" v-if="user?.user_type === 2">
+          <button class="nav-link" :class="{ active: activeTab === 'social' }" @click="activeTab='social'">
+            Réseaux sociaux
           </button>
         </li>
       </ul>
 
-      <!-- Onglet : Infos générales -->
-      <div v-if="activeTab === 'info'">
+      <!-- ▶ INFOS -->
+      <div v-if="activeTab==='info'">
         <form @submit.prevent="updateProfile">
           <div class="row">
             <div class="col-md-12 mb-3">
@@ -75,104 +50,94 @@
               <input v-model="form.name" type="text" class="form-control" />
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-6 mb-3">
               <label>Téléphone principal</label>
-              <input v-model="form.phone1" type="number" class="form-control" />
+              <input v-model="form.phone1" type="text" class="form-control" />
             </div>
-
             <div class="col-md-6 mb-3">
               <label>Téléphone secondaire</label>
-              <input v-model="form.phone2" type="number" class="form-control" />
+              <input v-model="form.phone2" type="text" class="form-control" />
             </div>
-            <!-- <div class="col-md-6 mb-3">
-              <label>Rôle</label>
-              <input :value="roleLabel(user?.role)" class="form-control" disabled />
-            </div> -->
           </div>
-
-          <button class="btn btn-success">Enregistrer</button>
+          <button class="btn btn-success" :disabled="loading.info">
+            <span v-if="loading.info" class="spinner-border spinner-border-sm"></span>
+            <span v-else>Enregistrer</span>
+          </button>
         </form>
       </div>
 
-      <!-- Onglet : Email -->
-      <div v-if="activeTab === 'email'">
+      <!-- ▶ EMAIL -->
+      <div v-if="activeTab==='email'">
         <form @submit.prevent="updateEmail">
           <div class="mb-3">
             <label>Nouvel email</label>
             <input v-model="emailForm.email" type="email" class="form-control" />
           </div>
           <div class="mb-3">
-            <label>Mot de passe actuel (pour confirmer)</label>
-            <input
-              v-model="emailForm.password"
-              type="password"
-              class="form-control"
-            />
+            <label>Mot de passe actuel</label>
+            <input v-model="emailForm.password" type="password" class="form-control" />
           </div>
-          <button class="btn btn-success">Mettre à jour l’email</button>
+          <button class="btn btn-success" :disabled="loading.email">
+            <span v-if="loading.email" class="spinner-border spinner-border-sm"></span>
+            <span v-else>Mettre à jour l’email</span>
+          </button>
         </form>
       </div>
 
-      <!-- Onglet : Mot de passe -->
-      <div v-if="activeTab === 'password'">
+      <!-- ▶ PASSWORD -->
+      <div v-if="activeTab==='password'">
         <form @submit.prevent="updatePassword">
           <div class="mb-3">
             <label>Mot de passe actuel</label>
-            <input
-              v-model="passwordForm.current_password"
-              type="password"
-              class="form-control"
-            />
+            <input v-model="passwordForm.current_password" type="password" class="form-control" />
           </div>
-
           <div class="mb-3">
             <label>Nouveau mot de passe</label>
-            <input
-              v-model="passwordForm.new_password"
-              type="password"
-              class="form-control"
-            />
+            <input v-model="passwordForm.new_password" type="password" class="form-control" />
           </div>
-
           <div class="mb-3">
             <label>Confirmer le mot de passe</label>
-            <input
-              v-model="passwordForm.new_password_confirmation"
-              type="password"
-              class="form-control"
-            />
+            <input v-model="passwordForm.new_password_confirmation" type="password" class="form-control" />
           </div>
-
-          <button class="btn btn-success">Modifier le mot de passe</button>
+          <button class="btn btn-success" :disabled="loading.password">
+            <span v-if="loading.password" class="spinner-border spinner-border-sm"></span>
+            <span v-else>Modifier le mot de passe</span>
+          </button>
         </form>
       </div>
+
+      <!-- ▶ RÉSEAUX SOCIAUX -->
+      <div v-if="activeTab==='social'">
+        <form @submit.prevent="updateSocial">
+          <div class="mb-3" v-for="social in socials" :key="social.key">
+            <label>{{ social.label }}</label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark text-light">
+                <i :class="social.icon"></i>
+              </span>
+              <input v-model="form[social.key]" :type="social.type" class="form-control" :placeholder="social.placeholder" />
+            </div>
+          </div>
+
+          <button class="btn btn-success" :disabled="!hasSocialInput || loading.social">
+            <span v-if="loading.social" class="spinner-border spinner-border-sm"></span>
+            <span v-else>Enregistrer</span>
+          </button>
+        </form>
+      </div>
+
     </div>
 
-    <div v-if="!isAuthenticated" class="card shadow-lg p-4 rounded">
-      <!-- <h4 class="text-center text-light">Veuillez vous connecter pour accéder à votre profil.</h4> -->
-      <!-- 404 Start -->
-      <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-          <div class="container text-center">
-              <div class="row justify-content-center">
-                  <div class="col-lg-6 text-danger">
-                      <i class="bi bi-exclamation-triangle display-1 text-danger"></i>
-                      <h1 class="display-1 ">Erreur 404</h1>
-                      <h1 class="mb-4">Liste non trouvée</h1>
-                      <p class="mb-4">Veuillez vous connecter pour accéder à votre profil.</p>
-                      <a class="btn btn-primary py-3 px-5" @click="goToLogin">Se connecter</a>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <!-- 404 End -->
+    <!-- NON AUTH -->
+    <div v-if="!isAuthenticated" class="card shadow-lg p-4 rounded text-light text-center">
+      <h4>Veuillez vous connecter pour accéder à votre profil.</h4>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import axios from "axios"
 import Swal from "sweetalert2"
 import { user, fetchUser, isAuthenticated } from "../auth/auth.js"
@@ -182,29 +147,41 @@ const defaultImage = "https://cdn-icons-png.flaticon.com/512/847/847969.png"
 const previewImage = ref(null)
 const uploadedFile = ref(null)
 
-import { useRouter } from 'vue-router'
-const router = useRouter()
+// LOADING
+const loading = ref({
+  info: false,
+  email: false,
+  password: false,
+  social: false,
+  image: false
+})
 
-const goToLogin = () => {
-  router.push('/login')
-}
-
+// FORM PRINCIPAL
 const form = ref({
   name: "",
   phone1: "",
   phone2: "",
-})
-const emailForm = ref({
-  email: "",
-  password: "",
-})
-const passwordForm = ref({
-  current_password: "",
-  new_password: "",
-  new_password_confirmation: "",
+  facebook_link: "",
+  tiktok_link: "",
+  whatsapp_link: ""
 })
 
-// Charger les données utilisateur à l’ouverture
+const emailForm = ref({ email: "", password: "" })
+const passwordForm = ref({ current_password: "", new_password: "", new_password_confirmation: "" })
+
+// Réseaux sociaux
+const socials = [
+  { key: 'facebook_link', label: 'Facebook', icon: 'bi bi-facebook', type: 'url', placeholder: 'https://facebook.com/...' },
+  { key: 'tiktok_link', label: 'TikTok', icon: 'fab fa-tiktok', type: 'url', placeholder: 'https://tiktok.com/@...' },
+  { key: 'whatsapp_link', label: 'WhatsApp', icon: 'bi bi-whatsapp', type: 'text', placeholder: 'Lien ou numéro WhatsApp' },
+]
+
+const hasSocialInput = computed(() =>
+  (form.value.facebook_link || '').trim() !== '' ||
+  (form.value.tiktok_link || '').trim() !== '' ||
+  (form.value.whatsapp_link || '').trim() !== ''
+)
+
 onMounted(async () => {
   await fetchUser()
   if (user.value) {
@@ -212,124 +189,86 @@ onMounted(async () => {
       name: user.value.name || "",
       phone1: user.value.phone1 || "",
       phone2: user.value.phone2 || "",
+      facebook_link: user.value.facebook_link || "",
+      tiktok_link: user.value.tiktok_link || "",
+      whatsapp_link: user.value.whatsapp_link || "",
     }
     emailForm.value.email = user.value.email || ""
   }
 })
 
-// 🧠 Helpers
-function imageUrl(path) {
-  return path ? `/${path}` : defaultImage;
-}
-
+function imageUrl(path) { return path ? `/${path}` : defaultImage }
 function onImageChange(e) {
   const file = e.target.files[0]
-  if (file) {
-    previewImage.value = URL.createObjectURL(file)
-    uploadedFile.value = file
-  }
+  if (file) { previewImage.value = URL.createObjectURL(file); uploadedFile.value = file }
 }
 
-// 🧾 Mettre à jour les infos générales
+// UPDATE INFOS
 async function updateProfile() {
   try {
+    loading.value.info = true
     const data = new FormData()
-
-    // 🔸 On n’envoie que les champs remplis
-    Object.entries(form.value).forEach(([k, v]) => {
-      if (v !== null && v !== undefined && v !== "") {
-        data.append(k, v)
-      }
+    Object.entries(form.value).forEach(([k,v])=>{
+      if(['facebook_link','tiktok_link','whatsapp_link'].includes(k)) return
+      if(v) data.append(k,v)
     })
-
-    if (uploadedFile.value) data.append("profile_image", uploadedFile.value)
-
-    const res = await axios.post("/me/update", data, { withCredentials: true })
-    if(res.data.status){
-      Swal.fire("Succès", res.data.message, "success")
-      await fetchUser()
-    }else{
-      Swal.fire("Erreur", res.data.message, "error")
-    }
-  } catch (err) {
-    Swal.fire(
-      "Erreur",
-      err.response?.data?.message || "Une erreur est survenue",
-      "error"
-    )
-  }
+    if(uploadedFile.value) data.append('profile_image', uploadedFile.value)
+    const res = await axios.post("/me/update", data, { withCredentials:true })
+    if(res.data.status) { Swal.fire("Succès", res.data.message,"success"); fetchUser() }
+    else Swal.fire("Erreur", res.data.message,"error")
+  } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
+  finally { loading.value.info = false }
 }
 
-// 🗑️ Supprimer l’image de profil
-async function removeImage() {
-  const result = await Swal.fire({
-    title: "Supprimer la photo de profil ?",
-    text: "Cette action est irréversible. La photo sera définitivement supprimée.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Oui, supprimer",
-    cancelButtonText: "Annuler",
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-  });
-
-  if (!result.isConfirmed) return;
-
-  try {
-    const res = await axios.delete("/me/remove-image", { withCredentials: true });
-    Swal.fire("Supprimée ✅", res.data.message, "success");
-    previewImage.value = null;
-    await fetchUser(); // 🔄 recharge les infos utilisateur
-  } catch (err) {
-    Swal.fire("Erreur ❌", err.response?.data?.message || "Impossible de supprimer l'image", "error");
-  }
-}
-
-
-
-// 📧 Mettre à jour l’email
+// UPDATE EMAIL
 async function updateEmail() {
   try {
-    const res = await axios.post(
-      "/me/updateEmail",
-      {
-        email: emailForm.value.email,
-        password_confirmation: emailForm.value.password,
-      },
-      { withCredentials: true }
-    )
-    Swal.fire("Email mis à jour", res.data.message, "success")
-    await fetchUser()
-  } catch (err) {
-    Swal.fire(
-      "Erreur",
-      err.response?.data?.message || "Impossible de changer l'email",
-      "error"
-    )
-  }
+    loading.value.email = true
+    const res = await axios.post("/me/updateEmail", {
+      email: emailForm.value.email,
+      password_confirmation: emailForm.value.password
+    })
+    Swal.fire("Succès", res.data.message,"success")
+    fetchUser()
+  } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
+  finally { loading.value.email = false }
 }
 
-// 🔑 Mettre à jour le mot de passe
+// UPDATE PASSWORD
 async function updatePassword() {
   try {
-    const res = await axios.post(
-      "/me/update-password",
-      passwordForm.value,
-      { withCredentials: true }
-    )
-    Swal.fire("Succès", res.data.message, "success")
-    passwordForm.value = {
-      current_password: "",
-      new_password: "",
-      new_password_confirmation: "",
-    }
-  } catch (err) {
-    Swal.fire(
-      "Erreur",
-      err.response?.data?.message || "Impossible de changer le mot de passe",
-      "error"
-    )
-  }
+    loading.value.password = true
+    const res = await axios.post("/me/update-password", passwordForm.value)
+    Swal.fire("Succès", res.data.message,"success")
+    passwordForm.value = { current_password:"", new_password:"", new_password_confirmation:"" }
+  } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
+  finally { loading.value.password = false }
+}
+
+// UPDATE SOCIAL
+async function updateSocial() {
+  try {
+    loading.value.social = true
+    const res = await axios.post("/me/update-social", {
+      facebook_link: form.value.facebook_link,
+      tiktok_link: form.value.tiktok_link,
+      whatsapp_link: form.value.whatsapp_link
+    })
+    if(res.data.status) { Swal.fire("Succès", res.data.message,"success"); fetchUser() }
+    else Swal.fire("Erreur", res.data.message,"error")
+  } catch(err){ Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
+  finally { loading.value.social = false }
+}
+
+// REMOVE PHOTO
+async function removeImage() {
+  try {
+    loading.value.image = true
+    const res = await axios.delete("/me/remove-image")
+    Swal.fire("Supprimée", res.data.message,"success")
+    previewImage.value=null; fetchUser()
+  } catch(err){ Swal.fire("Erreur","Impossible de supprimer","error") }
+  finally{ loading.value.image=false }
 }
 </script>
 
@@ -342,11 +281,6 @@ async function updatePassword() {
   background-color: #00b98e !important;
   color: #fff !important;
 }
-label {
-  font-weight: 600;
-  color: #fff;
-}
-img.rounded-circle {
-  object-fit: cover;
-}
+label { font-weight: 600; color: #fff }
+img.rounded-circle { object-fit: cover }
 </style>

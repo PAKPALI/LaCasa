@@ -70,7 +70,7 @@
             <div class="row">
               <div class="col-md-4 text-center">
                 <img :src="selectedUser.profile_image ? '/'+selectedUser.profile_image : '/default-avatar.png'" 
-                     alt="Photo de profil" class="img-thumbnail rounded-circle mb-2" width="120" height="120">
+                    alt="Photo de profil" class="img-thumbnail rounded-circle mb-2" width="120" height="120">
               </div>
               <div class="col-md-8">
                 <p><strong>Nom :</strong> {{ selectedUser.name }}</p>
@@ -91,6 +91,24 @@
                     {{ selectedUser.is_active ? 'Actif' : 'Inactif' }}
                   </span>
                 </p>
+
+                <!-- Liens réseaux sociaux uniquement si agence -->
+                <div v-if="selectedUser.user_type === 2">
+                  <p v-if="selectedUser.facebook_link"><strong>Facebook :</strong> 
+                    <a :href="selectedUser.facebook_link" target="_blank">{{ selectedUser.facebook_link }}</a>
+                  </p>
+                  <p v-if="selectedUser.tiktok_link"><strong>TikTok :</strong> 
+                    <a :href="selectedUser.tiktok_link" target="_blank">{{ selectedUser.tiktok_link }}</a>
+                  </p>
+                  <p v-if="selectedUser.whatsapp_link"><strong>WhatsApp :</strong>
+                    <span v-if="selectedUser.whatsapp_link.startsWith('http')">
+                      <a :href="selectedUser.whatsapp_link" target="_blank">{{ selectedUser.whatsapp_link }}</a>
+                    </span>
+                    <span v-else>
+                      {{ selectedUser.whatsapp_link }}
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -101,6 +119,7 @@
       </div>
     </div>
   </div>
+
 
   <!-- Accordéon Utilisateurs -->
   <div class="accordion-item mb-4">
@@ -149,6 +168,21 @@
                 <button class="btn btn-sm btn-info me-1" @click="viewUser(user)">
                   <i class="bi bi-eye"></i>
                 </button>
+                <!-- Toggle Certification -->
+                <div v-if="user.user_type === 2" class="form-check form-switch d-inline-block me-1">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    :id="'certifySwitch-' + user.id"
+                    :checked="user.is_verified"
+                    @change="confirmToggleCertification(user, $event)"
+                    :disabled="loadingButton === 'certify-' + user.id"
+                  >
+                  <label class="form-check-label" :for="'certifySwitch-' + user.id">
+                    <!-- {{ user.is_verified }} -->
+                  </label>
+                </div>
+
                 <button v-if="isAuthenticated && authUser.role == 1" class="btn btn-sm btn-warning me-1" @click="editUser(user)" :disabled="loadingButton==='update'">
                   <i class="bi bi-pencil-square"></i>
                 </button>
@@ -232,10 +266,56 @@ function viewUser(user) {
   selectedUser.value = user
   new Modal(document.getElementById('viewUserModal')).show()
 }
+
 function editUser(user) {
   userForm.value = { ...user }
   new Modal(document.getElementById('updateUserModal')).show()
 }
+
+async function confirmToggleCertification(user, event) {
+  const newState = event.target.checked;
+  const action = newState ? 'certifier cette agence' : 'retirer la certification';
+
+  const confirm = await Swal.fire({
+    title: 'Êtes-vous sûr ?',
+    text: `Voulez-vous vraiment ${action} ?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#28a745',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Oui',
+    cancelButtonText: 'Annuler'
+  });
+
+  if (!confirm.isConfirmed) {
+    // Si l’utilisateur annule, remettre le switch à son état initial
+    event.target.checked = !newState;
+    return;
+  }
+
+  loadingButton.value = 'certify-' + user.id;
+
+  try {
+    const res = await axios.post(`/api/users/${user.id}/toggle-verification`);
+    if (res.data.status) {
+      Swal.fire({
+        icon: 'success',
+        title: res.data.message,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+      await getUsers(); // recharge la liste pour mettre à jour le switch
+    }
+  } catch (err) {
+    Swal.fire('Erreur', err.response?.data?.message || 'Impossible de modifier la certification', 'error');
+    event.target.checked = !newState; // revert en cas d’erreur
+  } finally {
+    loadingButton.value = '';
+  }
+}
+
 async function updateUser() {
   loadingButton.value = 'update'
   try {

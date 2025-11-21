@@ -213,6 +213,41 @@ class AuthController extends Controller
         ]);
     }
 
+    public function updateSocial(Request $request)
+    {
+        $user = Auth::user();
+
+        $validator = Validator::make($request->all(), [
+            'facebook_link' => 'nullable|url',
+            'tiktok_link'   => 'nullable|url',
+            'whatsapp_link' => 'nullable|string|max:255',
+        ], [
+            'facebook_link.url' => 'Le lien Facebook doit être une URL valide.',
+            'tiktok_link.url'   => 'Le lien TikTok doit être une URL valide.',
+            'whatsapp_link.max' => 'Le lien WhatsApp est trop long.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status"  => false,
+                "message" => $validator->errors()->first(),
+            ], 422);
+        }
+
+        // 💾 Mise à jour
+        $user->update([
+            'facebook_link' => $request->facebook_link,
+            'tiktok_link'   => $request->tiktok_link,
+            'whatsapp_link' => $request->whatsapp_link,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Réseaux sociaux mis à jour avec succès.',
+            'user' => $user
+        ]);
+    }
+
     public function removeProfileImage()
     {
         $user = Auth::user();

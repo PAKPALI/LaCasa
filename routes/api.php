@@ -17,6 +17,7 @@ Route::apiResource('town', TownController::class);
 Route::apiResource('district', DistrictController::class);
 Route::apiResource('register', UserController::class);
 Route::apiResource('users', UserController::class);
+Route::post('/users/{user}/toggle-verification', [UserController::class, 'toggleVerification']);
 Route::apiResource('category', CategoryController::class);
 Route::apiResource('pub-type', PubTypeController::class);
 Route::apiResource('attribute', AttributController::class);

@@ -14,8 +14,6 @@
         <div class="ring"></div>
         <div class="ring"></div>
       </div>
-
-      
       <!-- ======== FIN NOUVEAU LOADER ======== -->
 
       <!-- ======== ANCIEN SPINNER (COMMENTÉ) ========
