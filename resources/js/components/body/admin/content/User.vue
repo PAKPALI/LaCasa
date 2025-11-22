@@ -169,18 +169,25 @@
                   <i class="bi bi-eye"></i>
                 </button>
                 <!-- Toggle Certification -->
-                <div v-if="user.user_type === 2" class="form-check form-switch d-inline-block me-1">
-                  <input 
-                    class="form-check-input" 
-                    type="checkbox" 
-                    :id="'certifySwitch-' + user.id"
-                    :checked="user.is_verified"
-                    @change="confirmToggleCertification(user, $event)"
-                    :disabled="loadingButton === 'certify-' + user.id"
-                  >
-                  <label class="form-check-label" :for="'certifySwitch-' + user.id">
-                    <!-- {{ user.is_verified }} -->
-                  </label>
+                <div v-if="user.user_type === 2" class="d-inline-block me-1">
+
+                  <!-- Loader lorsqu'on certifie -->
+                  <div v-if="loadingButton === 'certify-' + user.id">
+                    <div class="spinner-border spinner-border-sm text-info"></div>
+                  </div>
+
+                  <!-- Toggle normal -->
+                  <div v-else class="form-check form-switch">
+                    <input 
+                      class="form-check-input" 
+                      type="checkbox" 
+                      :id="'certifySwitch-' + user.id"
+                      :checked="user.is_verified"
+                      @change="confirmToggleCertification(user, $event)"
+                    >
+                    <label class="form-check-label" :for="'certifySwitch-' + user.id"></label>
+                  </div>
+
                 </div>
 
                 <button v-if="isAuthenticated && authUser.role == 1" class="btn btn-sm btn-warning me-1" @click="editUser(user)" :disabled="loadingButton==='update'">

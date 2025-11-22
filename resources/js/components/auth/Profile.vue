@@ -109,6 +109,32 @@
 
       <!-- ▶ RÉSEAUX SOCIAUX -->
       <div v-if="activeTab==='social'">
+        <div class="alert alert-warning text-dark mb-3" v-if="user">
+
+          <!-- L'agence n'est PAS encore certifiée -->
+          <template v-if="!user.is_verified">
+            <strong>Information importante :</strong><br />
+            Après la mise à jour de vos réseaux sociaux, un délai de
+            <strong>48h minimum</strong> (voire plus si nécessaire)
+            est requis pour le traitement avant certification.<br />
+            Vous recevrez un <strong>email</strong> et un <strong>SMS</strong>
+            pour vous informer du statut de votre demande.<br /><br />
+
+            Veuillez vous assurer que les liens fournis sont corrects.
+          </template>
+
+          <!-- L'agence est déjà certifiée -->
+          <template v-else>
+            <strong>Note :</strong><br />
+            Votre agence est déjà certifiée. Par conséquent,
+            <strong>aucun retour de statut</strong> ne sera envoyé
+            après la mise à jour de vos réseaux sociaux.<br /><br />
+
+            Les liens que vous fournissez participent à renforcer
+            <strong>l’image professionnelle de votre agence en tant que partenaire</strong>.
+          </template>
+
+        </div>
         <form @submit.prevent="updateSocial">
           <div class="mb-3" v-for="social in socials" :key="social.key">
             <label>{{ social.label }}</label>

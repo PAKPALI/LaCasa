@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -217,14 +219,11 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
+        // Valider
         $validator = Validator::make($request->all(), [
             'facebook_link' => 'nullable|url',
             'tiktok_link'   => 'nullable|url',
             'whatsapp_link' => 'nullable|string|max:255',
-        ], [
-            'facebook_link.url' => 'Le lien Facebook doit être une URL valide.',
-            'tiktok_link.url'   => 'Le lien TikTok doit être une URL valide.',
-            'whatsapp_link.max' => 'Le lien WhatsApp est trop long.',
         ]);
 
         if ($validator->fails()) {
@@ -234,19 +233,40 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // 💾 Mise à jour
+        // Mise à jour des réseaux sociaux
         $user->update([
             'facebook_link' => $request->facebook_link,
             'tiktok_link'   => $request->tiktok_link,
             'whatsapp_link' => $request->whatsapp_link,
         ]);
 
+        // 🔔 Envoyer un mail à tous les admins
+        if($user -> is_verified == 0){
+            $this->notifyAdminsCertificationRequest($user);
+        }
+
         return response()->json([
             'status' => true,
-            'message' => 'Réseaux sociaux mis à jour avec succès.',
+            'message' => 'Réseaux sociaux mis à jour. Demande de certification envoyée.',
             'user' => $user
         ]);
     }
+
+    public function notifyAdminsCertificationRequest($user)
+    {
+        // Récupérer tous les admins (role ≠ 3)
+        $admins = User::where('role', '!=', 3)->get();
+
+        foreach ($admins as $admin) {
+            Mail::send('emails.admin.certifyAlert', ['agency_name' => $user->name], 
+                function($message) use ($admin) {
+                    $message->to($admin->email);
+                    $message->subject('Nouvelle demande de certification');
+                }
+            );
+        }
+    }
+
 
     public function removeProfileImage()
     {

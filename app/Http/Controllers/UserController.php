@@ -147,7 +147,7 @@ class UserController extends Controller
             'password' => $password,
         ], function($message) use ($email){
             $message->to($email);
-            $message->subject(config('app.name') . ' - Bienvenue sur notre plateforme');
+            $message->subject('Bienvenue sur notre plateforme');
         });
     }
 
@@ -195,7 +195,7 @@ class UserController extends Controller
             'email' => $email,
         ], function($message) use ($email){
             $message->to($email);
-            $message->subject(config('app.name') . ' - Compte certifié avec succès');
+            $message->subject('Certification LaCasa est maintenant active');
         });
     }
 

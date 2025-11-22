@@ -12,18 +12,8 @@
       </div>
 
       <!-- Wrapper pour hover -->
-      <div
-        class="marquee-wrapper"
-        ref="marqueeWrapper"
-        @mouseenter="isHovered = true"
-        @mouseleave="isHovered = false"
-      >
-        <div
-          class="marquee-content"
-          :class="{ scrolling: canScroll }"
-          :style="{ animationPlayState: isHovered ? 'paused' : 'running' }"
-          ref="marqueeContent"
-        >
+      <div class="marquee-wrapper" ref="marqueeWrapper" @mouseenter="isHovered = true" @mouseleave="isHovered = false">
+        <div class="marquee-content" :class="{ scrolling: canScroll }" :style="{ animationPlayState: isHovered ? 'paused' : 'running' }" ref="marqueeContent">
           <div class="marquee-item" v-for="(p, i) in partnersToShow" :key="i">
             <img :src="p.logo" :alt="p.nom" class="partner-logo" />
             <p class="partner-name">{{ p.nom }}</p>
@@ -46,25 +36,111 @@
         </div>
       </div>
       <!-- fin marquee-wrapper -->
+
+      <button class="btn btn-dark mt-4 fw-bold px-4" data-bs-toggle="modal" data-bs-target="#partnerInfoModal">
+        Comment devenir partenaire ?
+      </button>
     </div>
   </div>
 
   <div class="modal fade" id="whatsappModal" tabindex="-1" ref="whatsappModal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title">Numéro WhatsApp</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body text-center">
-        <p class="mb-0">{{ currentWhatsappNumber }}</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">Numéro WhatsApp</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p class="mb-0">{{ currentWhatsappNumber }}</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <div class="modal fade mt-5" id="partnerInfoModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        
+        <div class="modal-header bg-dark text-light">
+          <h5 class="modal-title fw-bold text-light">Devenir partenaire LaCasa</h5>
+          <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <!-- SECTION : Comment devenir partenaire -->
+          <h5 class="fw-bold mb-0 text-success">Comment devenir partenaire ?</h5>
+          <p class="text-dark">
+            Pour devenir partenaire, vous devez obligatoirement être une 
+            <strong>agence immobilière professionnelle</strong>.  
+            Les étapes à suivre :
+          </p>
+          <ul class="text-dark">
+            <li>Créer un compte sur la plateforme <strong>LaCasa</strong></li>
+            <li>Vous connecter à votre espace personnel</li>
+            <li>Accéder à votre profil et <strong>mettre à jour la section “Réseaux sociaux”</strong></li>
+          </ul>
+
+          <hr />
+
+          <!-- SECTION : La certification est-elle obligatoire ? -->
+          <h5 class="fw-bold mb-0 text-success">La certification est-elle obligatoire ?</h5>
+          <p class="text-dark">
+            Non, ce n’est pas obligatoire. L’agence peut créer son compte gratuitement 
+            et publier des annonces sans certification pour le moment.
+          </p>
+
+          <hr />
+
+          <!-- SECTION : Alors pourquoi se certifier ? -->
+          <h5 class="fw-bold mb-0 text-success">Alors pourquoi se certifier ?</h5>
+          <p class="text-dark">
+            La certification établit un lien officiel de partenariat avec <strong>LaCasa</strong>.  
+            Elle permet :
+          </p>
+          <ul class="text-dark">
+            <li>De montrer aux clients potentiels que vos publications sont fiables et que votre agence est crédible</li>
+            <li>À LaCasa de promouvoir votre agence en mettant en avant les liens mis à jour lors de la certification dans la section “Partenaires”</li>
+            <li>De bénéficier d’une visibilité auprès de nombreux utilisateurs qui consultent régulièrement la plateforme pour en savoir plus sur les agences</li>
+          </ul>
+
+          <hr />
+
+          <!-- SECTION : Comment se certifier -->
+          <h5 class="fw-bold mb-0 text-success">Comment se certifier ?</h5>
+          <p class="text-dark">
+            Après la mise à jour de vos réseaux sociaux, notre équipe procède à la vérification 
+            des informations fournies et s'assure du payement des frais  <strong class ="text-success">(3000 FCFA)</strong> de certification.
+          </p>
+          <ul class="text-dark">
+            <li>Vérification de la <strong>validité des liens</strong> que vous avez insérés</li>
+            <li>Contrôle que vous possédez une <strong>photo de profil claire et professionnelle</strong></li>
+            <li>Analyse de la cohérence entre les informations de votre compte et votre activité réelle</li>
+          </ul>
+
+          <p class="text-dark">
+            Une fois la vérification terminée :
+          </p>
+          <ul class="text-dark">
+            <li>Vous recevez une <strong>notification Email + SMS</strong> indiquant le statut</li>
+            <li>Si votre certification est approuvée, votre agence apparaît automatiquement dans la 
+              <strong>liste officielle des partenaires</strong>
+            </li>
+          </ul>
+
+        </div>
+
+        <div class="modal-footer bg-dark">
+          <!-- <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button> -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 
 </template>
 
@@ -116,18 +192,29 @@ onMounted(async () => {
   whatsappModal.value = new Modal(document.getElementById("whatsappModal"))
 })
 
+function getPartnerLogo(user) {
+  // Si le partenaire a une image de profil, on l'utilise
+  if (user.profile_image && user.profile_image.length > 0) {
+    return `/${user.profile_image}`
+  }
+  // Sinon, on prend le logo par défaut (ici logo1)
+  return logo1
+}
+
+
 // Choisir entre utilisateurs certifiés ou liste par défaut
-const partnersToShow = computed(() => {
-  return certifiedUsers.value.length > 0
-    ? certifiedUsers.value.map(u => ({
-        nom: u.name,
-        logo: u.logo ?? logo1,
-        facebook: u.facebook_link,
-        whatsapp: u.whatsapp_link,
-        tiktok: u.tiktok_link
-      }))
-    : defaultPartners
-})
+  const partnersToShow = computed(() => {
+    return certifiedUsers.value.length > 0
+      ? certifiedUsers.value.map(u => ({
+          nom: u.name,
+          logo: getPartnerLogo(u),  // <-- ici le fallback appliqué
+          facebook: u.facebook_link,
+          whatsapp: u.whatsapp_link,
+          tiktok: u.tiktok_link
+        }))
+      : defaultPartners
+  })
+
 
 function openWhatsappModal(number) {
   currentWhatsappNumber.value = number
