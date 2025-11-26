@@ -72,7 +72,7 @@
                 <img :src="selectedUser.profile_image ? '/'+selectedUser.profile_image : '/default-avatar.png'" 
                     alt="Photo de profil" class="img-thumbnail rounded-circle mb-2" width="120" height="120">
               </div>
-              <div class="col-md-8">
+              <div class="col-md-8 bg-dark text-light">
                 <p><strong>Nom :</strong> {{ selectedUser.name }}</p>
                 <p><strong>Email :</strong> {{ selectedUser.email }}</p>
                 <p><strong>Téléphone 1 :</strong> {{ selectedUser.phone1 ?? '—' }}</p>

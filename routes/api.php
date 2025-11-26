@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TownController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PubTypeController;
 use App\Http\Controllers\AttributController;
 use App\Http\Controllers\CategoryController;
@@ -22,6 +23,9 @@ Route::apiResource('category', CategoryController::class);
 Route::apiResource('pub-type', PubTypeController::class);
 Route::apiResource('attribute', AttributController::class);
 Route::apiResource('publication', PublicationController::class);
+Route::apiResource('payments', PaymentController::class);
+
+Route::post('/kprimepay/webhook', [PaymentController::class, 'webhook']);
 
 // Route::middleware('auth:sanctum')->group(function () {
 //     Route::apiResource('country', CountryController::class);

@@ -20,6 +20,7 @@
           <PubType accordionId="adminAccordion" />
           <Attribute accordionId="adminAccordion" />
           <User v-if="isAuthenticated && (user.role == 1 || user.role == 2)" accordionId="adminAccordion" />
+          <Payment accordionId="adminAccordion" />
         </div>
       </div>
     </div>
@@ -46,7 +47,7 @@
           </div>
       </div>
       <!-- 404 End -->
-    </div>
+  </div>
 </template>
 
 <script setup>
@@ -59,6 +60,7 @@
   import PubType from './content/PubType.vue'
   import Attribute from './content/Attribute.vue'
   import User from './content/User.vue'
+  import Payment from './content/Payment.vue'
 
   import { useRouter } from 'vue-router'
   const router = useRouter()

@@ -109,40 +109,60 @@
 
       <!-- ▶ RÉSEAUX SOCIAUX -->
       <div v-if="activeTab==='social'">
-        <div class="alert alert-warning text-dark mb-3" v-if="user">
 
-          <!-- L'agence n'est PAS encore certifiée -->
-          <template v-if="!user.is_verified">
-            <strong>Information importante :</strong><br />
-            Après la mise à jour de vos réseaux sociaux, un délai de
-            <strong>48h minimum</strong> (voire plus si nécessaire)
-            est requis pour le traitement avant certification.<br />
-            Vous recevrez un <strong>email</strong> et un <strong>SMS</strong>
-            pour vous informer du statut de votre demande.<br /><br />
+        <!-- 1️⃣ L’utilisateur n’a pas encore payé la certification -->
+        <div v-if="user && !user.certify_payment_status" class="alert alert-info text-dark mb-3">
+          <strong>Certification requise :</strong><br />
+          Pour déposer une demande de certification, vous devez d’abord effectuer
+          le paiement des frais de certification.<br /><br />
+          
+          Une fois le paiement effectué, vous pourrez compléter votre profil social
+          et soumettre votre demande de certification.<br /><br />
 
-            Veuillez vous assurer que les liens fournis sont corrects.
-          </template>
-
-          <!-- L'agence est déjà certifiée -->
-          <template v-else>
-            <strong>Note :</strong><br />
-            Votre agence est déjà certifiée. Par conséquent,
-            <strong>aucun retour de statut</strong> ne sera envoyé
-            après la mise à jour de vos réseaux sociaux.<br /><br />
-
-            Les liens que vous fournissez participent à renforcer
-            <strong>l’image professionnelle de votre agence en tant que partenaire</strong>.
-          </template>
-
+          <button class="btn btn-warning btn-shimmer" @click="goToPayment">
+            Payer pour la certification
+          </button>
         </div>
-        <form @submit.prevent="updateSocial">
+
+        <!-- Si pas encore payé → on bloque tout le reste -->
+        <div v-if="user && !user.certify_payment_status">
+          <!-- ON NE MONTRE PAS LE FORMULAIRE NI LES TEMPLATES -->
+          <br />
+          <p class="text-warning">Effectuez le paiement pour continuer.</p>
+        </div>
+
+        <!-- 2️⃣ L’utilisateur a payé mais n’est pas encore certifié -->
+        <div class="alert alert-warning text-dark mb-3" v-if="user && user.certify_payment_status && !user.is_verified">
+          <strong>Information importante :</strong><br />
+          Après la mise à jour de vos réseaux sociaux, un délai de
+          <strong>48h minimum</strong> est requis pour le traitement de votre demande de certification.<br />
+          Vous recevrez un <strong>email</strong> et un <strong>SMS</strong> concernant l’évolution.<br /><br />
+
+          Veuillez vérifier que les liens fournis sont corrects.
+        </div>
+
+        <!-- 3️⃣ L’utilisateur est déjà certifié -->
+        <div class="alert alert-success text-dark mb-3" v-if="user && user.is_verified">
+          <strong>Note :</strong><br />
+          Votre agence est déjà certifiée. Vous pouvez continuer à mettre à jour vos réseaux sociaux.<br /><br />
+
+          Ces informations renforcent votre image professionnelle.
+        </div>
+
+        <!--  Formulaire réseaux sociaux (visible pour état 2 et 3) -->
+        <form @submit.prevent="updateSocial" v-if="user && (user.certify_payment_status)">
           <div class="mb-3" v-for="social in socials" :key="social.key">
             <label>{{ social.label }}</label>
             <div class="input-group">
               <span class="input-group-text bg-dark text-light">
                 <i :class="social.icon"></i>
               </span>
-              <input v-model="form[social.key]" :type="social.type" class="form-control" :placeholder="social.placeholder" />
+              <input
+                v-model="form[social.key]"
+                :type="social.type"
+                class="form-control"
+                :placeholder="social.placeholder"
+              />
             </div>
           </div>
 
@@ -163,150 +183,260 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue"
-import axios from "axios"
-import Swal from "sweetalert2"
-import { user, fetchUser, isAuthenticated } from "../auth/auth.js"
+  import { ref, onMounted, computed } from "vue"
+  import axios from "axios"
+  import Swal from "sweetalert2"
+  import { user, fetchUser, isAuthenticated } from "../auth/auth.js"
 
-const activeTab = ref("info")
-const defaultImage = "https://cdn-icons-png.flaticon.com/512/847/847969.png"
-const previewImage = ref(null)
-const uploadedFile = ref(null)
+  const activeTab = ref("info")
+  const defaultImage = "https://cdn-icons-png.flaticon.com/512/847/847969.png"
+  const previewImage = ref(null)
+  const uploadedFile = ref(null)
 
-// LOADING
-const loading = ref({
-  info: false,
-  email: false,
-  password: false,
-  social: false,
-  image: false
-})
+  // LOADING
+  const loading = ref({
+    info: false,
+    email: false,
+    password: false,
+    social: false,
+    image: false
+  })
 
-// FORM PRINCIPAL
-const form = ref({
-  name: "",
-  phone1: "",
-  phone2: "",
-  facebook_link: "",
-  tiktok_link: "",
-  whatsapp_link: ""
-})
+  // FORM PRINCIPAL
+  const form = ref({
+    name: "",
+    phone1: "",
+    phone2: "",
+    facebook_link: "",
+    tiktok_link: "",
+    whatsapp_link: ""
+  })
 
-const emailForm = ref({ email: "", password: "" })
-const passwordForm = ref({ current_password: "", new_password: "", new_password_confirmation: "" })
+  const emailForm = ref({ email: "", password: "" })
+  const passwordForm = ref({ current_password: "", new_password: "", new_password_confirmation: "" })
 
-// Réseaux sociaux
-const socials = [
-  { key: 'facebook_link', label: 'Facebook', icon: 'bi bi-facebook', type: 'url', placeholder: 'https://facebook.com/...' },
-  { key: 'tiktok_link', label: 'TikTok', icon: 'fab fa-tiktok', type: 'url', placeholder: 'https://tiktok.com/@...' },
-  { key: 'whatsapp_link', label: 'WhatsApp', icon: 'bi bi-whatsapp', type: 'text', placeholder: 'Lien ou numéro WhatsApp' },
-]
+  // Réseaux sociaux
+  const socials = [
+    { key: 'facebook_link', label: 'Facebook', icon: 'bi bi-facebook', type: 'url', placeholder: 'https://facebook.com/...' },
+    { key: 'tiktok_link', label: 'TikTok', icon: 'fab fa-tiktok', type: 'url', placeholder: 'https://tiktok.com/@...' },
+    { key: 'whatsapp_link', label: 'WhatsApp', icon: 'bi bi-whatsapp', type: 'text', placeholder: 'Lien ou numéro WhatsApp' },
+  ]
 
-const hasSocialInput = computed(() =>
-  (form.value.facebook_link || '').trim() !== '' ||
-  (form.value.tiktok_link || '').trim() !== '' ||
-  (form.value.whatsapp_link || '').trim() !== ''
-)
+  const hasSocialInput = computed(() =>
+    (form.value.facebook_link || '').trim() !== '' ||
+    (form.value.tiktok_link || '').trim() !== '' ||
+    (form.value.whatsapp_link || '').trim() !== ''
+  )
 
-onMounted(async () => {
-  await fetchUser()
-  if (user.value) {
-    form.value = {
-      name: user.value.name || "",
-      phone1: user.value.phone1 || "",
-      phone2: user.value.phone2 || "",
-      facebook_link: user.value.facebook_link || "",
-      tiktok_link: user.value.tiktok_link || "",
-      whatsapp_link: user.value.whatsapp_link || "",
+  onMounted(async () => {
+    await fetchUser()
+    if (user.value) {
+      form.value = {
+        name: user.value.name || "",
+        phone1: user.value.phone1 || "",
+        phone2: user.value.phone2 || "",
+        facebook_link: user.value.facebook_link || "",
+        tiktok_link: user.value.tiktok_link || "",
+        whatsapp_link: user.value.whatsapp_link || "",
+      }
+      emailForm.value.email = user.value.email || ""
     }
-    emailForm.value.email = user.value.email || ""
+  })
+
+  function imageUrl(path) { return path ? `/${path}` : defaultImage }
+  function onImageChange(e) {
+    const file = e.target.files[0]
+    if (file) { previewImage.value = URL.createObjectURL(file); uploadedFile.value = file }
   }
-})
 
-function imageUrl(path) { return path ? `/${path}` : defaultImage }
-function onImageChange(e) {
-  const file = e.target.files[0]
-  if (file) { previewImage.value = URL.createObjectURL(file); uploadedFile.value = file }
-}
+  // UPDATE INFOS
+  async function updateProfile() {
+    try {
+      loading.value.info = true
+      const data = new FormData()
+      Object.entries(form.value).forEach(([k,v])=>{
+        if(['facebook_link','tiktok_link','whatsapp_link'].includes(k)) return
+        if(v) data.append(k,v)
+      })
+      if(uploadedFile.value) data.append('profile_image', uploadedFile.value)
+      const res = await axios.post("/me/update", data, { withCredentials:true })
+      if(res.data.status) { Swal.fire("Succès", res.data.message,"success"); fetchUser() }
+      else Swal.fire("Erreur", res.data.message,"error")
+    } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
+    finally { loading.value.info = false }
+  }
 
-// UPDATE INFOS
-async function updateProfile() {
-  try {
-    loading.value.info = true
-    const data = new FormData()
-    Object.entries(form.value).forEach(([k,v])=>{
-      if(['facebook_link','tiktok_link','whatsapp_link'].includes(k)) return
-      if(v) data.append(k,v)
-    })
-    if(uploadedFile.value) data.append('profile_image', uploadedFile.value)
-    const res = await axios.post("/me/update", data, { withCredentials:true })
-    if(res.data.status) { Swal.fire("Succès", res.data.message,"success"); fetchUser() }
-    else Swal.fire("Erreur", res.data.message,"error")
-  } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
-  finally { loading.value.info = false }
-}
+  // UPDATE EMAIL
+  async function updateEmail() {
+    try {
+      loading.value.email = true
+      const res = await axios.post("/me/updateEmail", {
+        email: emailForm.value.email,
+        password_confirmation: emailForm.value.password
+      })
+      Swal.fire("Succès", res.data.message,"success")
+      fetchUser()
+    } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
+    finally { loading.value.email = false }
+  }
 
-// UPDATE EMAIL
-async function updateEmail() {
-  try {
-    loading.value.email = true
-    const res = await axios.post("/me/updateEmail", {
-      email: emailForm.value.email,
-      password_confirmation: emailForm.value.password
-    })
-    Swal.fire("Succès", res.data.message,"success")
-    fetchUser()
-  } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
-  finally { loading.value.email = false }
-}
+  // UPDATE PASSWORD
+  async function updatePassword() {
+    try {
+      loading.value.password = true
+      const res = await axios.post("/me/update-password", passwordForm.value)
+      Swal.fire("Succès", res.data.message,"success")
+      passwordForm.value = { current_password:"", new_password:"", new_password_confirmation:"" }
+    } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
+    finally { loading.value.password = false }
+  }
 
-// UPDATE PASSWORD
-async function updatePassword() {
-  try {
-    loading.value.password = true
-    const res = await axios.post("/me/update-password", passwordForm.value)
-    Swal.fire("Succès", res.data.message,"success")
-    passwordForm.value = { current_password:"", new_password:"", new_password_confirmation:"" }
-  } catch(err) { Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
-  finally { loading.value.password = false }
-}
+  // UPDATE SOCIAL
+  async function updateSocial() {
+    try {
+      loading.value.social = true
+      const res = await axios.post("/me/update-social", {
+        facebook_link: form.value.facebook_link,
+        tiktok_link: form.value.tiktok_link,
+        whatsapp_link: form.value.whatsapp_link
+      })
+      if(res.data.status) { Swal.fire("Succès", res.data.message,"success"); fetchUser() }
+      else Swal.fire("Erreur", res.data.message,"error")
+    } catch(err){ Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
+    finally { loading.value.social = false }
+  }
 
-// UPDATE SOCIAL
-async function updateSocial() {
-  try {
-    loading.value.social = true
-    const res = await axios.post("/me/update-social", {
-      facebook_link: form.value.facebook_link,
-      tiktok_link: form.value.tiktok_link,
-      whatsapp_link: form.value.whatsapp_link
-    })
-    if(res.data.status) { Swal.fire("Succès", res.data.message,"success"); fetchUser() }
-    else Swal.fire("Erreur", res.data.message,"error")
-  } catch(err){ Swal.fire("Erreur", err.response?.data?.message||"Erreur inconnue","error") }
-  finally { loading.value.social = false }
-}
+  // REMOVE PHOTO
+  async function removeImage() {
+    try {
+      loading.value.image = true
+      const res = await axios.delete("/me/remove-image")
+      Swal.fire("Supprimée", res.data.message,"success")
+      previewImage.value=null; fetchUser()
+    } catch(err){ Swal.fire("Erreur","Impossible de supprimer","error") }
+    finally{ loading.value.image=false }
+  }
 
-// REMOVE PHOTO
-async function removeImage() {
-  try {
-    loading.value.image = true
-    const res = await axios.delete("/me/remove-image")
-    Swal.fire("Supprimée", res.data.message,"success")
-    previewImage.value=null; fetchUser()
-  } catch(err){ Swal.fire("Erreur","Impossible de supprimer","error") }
-  finally{ loading.value.image=false }
-}
+  async function goToPayment() {
+    try {
+      Swal.fire({
+        title: "Paiement en cours...",
+        text: "Veuillez patienter",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
+      const response = await axios.post("/me/certify_payment");
+
+      if (!response.data || !response.data.payment_url) {
+        Swal.fire("Erreur", "Lien de paiement introuvable.", "error");
+        return;
+      }
+
+      const paymentUrl = response.data.payment_url;
+
+      // 🔥 REDIRECTION DIRECTE VERS KPRIMEPAY
+      window.location.href = paymentUrl;
+
+    } catch (error) {
+      Swal.fire(
+        "Erreur",
+        error.response?.data?.message || "Impossible de démarrer le paiement.",
+        "error"
+      );
+    }
+  }
+
 </script>
 
 <style scoped>
-.nav-link {
-  background-color: #00b98e38 !important;
-  color: #fff !important;
-}
-.nav-link.active {
-  background-color: #00b98e !important;
-  color: #fff !important;
-}
-label { font-weight: 600; color: #fff }
-img.rounded-circle { object-fit: cover }
+  .nav-link {
+    background-color: #00b98e38 !important;
+    color: #fff !important;
+  }
+  .nav-link.active {
+    background-color: #00b98e !important;
+    color: #fff !important;
+  }
+  label { font-weight: 600; color: #fff }
+  img.rounded-circle { object-fit: cover }
+
+  /* CSS - coller dans ton fichier global (ex : app.css) */
+
+  /* wrapper : relative pour le pseudo-élément de lueur */
+  .btn-shimmer {
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+    /* pour lisibilité si le shimmer est fort */
+    transition: box-shadow .15s ease;
+  }
+
+  /* Lueur "dorée/blanche" qui traverse : pseudo-élément avant */
+  .btn-shimmer::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    /* gradient fin pour obtenir un trait lumineux doré/blanc */
+    background: linear-gradient(
+      120deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.95) 30%,
+      rgba(255,230,150,0.85) 45%,
+      rgba(255,255,255,0.95) 60%,
+      rgba(255,255,255,0) 100%
+    );
+    transform: translateX(-120%) rotate(15deg);
+    z-index: 1;
+    pointer-events: none;
+    /* animation de traversée : courte et 'brusque' */
+    animation: shimmer-swipe 3s cubic-bezier(.4,0,.6,1) infinite;
+    mix-blend-mode: screen; /* rend la lueur plus naturelle selon le fond */
+    opacity: 0; /* reste invisible hors du flash */
+    filter: blur(6px);
+  }
+
+  /* petit flash / pulse de box-shadow pour renforcer l'effet "brusque" */
+  @keyframes shimmer-swipe {
+    0%   { transform: translateX(-120%) rotate(15deg); opacity: 0; }
+    10%  { opacity: 0.0; }
+    30%  { transform: translateX(0%) rotate(15deg); opacity: 1; }    /* apparition rapide */
+    45%  { transform: translateX(30%) rotate(15deg); opacity: 0.9; } /* milieu lumineux */
+    60%  { transform: translateX(70%) rotate(15deg); opacity: 0.0; } /* disparition rapide */
+    100% { transform: translateX(120%) rotate(15deg); opacity: 0; }
+  }
+
+  /* flash brusque du bouton (ombre) synchronisée */
+  .btn-shimmer {
+    animation: shimmer-pulse-shadow 3s steps(1) infinite;
+  }
+
+  /* steps(1) crée un effet discontinu (brusque). Ajuste la durée si besoin. */
+  @keyframes shimmer-pulse-shadow {
+    0%   { box-shadow: none; }
+    33%  { box-shadow: 0 6px 22px rgba(255,200,80,0); }
+    34%  { box-shadow: 0 8px 28px rgba(255,220,110,0.26); } /* flash brusque */
+    37%  { box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+    100% { box-shadow: none; }
+  }
+
+  /* S'assurer que le texte reste au dessus du pseudo-élément */
+  .btn-shimmer * {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Respecter la préférence de l'utilisateur pour réduire les animations */
+  @media (prefers-reduced-motion: reduce) {
+    .btn-shimmer::before,
+    .btn-shimmer {
+      animation: none;
+      filter: none;
+      opacity: 1;
+    }
+  }
+
 </style>

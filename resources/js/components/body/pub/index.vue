@@ -1,6 +1,6 @@
 <template>
   <!-- <ParticleJs /> -->
-  <Header />
+  <!-- <Header /> -->
   <!-- <SearchBar /> -->
   <!-- <Category />
   <About /> -->

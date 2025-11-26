@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TownController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PubTypeController;
 use App\Http\Controllers\AttributController;
 use App\Http\Controllers\CategoryController;
@@ -22,7 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/me/remove-image', [AuthController::class, 'removeProfileImage']);
 
     Route::get('getMyPublication', [PublicationController::class, 'getMyPublication']);
+    Route::post('/me/certify_payment', [UserController::class, 'certifyPayment']);
 });
+
+
 
     // Route::middleware(['auth'])->group(function () {
 

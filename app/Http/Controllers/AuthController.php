@@ -267,7 +267,6 @@ class AuthController extends Controller
         }
     }
 
-
     public function removeProfileImage()
     {
         $user = Auth::user();

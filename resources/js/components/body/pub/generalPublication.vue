@@ -107,12 +107,18 @@
           <!-- <div class="text-end mx-auto mb-3">
             <router-link to='/createPub' class="btn btn-dark border-0 w-15"> + Ajouter publication </router-link>
           </div> -->
-          <div class="text-end mx-auto mb-3">
+          <div v-if="isAuthenticated && user.user_type == 2" class="text-end mx-auto mb-3">
             <button class="btn-lg btn-dark  pulse-btn border-0 w-50" @click="handleAddPublication" :disabled="loadingPublications">
               + Ajouter publication
             </button>
           </div>
-
+          <div v-if="isAuthenticated && user.user_type == 1" class="text-end mx-auto mb-3">
+          </div>
+          <div v-if="!isAuthenticated" class="text-end mx-auto mb-3">
+            <button class="btn-lg btn-dark  pulse-btn border-0 w-50" @click="handleAddPublication" :disabled="loadingPublications">
+              + Ajouter publication 
+            </button>
+          </div>
         </div>
         
         <marquee class="bg-dark text-light mb-2" behavior="scroll" direction="left" scrollamount="6">
@@ -376,7 +382,7 @@
           <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
             <img width="94" height="94" src="https://img.icons8.com/3d-fluency/94/user-male-circle.png" alt="user-male-circle"/>
             <p style="font-size:16px; color:#0e2e50; font-weight:500; margin-top:15px;">
-              Vous devez être connecté pour ajouter une publication.<br>
+              Vous devez être connecté en tant qu'agence pour ajouter une publication.<br>
               Voulez-vous vous connecter maintenant ?
             </p>
           </div>

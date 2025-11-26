@@ -7,10 +7,12 @@ use Illuminate\Support\Str;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Services\KPrimePayService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Repositories\PaymentRepository;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -169,6 +171,54 @@ class UserController extends Controller
         //     ),
         //     'status_code' => 200,
         // )
+    }
+
+    public function certifyPayment(KPrimePayService $kpp, PaymentRepository $repo)
+    {
+        $user = Auth::user();
+
+        if ($user->certify_payment_status) {
+            return response()->json([
+                "status" => false,
+                "message" => "Vous avez déjà payé la certification."
+            ], 400);
+        }
+
+        // 🔹 1 - Créer transaction interne
+        $transaction_id = 'KPP' . strtoupper(uniqid());
+        $repo->create([
+            "transaction_id" => $transaction_id,
+            "user_id"        => $user->id,
+            "amount"         => 2000,
+            "currency"       => "XOF",
+            "status"         => "pending",
+        ]);
+
+        // 🔹 2 - Appel API KPrimePay
+        $checkout = $kpp->createCheckout([
+            "transaction_id" => $transaction_id,
+            "currency"       => "XOF",
+            "amount"         => 2000,
+            "with_fees"      => 1,
+            "mode"           => 1,
+            "description"    => "Paiement certification agence",
+            "return_url" => config('app.url') . '/profile',
+            "metadata"       => ["user_id" => $user->id],
+        ]);
+
+        if (!is_array($checkout) || !isset($checkout["success"]) || !$checkout["success"]) {
+            return response()->json([
+                "status" => false,
+                "message" => "Erreur KPrimePay " . json_encode($checkout),
+                "details" => $checkout
+            ], 500);
+        }
+
+
+        return response()->json([
+            "status" => true,
+            "payment_url" => $checkout["checkout_url"],
+        ]);
     }
 
     public function toggleVerification(User $user)
