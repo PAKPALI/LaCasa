@@ -70,7 +70,7 @@
         </div>
 
         <!-- body -->
-        <div class="modal-body bg-dark text-light">
+        <div class="modal-body">
 
           <!-- SECTION : Comment devenir partenaire -->
           <h5 class="fw-bold mb-0 text-success">Comment devenir partenaire ?</h5>
