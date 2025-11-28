@@ -1,51 +1,41 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <title>Paiement confirmé sur {{ config('app.name') }}</title>
+    <title>Paiement réussi - {{ config('app.name') }}</title>
 </head>
-
 <body style="font-family: Arial, sans-serif; background-color: #f7f9fb; padding: 40px;">
-
-    <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden;">
-
+    <div style="max-width:600px;margin:auto;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);">
         <!-- Header -->
-        <div style="background-color: #0e2e50; color: #ffffff; text-align: center; padding: 20px 0;">
-            <h2 style="margin: 0;">{{ config('app.name') }}</h2>
+        <div style="background-color:#0e2e50;color:#fff;text-align:center;padding:20px 0;">
+            <h2 style="margin:0;">{{ config('app.name') }}</h2>
         </div>
 
         <!-- Body -->
-        <div style="padding: 30px; color: #0e2e50;">
+        <div style="padding:30px;color:#0e2e50;">
             <p>Bonjour <strong>{{ $user_name }}</strong>,</p>
 
-            <p>
-                🎉 <strong>Votre paiement a été effectué avec succès !</strong>
-            </p>
+            <p>✅ Votre paiement a été effectué avec succès !</p>
 
-            <div style="background-color: #d1e7dd; color: #0f5132; padding: 15px; border-radius: 6px; margin-top: 10px;">
-                Montant : <strong>{{ $amount }} {{ $currency }}</strong><br>
-                Transaction ID : <strong>{{ $transaction_id }}</strong><br>
-                Date : <strong>{{ $date }}</strong>
-            </div>
+            <p>Détails de votre transaction :</p>
+            <ul>
+                <li><strong>Montant :</strong> {{ $data['amount'] ?? 'N/A' }} {{ $data['currency'] ?? 'XOF' }}</li>
+                <li><strong>Référence :</strong> {{ $data['reference'] ?? 'N/A' }}</li>
+                <li><strong>Méthode de paiement :</strong> {{ $data['payment_method'] ?? 'N/A' }}</li>
+                <li><strong>Opérateur :</strong> {{ $data['payment_operator'] ?? 'N/A' }}</li>
+                <li><strong>ID Transaction :</strong> {{ $data['transaction_id'] ?? 'N/A' }}</li>
+            </ul>
 
-            <p style="margin-top: 20px;">
-                Vous trouverez ci-joint votre facture officielle au format PDF pour vos archives.
-            </p>
+            <p>Vous trouverez ci-joint la facture au format PDF.</p>
 
-            <p style="margin-top: 30px;">
-                L’équipe {{ config('app.name') }}
-            </p>
+            <p style="margin-top:30px;">L’équipe {{ config('app.name') }}</p>
         </div>
 
         <!-- Footer -->
-        <div style="background-color: #0e2e50; color: #ffffff; text-align: center; padding: 15px; font-size: 14px;">
+        <div style="background-color:#0e2e50;color:#fff;text-align:center;padding:15px;font-size:14px;">
             &copy; {{ date('Y') }} {{ config('app.name') }} — Tous droits réservés.
-            <div style="background-color: #0e2e50; color: #00b98e; text-align: center; padding: 15px; font-size: 14px;">
-                LaCasa - Bouger simplement
-            </div>
+            <div style="color:#00b98e;">LaCasa - Bouger simplement</div>
         </div>
     </div>
 </body>
-
 </html>

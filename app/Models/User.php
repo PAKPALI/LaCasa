@@ -31,7 +31,8 @@ class User extends Authenticatable
         'facebook_link',
         'tiktok_link',
         'whatsapp_link',
-        'is_verified'
+        'is_verified',
+        'certify_payment_status'
     ];
 
     /**

@@ -49,13 +49,16 @@ class PaymentController extends Controller
             // On récupère l'utilisateur via la metadata envoyée à la création du checkout
             $userId = $data['custom_meta_data']['user_id'] ?? $payment->user_id;
             $user = User::find($userId);
-
+            Log::info($user);
             if ($user) {
                 $user->update(['certify_payment_status' => true]);
 
                 // 🔹 Appel de ta fonction pour envoyer l'email et la facture PDF
                 $this->sendPaymentSuccessEmail($user, [
-                    'amount' => $data['amount'] ?? 'N/A',
+                    'amount' => $data['total_amount'] ?? 'N/A',
+                    'reference' => $data['kpp_tx_reference'] ?? 'N/A',
+                    'payment_method' => $data['payment_method'] ?? 'N/A',
+                    'payment_operator' => $data['payment_operator'] ?? 'N/A',
                     'currency' => $data['currency'] ?? 'XOF',
                     'transaction_id' => $transactionId
                 ]);
@@ -63,7 +66,9 @@ class PaymentController extends Controller
                 // 🔹 SMS si tu veux
                 $smsMessage = "Bonjour {$user->name}, votre paiement LaCasa a été effectué avec succès. Consultez votre email pour plus de détails et la facture.";
                 $number = $user->phone1 ?: $user->phone2;
-                $this->sendSms($number, $smsMessage);
+                if($number){
+                    $this->sendSms($number, $smsMessage);
+                }
             }
         }
         return response()->json(['status' => 'ok']);
@@ -77,26 +82,21 @@ class PaymentController extends Controller
     }
 
     // composer require barryvdh/laravel-dompdf
-    public function sendPaymentSuccessEmail($user, $paymentData){
+    public function sendPaymentSuccessEmail($user, $data){
         // Générer PDF facture
         $pdf = PDF::loadView('emails.payment.invoice', [
             'user' => $user,
-            'payment' => $paymentData
-        ]);
+            'data' => $data
+        ])->setPaper('A4');
 
         // Préparer et envoyer le mail
         Mail::send('emails.payment.success', [
             'user_name' => $user->name,
-            'amount' => $paymentData['amount'],
-            'currency' => $paymentData['currency'],
-            'transaction_id' => $paymentData['transaction_id'],
-            'date' => now()->format('d/m/Y H:i'),
+            'data' => $data
         ], function ($message) use ($user, $pdf) {
             $message->to($user->email)
-                    ->subject('Confirmation de votre paiement')
-                    ->attachData($pdf->output(), 'facture.pdf', [
-                        'mime' => 'application/pdf',
-                    ]);
+                ->subject('Confirmation de votre paiement')
+                ->attachData($pdf->output(), "Facture_Paiement_".now()->format('Ymd_His').".pdf");
         });
     }
 }
