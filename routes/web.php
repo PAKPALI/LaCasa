@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/me/remove-image', [AuthController::class, 'removeProfileImage']);
 
     Route::get('getMyPublication', [PublicationController::class, 'getMyPublication']);
+    Route::Resource('publication', PublicationController::class);
     Route::post('/me/certify_payment', [UserController::class, 'certifyPayment']);
 });
 

@@ -437,7 +437,7 @@ const submitPublication = async () => {
     if (form.value.phone2) payload.append('phone2', form.value.phone2)
     form.value.images.forEach(file => payload.append('images[]', file))
 
-    const res = await axios.post('/api/publication', payload)
+    const res = await axios.post('publication', payload)
 
     Swal.fire({ toast:true, position:'top-end', icon:'success', title: res.data.message || 'Publication créée ✅', showConfirmButton:false, timer:3000 })
 

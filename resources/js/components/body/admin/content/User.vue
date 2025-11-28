@@ -120,6 +120,64 @@
     </div>
   </div>
 
+  <!-- Modal Retirer Certification -->
+  <div class="modal fade mt-5" id="revokeModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title text-light">Retirer la certification</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <p>Expliquez pourquoi vous retirez cette certification :</p>
+
+          <textarea class="form-control" rows="4" v-model="revokeReason"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button class="btn btn-danger" @click="submitRevoke" :disabled="loadingButton==='revoke'">
+            <span v-if="loadingButton==='revoke'" class="spinner-border spinner-border-sm"></span>
+            Retirer la certification
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Rejet Certification -->
+  <div class="modal fade mt-5" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-secondary ">
+          <h5 class="modal-title text-light">Rejeter la demande de certification</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <p>Cocher les raisons du rejet :</p>
+
+          <div v-for="r in rejectionReasons" :key="r" class="form-check">
+            <input type="checkbox" class="form-check-input" v-model="selectedRejectionReasons" :value="r">
+            <label class="form-check-label">{{ r }}</label>
+          </div>
+
+          <hr>
+          <label>Commentaire optionnel :</label>
+          <textarea class="form-control" rows="3" v-model="rejectComment"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-dark" data-bs-dismiss="modal">Fermer</button>
+          <button class="btn btn-secondary" @click="submitReject" :disabled="loadingButton==='reject'">
+            <span v-if="loadingButton==='reject'" class="spinner-border spinner-border-sm"></span>
+            Rejeter
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Accordéon Utilisateurs -->
   <div class="accordion-item mb-4">
@@ -168,36 +226,36 @@
                 <button class="btn btn-sm btn-info me-1" @click="viewUser(user)">
                   <i class="bi bi-eye"></i>
                 </button>
-                <!-- Toggle Certification -->
+
                 <div v-if="user.user_type === 2" class="d-inline-block me-1">
+                  <div class="d-flex align-items-center gap-2">
+                    <!-- Toggle certification -->
+                    <div class="form-check form-switch">
+                       <!-- Spinner si en cours -->
+                      <div v-if="loadingButton === 'certify-' + user.id" class="spinner-border spinner-border-sm text-success"></div>
+                      <input v-else class="form-check-input" type="checkbox" :id="'certifySwitch-' + user.id"
+                        :checked="user.is_verified"
+                        @change="confirmToggleCertification(user, $event)"
+                      >
+                      <label class="form-check-label" :for="'certifySwitch-' + user.id"></label>
+                    </div>
 
-                  <!-- Loader lorsqu'on certifie -->
-                  <div v-if="loadingButton === 'certify-' + user.id">
-                    <div class="spinner-border spinner-border-sm text-info"></div>
+                    <!-- Rejet uniquement si non certifié -->
+                    <button v-if="!user.is_verified" class="btn btn-sm btn-secondary" @click="openRejectModal(user)">
+                      <i class="bi bi-x-circle me-1"></i>
+                    </button>
                   </div>
-
-                  <!-- Toggle normal -->
-                  <div v-else class="form-check form-switch">
-                    <input 
-                      class="form-check-input" 
-                      type="checkbox" 
-                      :id="'certifySwitch-' + user.id"
-                      :checked="user.is_verified"
-                      @change="confirmToggleCertification(user, $event)"
-                    >
-                    <label class="form-check-label" :for="'certifySwitch-' + user.id"></label>
-                  </div>
-
                 </div>
 
-                <button v-if="isAuthenticated && authUser.role == 1" class="btn btn-sm btn-warning me-1" @click="editUser(user)" :disabled="loadingButton==='update'">
+                <!-- Boutons Edit / Delete pour admin -->
+                <button v-if="isAuthenticated && authUser.role == 1" class="btn btn-sm btn-warning me-1" @click="editUser(user)">
                   <i class="bi bi-pencil-square"></i>
                 </button>
-                <button v-if="isAuthenticated && authUser.role == 1" class="btn btn-sm btn-danger" @click="deleteUser(user.id)" :disabled="loadingButton===user.id">
-                  <span v-if="loadingButton===user.id" class="spinner-border spinner-border-sm text-light"></span>
-                  <span v-else><i class="bi bi-trash"></i></span>
+                <button v-if="isAuthenticated && authUser.role == 1" class="btn btn-sm btn-danger" @click="deleteUser(user.id)">
+                  <i class="bi bi-trash"></i>
                 </button>
               </td>
+
             </tr>
             <tr v-if="filteredUsers.length===0">
               <td colspan="7" class="text-center text-danger">Aucun utilisateur trouvé</td>
@@ -217,152 +275,214 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import { Modal } from 'bootstrap'
-import { user, isAuthenticated } from '../../../auth/auth.js'
+  import { ref, computed, onMounted } from 'vue'
+  import axios from 'axios'
+  import Swal from 'sweetalert2'
+  import { Modal } from 'bootstrap'
+  import { user, isAuthenticated } from '../../../auth/auth.js'
 
-const Users = ref([])
-const selectedUser = ref(null)
-const searchQuery = ref('')
-const currentPage = ref(1)
-const perPage = ref(5)
-const loadingTable = ref(true)
-const loadingButton = ref('')
-const authUser = user
+  const Users = ref([])
+  const selectedUser = ref(null)
+  const searchQuery = ref('')
+  const currentPage = ref(1)
+  const perPage = ref(5)
+  const loadingTable = ref(true)
+  const loadingButton = ref('')
+  const authUser = user
 
-const userForm = ref({
-  id: null,
-  name: '',
-  email: '',
-  role: 3,
-  is_active: 1
-})
-
-// --- PAGINATION & FILTRE ---
-const filteredUsers = computed(() => {
-  if (!searchQuery.value) return Users.value
-  const q = searchQuery.value.toLowerCase()
-  return Users.value.filter(u =>
-    u.name.toLowerCase().includes(q) ||
-    u.email.toLowerCase().includes(q) ||
-    (u.country?.name?.toLowerCase().includes(q) ?? false)
-  )
-})
-const totalPages = computed(() => Math.max(1, Math.ceil(filteredUsers.value.length / perPage.value)))
-const paginatedUsers = computed(() => {
-  const start = (currentPage.value - 1) * perPage.value
-  return filteredUsers.value.slice(start, start + perPage.value)
-})
-function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
-function prevPage() { if (currentPage.value > 1) currentPage.value-- }
-
-// --- CRUD ---
-async function getUsers() {
-  loadingTable.value = true
-  try {
-    const res = await axios.get('/api/users', { headers: { Accept: 'application/json' } })
-    Users.value = res.data.data  // ✅ on récupère la clé "data"
-  } finally {
-    loadingTable.value = false
-  }
-}
-
-function viewUser(user) {
-  selectedUser.value = user
-  new Modal(document.getElementById('viewUserModal')).show()
-}
-
-function editUser(user) {
-  userForm.value = { ...user }
-  new Modal(document.getElementById('updateUserModal')).show()
-}
-
-async function confirmToggleCertification(user, event) {
-  const newState = event.target.checked;
-  const action = newState ? 'certifier cette agence' : 'retirer la certification';
-
-  const confirm = await Swal.fire({
-    title: 'Êtes-vous sûr ?',
-    text: `Voulez-vous vraiment ${action} ?`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#28a745',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Oui',
-    cancelButtonText: 'Annuler'
-  });
-
-  if (!confirm.isConfirmed) {
-    // Si l’utilisateur annule, remettre le switch à son état initial
-    event.target.checked = !newState;
-    return;
-  }
-
-  loadingButton.value = 'certify-' + user.id;
-
-  try {
-    const res = await axios.post(`/api/users/${user.id}/toggle-verification`);
-    if (res.data.status) {
-      Swal.fire({
-        icon: 'success',
-        title: res.data.message,
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000
-      });
-      await getUsers(); // recharge la liste pour mettre à jour le switch
-    }
-  } catch (err) {
-    Swal.fire('Erreur', err.response?.data?.message || 'Impossible de modifier la certification', 'error');
-    event.target.checked = !newState; // revert en cas d’erreur
-  } finally {
-    loadingButton.value = '';
-  }
-}
-
-async function updateUser() {
-  loadingButton.value = 'update'
-  try {
-    const res = await axios.put(`/api/users/${userForm.value.id}`, {
-      name: userForm.value.name,
-      role: userForm.value.role,
-      is_active: userForm.value.is_active
-    })
-    if (res.data.status) {
-      Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: res.data.message, showConfirmButton: false, timer: 3000 })
-      await getUsers()
-      Modal.getInstance(document.getElementById('updateUserModal')).hide()
-    }
-  } finally {
-    loadingButton.value = ''
-  }
-}
-async function deleteUser(id) {
-  const confirm = await Swal.fire({
-    title: 'Supprimer cet utilisateur ?',
-    text: "Cette action est irréversible !",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: 'red',
-    confirmButtonText: 'Oui, supprimer',
-    cancelButtonText: 'Annuler'
+  const userForm = ref({
+    id: null,
+    name: '',
+    email: '',
+    role: 3,
+    is_active: 1
   })
-  if (confirm.isConfirmed) {
-    loadingButton.value = id
+
+  const rejectionReasons = ref([
+    "Photo de profil inexistante",
+    "Photo de profil non professionnelle",
+    "Lien TikTok invalide ou non joignable",
+    "Lien Facebook invalide ou non joignable",
+    "Numéro WhatsApp invalide ou non joignable",
+  ])
+
+  const selectedRejectionReasons = ref([])
+  const userToReject = ref(null)
+  const revokeReason = ref("");
+  const rejectComment = ref("");
+  const userToRevoke = ref(null);
+
+  // --- PAGINATION & FILTRE ---
+  const filteredUsers = computed(() => {
+    if (!searchQuery.value) return Users.value
+    const q = searchQuery.value.toLowerCase()
+    return Users.value.filter(u =>
+      u.name.toLowerCase().includes(q) ||
+      u.email.toLowerCase().includes(q) ||
+      (u.country?.name?.toLowerCase().includes(q) ?? false)
+    )
+  })
+  const totalPages = computed(() => Math.max(1, Math.ceil(filteredUsers.value.length / perPage.value)))
+  const paginatedUsers = computed(() => {
+    const start = (currentPage.value - 1) * perPage.value
+    return filteredUsers.value.slice(start, start + perPage.value)
+  })
+  function nextPage() { if (currentPage.value < totalPages.value) currentPage.value++ }
+  function prevPage() { if (currentPage.value > 1) currentPage.value-- }
+
+  // --- CRUD ---
+  async function getUsers() {
+    loadingTable.value = true
     try {
-      const res = await axios.delete(`/api/users/${id}`)
+      const res = await axios.get('/api/users', { headers: { Accept: 'application/json' } })
+      Users.value = res.data.data  // ✅ on récupère la clé "data"
+    } finally {
+      loadingTable.value = false
+    }
+  }
+
+  function viewUser(user) {
+    selectedUser.value = user
+    new Modal(document.getElementById('viewUserModal')).show()
+  }
+
+  function editUser(user) {
+    userForm.value = { ...user }
+    new Modal(document.getElementById('updateUserModal')).show()
+  }
+
+  async function confirmToggleCertification(user, event) {
+    const newState = event.target.checked;
+    const action = newState ? 'certifier cette agence' : 'retirer la certification';
+
+    const confirm = await Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: `Voulez-vous vraiment ${action} ?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Annuler'
+    });
+
+    if (!confirm.isConfirmed) {
+      // revert toggle si annulé
+      event.target.checked = !newState;
+      return;
+    }
+
+    if (newState) {
+      // On certifie
+      certifier(user);
+    } else {
+      // On retire → ouvrir modal pour saisir raison
+      userToRevoke.value = user;
+      revokeReason.value = '';
+      new Modal(document.getElementById("revokeModal")).show();
+    }
+  }
+
+  async function updateUser() {
+    loadingButton.value = 'update'
+    try {
+      const res = await axios.put(`/api/users/${userForm.value.id}`, {
+        name: userForm.value.name,
+        role: userForm.value.role,
+        is_active: userForm.value.is_active
+      })
       if (res.data.status) {
-        Swal.fire({ toast: true, icon: 'success', title: res.data.message, showConfirmButton: false, timer: 3000 })
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: res.data.message, showConfirmButton: false, timer: 3000 })
         await getUsers()
+        Modal.getInstance(document.getElementById('updateUserModal')).hide()
       }
     } finally {
       loadingButton.value = ''
     }
   }
-}
+  async function deleteUser(id) {
+    const confirm = await Swal.fire({
+      title: 'Supprimer cet utilisateur ?',
+      text: "Cette action est irréversible !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'red',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    })
+    if (confirm.isConfirmed) {
+      loadingButton.value = id
+      try {
+        const res = await axios.delete(`/api/users/${id}`)
+        if (res.data.status) {
+          Swal.fire({ toast: true, icon: 'success', title: res.data.message, showConfirmButton: false, timer: 3000 })
+          await getUsers()
+        }
+      } finally {
+        loadingButton.value = ''
+      }
+    }
+  }
 
-onMounted(getUsers)
+  async function certifier(user) {
+    loadingButton.value = "certify-" + user.id;
+    try {
+      const res = await axios.post(`/api/users/${user.id}/toggle-verification`);
+      Swal.fire("Succès", res.data.message, "success");
+      await getUsers();
+    } finally {
+      loadingButton.value = "";
+    }
+  }
+
+  async function submitRevoke() {
+    if (!revokeReason.value.trim()) {
+      Swal.fire("Erreur", "Veuillez expliquer la raison du retrait", "error");
+      return;
+    }
+
+    loadingButton.value = "revoke";
+    try {
+      const res = await axios.post(`/api/certification/revoke/${userToRevoke.value.id}`, {
+        reason: revokeReason.value
+      });
+
+      Swal.fire("Certification retirée", res.data.message, "success");
+      getUsers();
+      Modal.getInstance(document.getElementById("revokeModal")).hide();
+    } finally {
+      loadingButton.value = "";
+    }
+  }
+
+  function openRejectModal(user) {
+    userToReject.value = user;
+    selectedRejectionReasons.value = [];
+    rejectComment.value = "";
+    new Modal(document.getElementById("rejectModal")).show();
+  }
+
+  async function submitReject() {
+    if (selectedRejectionReasons.value.length === 0) {
+      Swal.fire("Erreur", "Sélectionnez au moins un motif", "error");
+      return;
+    }
+
+    loadingButton.value = "reject";
+
+    try {
+      const res = await axios.post(`/api/certification/reject/${userToReject.value.id}`, {
+        reasons: selectedRejectionReasons.value,
+        comment: rejectComment.value
+      });
+
+      Swal.fire("Demande rejetée", res.data.message, "success");
+      getUsers();
+      Modal.getInstance(document.getElementById("rejectModal")).hide();
+    } finally {
+      loadingButton.value = "";
+    }
+  }
+
+  onMounted(getUsers)
 </script>

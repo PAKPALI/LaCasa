@@ -11,6 +11,7 @@ use App\Http\Controllers\AttributController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\CertificationController;
 
 // ADMIN
 Route::apiResource('country', CountryController::class);
@@ -18,12 +19,15 @@ Route::apiResource('town', TownController::class);
 Route::apiResource('district', DistrictController::class);
 Route::apiResource('register', UserController::class);
 Route::apiResource('users', UserController::class);
-Route::post('/users/{user}/toggle-verification', [UserController::class, 'toggleVerification']);
 Route::apiResource('category', CategoryController::class);
 Route::apiResource('pub-type', PubTypeController::class);
 Route::apiResource('attribute', AttributController::class);
 Route::apiResource('publication', PublicationController::class);
 Route::apiResource('payments', PaymentController::class);
+
+Route::post('/users/{user}/toggle-verification', [CertificationController::class, 'toggleVerification']);
+Route::post('/certification/revoke/{user}', [CertificationController::class, 'revoke']);
+Route::post('/certification/reject/{user}', [CertificationController::class, 'reject']);
 
 Route::post('/kprimepay/webhook', [PaymentController::class, 'webhook']);
 

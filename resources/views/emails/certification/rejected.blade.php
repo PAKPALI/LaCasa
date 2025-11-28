@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Certification réussie sur {{ config('app.name') }}</title>
+    <title>Demande de certification rejetée sur {{ config('app.name') }}</title>
 </head>
 
 <body style="font-family: Arial, sans-serif; background-color: #f7f9fb; padding: 40px;">
@@ -20,33 +20,31 @@
             <p>Bonjour <strong>{{ $user_name }}</strong>,</p>
 
             <p>
-                🎉 <strong>Félicitations !</strong>  
-                Votre compte a été certifié avec succès par notre équipe.
+                ❌ <strong>Votre demande de certification a été rejetée.</strong>
             </p>
 
             <p>
-                Vous faites désormais partie de la liste officielle de nos partenaires, visible dans la section d’accueil de notre plateforme.  
-                Cette certification augmente votre crédibilité auprès des clients qui visitent notre site.
+                <p>Voici les points qui n'ont pas été validés :</p>
+                <div style="background-color: #f8d7da; color: #842029; padding: 15px; border-radius: 6px; margin-top: 10px;">
+                    {!! '- ' . str_replace("\n", "<br> ", $motifs) !!}
+                </div>
             </p>
 
+            @if(!empty($comment))
             <p>
-                Pour profiter pleinement de votre statut de partenaire certifié, vous pouvez consulter votre profil et vos informations via le bouton ci-dessous :
+                Commentaire de notre équipe :  
+                <div style="background-color: #fff3cd; color: #664d03; padding: 15px; border-radius: 6px; margin-top: 10px;">
+                    {{ $comment }}
+                </div>
             </p>
-
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="{{ config('app.url') }}"
-                    style="background-color: #00b98e; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold;">
-                    Voir mon profil partenaire
-                </a>
-            </div>
+            @endif
 
             <p>
-                Nous vous encourageons à maintenir vos informations sociales à jour pour que vos clients puissent bénéficier d’une expérience optimale.
+                Merci de corriger ces points et de soumettre à nouveau votre demande pour obtenir la certification.
             </p>
 
             <p style="margin-top: 30px;">
-                Merci de votre confiance,<br>
-                <strong>L’équipe {{ config('app.name') }}</strong>
+                L’équipe {{ config('app.name') }}
             </p>
         </div>
 

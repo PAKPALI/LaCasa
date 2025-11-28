@@ -7,6 +7,7 @@ use App\Models\Publication;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class PublicationController extends Controller
@@ -14,7 +15,7 @@ class PublicationController extends Controller
     public function index(Request $request)
     {
         $query = Publication::with([
-            'user:id,name,profile_image,user_type,phone1,phone2',
+            'user:id,name,profile_image,user_type,is_verified,phone1,phone2',
             'pubType:id,name',
             'category:id,name',
             'district:id,name',
@@ -114,6 +115,7 @@ class PublicationController extends Controller
                     'name' => $pub->user->name,
                     'profile_image' => $pub->user->profile_image ?? $defaultUserImage,
                     'user_type' => $pub->user->user_type,
+                    'is_verified' => $pub->user->is_verified,
                     'phone1' => $pub->user->phone1,
                     'phone2' => $pub->user->phone2,
                 ] : [
@@ -185,6 +187,7 @@ class PublicationController extends Controller
                     'name' => $pub->user->name,
                     'profile_image' => $pub->user->profile_image ?? $defaultUserImage,
                     'user_type' => $pub->user->user_type,
+                    'is_verified' => $pub->user->is_verified,
                     'phone1' => $pub->user->phone1,
                     'phone2' => $pub->user->phone2,
                 ] : [
@@ -267,9 +270,10 @@ class PublicationController extends Controller
                 'message' => $validator->errors()->first()
             ], 422);
         }
+        Log::info(Auth::user());
 
         $validated = $validator->validated();
-        $validated['user_id'] = auth()->id();
+        $validated['user_id'] = Auth::user()->id;
 
         if (!isset($validated['is_active'])) {
             $validated['is_active'] = true;

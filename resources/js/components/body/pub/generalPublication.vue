@@ -119,6 +119,26 @@
               + Ajouter publication 
             </button>
           </div>
+
+        </div>
+        <div class="alert alert-warning border border-warning rounded p-3" role="alert">
+          <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Sécurité des transactions</h5>
+          
+          <p>
+            Pour votre sécurité, prenez le temps de vérifier la crédibilité des agences non certifiées avant tout engagement ou paiement.
+          </p>
+          
+          <p>
+            Les agences <strong>certifiées</strong> sont clairement identifiables grâce à une <i class="bi bi-patch-check-fill text-success"></i> icône de certification affichée à côté de leur nom sur leurs publications.
+          </p>
+          
+          <p>
+            <strong>LaCasa décline toute responsabilité</strong> en cas de fraude, de litige ou de problème survenant entre un client et une agence non certifiée.
+          </p>
+          
+          <p>
+            À ce jour, toutes les agences enregistrées — certifiées ou non — sont autorisées à publier des annonces. Nous encourageons vivement les agences non certifiées à entamer leur processus de certification (Voir partie accueil, section partenaire) afin d’améliorer la <strong>transparence</strong>, la <strong>crédibilité</strong> et la <strong>confiance</strong> auprès des utilisateurs.
+          </p>
         </div>
         
         <marquee class="bg-dark text-light mb-2" behavior="scroll" direction="left" scrollamount="6">
@@ -216,7 +236,15 @@
                     <!-- <p><strong>Publié par :</strong></p> -->
                     <img :src="p.user.profile_image" class="rounded-circle" alt="Profil" style="width: 50px; height: 50px; object-fit: cover;">
                     <div>
-                      <small class="d-block fw-bold text-dark">{{ p.user?.name || 'Utilisateur inconnu' }}</small>
+                      <small class="d-block fw-bold text-dark">
+                        {{ p.user?.name || 'Utilisateur inconnu' }}
+
+                        <!-- Si l'utilisateur est vérifié -->
+                        <span v-if="p.user?.is_verified">
+                          <i class="bi bi-patch-check-fill text-success fs-5"></i>
+                        </span>
+                      </small>
+
                       <small class="text-success">
                         {{ p.user?.user_type === 2 ? 'Agence immobilière' : 'Particulier' }}
                       </small>
@@ -238,10 +266,10 @@
 
                 <!-- SURFACE / CHAMBRES -->
                 <div class="d-flex bg-dark text-light border-top">
-                  <small v-if="p.surface" class="flex-fill text-center py-2"><i
-                      class="fa fa-ruler-combined text-primary me-2"></i>{{ p.surface }} m²</small>
-                  <small v-if="p.bathroom" class="flex-fill text-center py-2"><i
-                      class="fa fa-bed text-primary me-2"></i>{{ p.bathroom }} Chambres</small>
+                  <small v-if="p.deposit" class="flex-fill text-center py-2">
+                    <i class="fa fa-lock text-warning me-2"></i> Caution: {{ p.deposit }} mois</small>
+                  <small v-if="p.advance" class="flex-fill text-center py-2">
+                    <i class="fa fa-credit-card text-warning me-2"></i> Avance: {{ p.advance }} mois</small>
                 </div>
 
               </div>
@@ -267,7 +295,7 @@
     </div>
 
     <!-- MODAL -->
-    <div class="modal fade" id="publicationModal" tabindex="-1">
+    <div class="modal fade mt-5" id="publicationModal" tabindex="-1">
       <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header text-light">
@@ -313,7 +341,7 @@
                 <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }}</td></tr>
                 <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} Mois</td></tr>
                 <tr><th>Avance</th><td>{{ selectedPublication?.advance }} Mois</td></tr>
-                <tr><th>Commission</th><td>{{ selectedPublication?.commission || '-'}}</td></tr>
+                <tr><th>Commission</th><td>{{ formatPrice(selectedPublication?.commission || '-')}}</td></tr>
                 <tr><th>Visit</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
                 <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
                 <tr><th>Superficie</th><td>{{ selectedPublication?.surface || '-'}} m²</td></tr>

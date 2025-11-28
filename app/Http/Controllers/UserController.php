@@ -153,26 +153,6 @@ class UserController extends Controller
         });
     }
 
-    public function sendSms($number, $message)
-    {
-        $smsService = new SmsService ();
-        $response = $smsService->send($number, $message);
-        log::info($response);
-        return response()->json($response);
-
-        // response example in format json
-        // array (
-        //     'status' => true,
-        //     'message' => 'MESSAGE_SENT_SUCCESSFULLY',
-        //     'data' => 
-        //     array (
-        //         'status' => 1,
-        //         'response_token' => 'push_sms_afgrchw6re2bjnr',
-        //     ),
-        //     'status_code' => 200,
-        // )
-    }
-
     public function certifyPayment(KPrimePayService $kpp, PaymentRepository $repo)
     {
         $user = Auth::user();
@@ -219,34 +199,6 @@ class UserController extends Controller
             "status" => true,
             "payment_url" => $checkout["checkout_url"],
         ]);
-    }
-
-    public function toggleVerification(User $user)
-    {
-        $user->is_verified = !$user->is_verified;
-        $user->save();
-
-        $this->sendEmailVerification($user->name, $user->email);
-        $message = "Félicitations " . $user->name . "! Votre certification LaCasa est validée. Vous êtes désormais partenaire officiel.";
-        $user->phone1 ? $number = $user->phone1 : $number = $user->phone2;
-        $this->sendSms($number, $message);
-
-        return response()->json([
-            'status' => true,
-            'message' => $user->is_verified ? 'Agence certifiée ✅' : 'Certification retirée ❌',
-            'user' => $user
-        ]);
-    }
-
-    public function sendEmailVerification($user_name, $email)
-    {
-        Mail::send('emails.user.certify', [
-            'user_name' => $user_name,
-            'email' => $email,
-        ], function($message) use ($email){
-            $message->to($email);
-            $message->subject('Certification LaCasa est maintenant active');
-        });
     }
 
     public function update(Request $request, $id)
