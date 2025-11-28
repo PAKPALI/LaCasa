@@ -15,6 +15,7 @@ class CertificationController extends Controller
     public function certifyPayment(KPrimePayService $kpp, PaymentRepository $repo)
     {
         $user = Auth::user();
+        $amount = 10;
 
         if ($user->certify_payment_status) {
             return response()->json([
@@ -28,7 +29,7 @@ class CertificationController extends Controller
         $repo->create([
             "transaction_id" => $transaction_id,
             "user_id"        => $user->id,
-            "amount"         => 10,
+            "amount"         => $amount,
             "currency"       => "XOF",
             "status"         => "pending",
         ]);
@@ -37,7 +38,7 @@ class CertificationController extends Controller
         $checkout = $kpp->createCheckout([
             "transaction_id" => $transaction_id,
             "currency"       => "XOF",
-            "amount"         => 2000,
+            "amount"         => $amount,
             "with_fees"      => 1,
             "mode"           => 1,
             "description"    => "Paiement certification agence",
@@ -58,7 +59,7 @@ class CertificationController extends Controller
             "payment_url" => $checkout["checkout_url"],
         ]);
     }
-
+    
     public function toggleVerification(User $user)
     {
         $user->is_verified = !$user->is_verified;
