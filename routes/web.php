@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::get('getMyPublication', [PublicationController::class, 'getMyPublication']);
     Route::Resource('publication', PublicationController::class);
     Route::post('/me/certify_payment', [CertificationController::class, 'certifyPayment']);
+
+    Route::post('/kprimepay/webhook', [PaymentController::class, 'webhook']);
 });
 
     // Route::middleware(['auth'])->group(function () {
