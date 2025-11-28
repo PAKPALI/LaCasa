@@ -14,7 +14,7 @@ class KPrimePayService
     {
         $this->merchantNumber = env('KPRIME_MERCHANT_NUMBER');
         $this->secretKey      = env('KPRIME_SECRET_KEY');
-        $this->baseUrl        = "https://api-kprimepay.com/v1/checkout";
+        $this->baseUrl        = "https://api.kprimepay.com/v1/checkout";
         // https://api.kprimepay.ro-cobra.net/v1/checkout
     }
 

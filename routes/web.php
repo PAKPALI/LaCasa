@@ -12,6 +12,7 @@ use App\Http\Controllers\AttributController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\CertificationController;
 
 Route::post('/myLogin', [AuthController::class, 'login'])->name('myLogin');
 Route::middleware('auth')->group(function () {
@@ -24,10 +25,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('getMyPublication', [PublicationController::class, 'getMyPublication']);
     Route::Resource('publication', PublicationController::class);
-    Route::post('/me/certify_payment', [UserController::class, 'certifyPayment']);
+    Route::post('/me/certify_payment', [CertificationController::class, 'certifyPayment']);
 });
-
-
 
     // Route::middleware(['auth'])->group(function () {
 
