@@ -28,7 +28,7 @@ class CertificationController extends Controller
         $repo->create([
             "transaction_id" => $transaction_id,
             "user_id"        => $user->id,
-            "amount"         => 2000,
+            "amount"         => 10,
             "currency"       => "XOF",
             "status"         => "pending",
         ]);
@@ -58,7 +58,7 @@ class CertificationController extends Controller
             "payment_url" => $checkout["checkout_url"],
         ]);
     }
-    
+
     public function toggleVerification(User $user)
     {
         $user->is_verified = !$user->is_verified;
