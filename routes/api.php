@@ -29,6 +29,8 @@ Route::post('/users/{user}/toggle-verification', [CertificationController::class
 Route::post('/certification/revoke/{user}', [CertificationController::class, 'revoke']);
 Route::post('/certification/reject/{user}', [CertificationController::class, 'reject']);
 
+Route::post('/kprimepay/webhook', [PaymentController::class, 'webhook']);
+
 // Route::middleware('auth:sanctum')->group(function () {
 //     Route::apiResource('country', CountryController::class);
 //     Route::apiResource('town', TownController::class);
