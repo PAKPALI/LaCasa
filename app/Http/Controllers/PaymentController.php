@@ -64,11 +64,9 @@ class PaymentController extends Controller
                 ]);
 
                 // 🔹 SMS si tu veux
-                $smsMessage = "Bonjour {$user->name}, votre paiement LaCasa a été effectué avec succès. Consultez votre email pour plus de détails et la facture.";
+                $smsMessage = $user->name." , votre paiement LaCasa a été effectué avec succès. Consultez votre email pour plus de détails et la facture.";
                 $number = $user->phone1 ?: $user->phone2;
-                if($number){
-                    $this->sendSms($number, $smsMessage);
-                }
+                $this->sendSms($number, $smsMessage);
             }
         }
         return response()->json(['status' => 'ok']);
