@@ -34,6 +34,7 @@ configurez les donnes .env pour le mail (nom et url)
 composer require laravel/sanctum
 php artisan install:api
 php artisan migrate
+composer require barryvdh/laravel-dompdf
 
 
 

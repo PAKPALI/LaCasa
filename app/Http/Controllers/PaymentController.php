@@ -7,7 +7,7 @@ use App\Models\Payment;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use PDF; // barryvdh/laravel-dompdf
+use Barryvdh\DomPDF\Facade\Pdf; // IMPORT NECESSAIRE
 use Illuminate\Support\Facades\Mail;
 use App\Repositories\PaymentRepository;
 
@@ -69,6 +69,14 @@ class PaymentController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
+    public function sendSms($number, $message){
+        $smsService = new SmsService ();
+        $response = $smsService->send($number, $message);
+        // Log::info($response);
+        return response()->json($response);
+    }
+
+    // composer require barryvdh/laravel-dompdf
     public function sendPaymentSuccessEmail($user, $paymentData){
         // Générer PDF facture
         $pdf = PDF::loadView('emails.payment.invoice', [
@@ -91,13 +99,5 @@ class PaymentController extends Controller
                     ]);
         });
     }
-
-    public function sendSms($number, $message){
-        $smsService = new SmsService ();
-        $response = $smsService->send($number, $message);
-        // Log::info($response);
-        return response()->json($response);
-    }
-
 }
 
