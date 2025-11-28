@@ -4,6 +4,8 @@
 # /public/build 
 /public/hot
 /public/storage
+/public/LaCasa/pub
+/public/default.php
 /storage/*.key
 /storage/pail
 /vendor
