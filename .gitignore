@@ -1,17 +1,26 @@
+# Dossiers de cache et dépendances
 /.phpunit.cache
 /bootstrap/ssr
 /node_modules
-# /public/build 
+/vendor
+
+# Build / stockage public
 /public/hot
 /public/storage
-/public/LaCasa/pub
+/public/build      # tu peux commenter si jamais build utilisé
+/public/LaCasa/pub # dossier des images uploadées
 /public/default.php
+
+# Storage sécurisé
 /storage/*.key
 /storage/pail
-/vendor
+
+# Environnements et configs locales
 .env
 .env.backup
 .env.production
+
+# IDE & outils
 .phpactor.json
 .phpunit.result.cache
 Homestead.json
