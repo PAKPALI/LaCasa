@@ -118,7 +118,7 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label text-light">Numéro 1</label>
-            <input type="number" class="form-control" v-model="form.phone1" placeholder="Ex: 90 00 00 00" />
+            <input type="number" value="{{ user.phone1 }}" class="form-control" v-model="form.phone1" placeholder="Ex: 90 00 00 00" />
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label text-light">Numéro 2</label>
@@ -265,6 +265,16 @@ const form = ref({
   phone1: '', phone2: ''
 })
 
+  // form.value.phone1 = user.value.is_active
+
+// Sinon attendre le chargement
+watch(user, (newVal) => {
+  if (newVal && newVal.phone1) {
+    form.value.phone1 = newVal.phone1
+  }
+})
+
+console.log(user.value.tiktok_link)
 const previewImages = ref([])
 const publicationsList = ref([])
 const isSubmitting = ref(false)

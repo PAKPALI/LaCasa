@@ -167,7 +167,7 @@
       <div class="tab-content">
         <div class="tab-pane fade show p-0 active">
           <div class="row g-4">
-            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp"
+            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp" @click="openModal(p)"
               :data-wow-delay="p.delay || '0.1s'">
               <!-- CARD PROPRIETE -->
               <div class="property-item rounded overflow-hidden shadow">
@@ -207,9 +207,9 @@
                     class="bg-dark text-light rounded-top text-primary position-absolute start-0 bottom-0 mx-0 pt-1 px-5">
                     {{ p.category_name || 'Type inconnu' }} - {{ p.code || 'JHSHS4568D45SDJ' }}
                   </div>
-                  <button class="btn eye-alert-btn position-absolute end-0 top-0 m-2 shadow" @click="openModal(p)">
+                  <!-- <button class="btn eye-alert-btn position-absolute end-0 top-0 m-2 shadow" @click="openModal(p)">
                     <i class="fa fa-eye"></i>
-                  </button>
+                  </button> -->
                 </div>
 
                 <!-- ATTRIBUTES -->
