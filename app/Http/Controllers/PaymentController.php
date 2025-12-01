@@ -48,25 +48,64 @@ class PaymentController extends Controller
 
             // On récupère l'utilisateur via la metadata envoyée à la création du checkout
             $userId = $data['custom_meta_data']['user_id'] ?? $payment->user_id;
-            $user = User::find($userId);
-            Log::info($user);
+            $user = $userId ? User::find($userId) : null;
+            // if ($user) {
+            //     $user->update(['certify_payment_status' => true]);
+
+            //     // 🔹 Appel de ta fonction pour envoyer l'email et la facture PDF
+            //     $this->sendPaymentSuccessEmail($user, [
+            //         'amount' => $data['total_amount'] ?? 'N/A',
+            //         'reference' => $data['kpp_tx_reference'] ?? 'N/A',
+            //         'payment_method' => $data['payment_method'] ?? 'N/A',
+            //         'payment_operator' => $data['payment_operator'] ?? 'N/A',
+            //         'currency' => $data['currency'] ?? 'XOF',
+            //         'transaction_id' => $transactionId
+            //     ]);
+
+            //     // 🔹 SMS si tu veux
+            //     $smsMessage = $user->name." , votre paiement LaCasa a été effectué avec succès. Consultez votre email pour plus de détails et la facture.";
+            //     $number = $user->phone1 ?: $user->phone2;
+            //     $this->sendSms($number, $smsMessage);
+            // }
+
             if ($user) {
+                // Pour la certification seulement (pas donation)
                 $user->update(['certify_payment_status' => true]);
 
-                // 🔹 Appel de ta fonction pour envoyer l'email et la facture PDF
-                $this->sendPaymentSuccessEmail($user, [
-                    'amount' => $data['total_amount'] ?? 'N/A',
-                    'reference' => $data['kpp_tx_reference'] ?? 'N/A',
-                    'payment_method' => $data['payment_method'] ?? 'N/A',
-                    'payment_operator' => $data['payment_operator'] ?? 'N/A',
-                    'currency' => $data['currency'] ?? 'XOF',
-                    'transaction_id' => $transactionId
-                ]);
+                // Envoi email + PDF
+                try {
+                    $this->sendPaymentSuccessEmail($user, [
+                        'amount' => $data['total_amount'] ?? 'N/A',
+                        'reference' => $data['kpp_tx_reference'] ?? 'N/A',
+                        'payment_method' => $data['payment_method'] ?? 'N/A',
+                        'payment_operator' => $data['payment_operator'] ?? 'N/A',
+                        'currency' => $data['currency'] ?? 'XOF',
+                        'transaction_id' => $transactionId
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error("Failed to send payment email: " . $e->getMessage());
+                }
 
-                // 🔹 SMS si tu veux
-                $smsMessage = $user->name." , votre paiement LaCasa a été effectué avec succès. Consultez votre email pour plus de détails et la facture.";
-                $number = $user->phone1 ?: $user->phone2;
-                $this->sendSms($number, $smsMessage);
+                // SMS de confirmation
+                try {
+                    $smsMessage = $user->name . " , votre paiement LaCasa a été effectué avec succès. Consultez votre email pour votre facture.";
+                    $number = $user->phone1 ?: $user->phone2;
+                    $this->sendSms($number, $smsMessage);
+                } catch (\Exception $e) {
+                    Log::error("Failed to send SMS: " . $e->getMessage());
+                }
+            }else {
+                // CAS 2 : donateur invité
+                $phone = $data['customer_details']['phone'] ?? null;
+
+                if ($phone) {
+                    try {
+                        $message = "Merci pour votre don ! Votre contribution a été reçue avec succès.";
+                        $this->sendSms($phone, $message);
+                    } catch (\Exception $e) {
+                        Log::error("Failed to send guest SMS: " . $e->getMessage());
+                    }
+                }
             }
         }
         return response()->json(['status' => 'ok']);

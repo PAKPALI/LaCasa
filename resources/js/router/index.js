@@ -13,8 +13,8 @@ import Review from '../components/body/home/Review.vue'
 
 
 const routes = [
-  // { path: '', name: 'home2', component: Home2 },
-  { path: '/home', name: 'home', component: Home },
+  { path: '/', name: 'home', component: Home },
+  { path: '/home', name: 'home2', component: Home },
   { path: '/publication', name: 'Publications', component: Publication },
   { path: '/createPub', name: 'Create pub', component: CreatePublication },
   { path: '/admin', name: 'admin', component: Admin },

@@ -31,43 +31,48 @@
         </div>
 
 
-        <h2 class="text-center mb-5 fw-bold">Vos avis</h2>
+        <h2 class="text-center mb-2 fw-bold">Vos avis</h2>
 
         <!-- FORMULAIRE POUR LAISSER UN AVIS -->
         <div class="card shadow-lg p-4 mb-5 rounded bg-dark text-light">
-        <h4 class="mb-3 text-light">Votre avis compte</h4>
-        <hr>
+            <h4 class="mb-3 text-light">Votre avis compte</h4>
+            <hr>
 
-        <div v-if="isAuthenticated">
-            <div class="mb-3 d-flex align-items-center">
-            <label class="me-3 mb-0">Votre note :</label>
-            <div>
-                <span
-                v-for="n in 5"
-                :key="n"
-                class="star"
-                :class="{ active: rating >= n }"
-                @click="rating = n"
-                @mouseover="hoverRating = n"
-                @mouseleave="hoverRating = 0"
-                >★</span>
-            </div>
+            <div v-if="isAuthenticated">
+                <div class="mb-3 d-flex align-items-center">
+                <label class="me-3 mb-0">Votre note :</label>
+                <div>
+                    <span
+                    v-for="n in 5"
+                    :key="n"
+                    class="star"
+                    :class="{ active: rating >= n }"
+                    @click="rating = n"
+                    @mouseover="hoverRating = n"
+                    @mouseleave="hoverRating = 0"
+                    >★</span>
+                </div>
+                </div>
+
+                <div class="mb-3">
+                <textarea v-model="comment" class="form-control" placeholder="Votre avis..." rows="3"></textarea>
+                </div>
+
+                <button class="btn btn-success btn-shimmer" @click="submitReview" :disabled="loading.submit">
+                <span v-if="loading.submit" class="spinner-border spinner-border-sm"></span>
+                <span v-else>Envoyer</span>
+                </button>
             </div>
 
-            <div class="mb-3">
-            <textarea v-model="comment" class="form-control" placeholder="Votre avis..." rows="3"></textarea>
+            <div v-else class="text-center text-light mt-3">
+                <p>Veuillez vous connecter pour laisser un avis.</p>
+                <button class="btn btn-primary btn-shimmer" @click="promptLogin">Se connecter</button>
             </div>
-
-            <button class="btn btn-success btn-shimmer" @click="submitReview" :disabled="loading.submit">
-            <span v-if="loading.submit" class="spinner-border spinner-border-sm"></span>
-            <span v-else>Envoyer</span>
-            </button>
         </div>
 
-        <div v-else class="text-center text-light mt-3">
-            <p>Veuillez vous connecter pour laisser un avis.</p>
-            <button class="btn btn-primary btn-shimmer" @click="promptLogin">Se connecter</button>
-        </div>
+        <!-- DONATION -->
+        <div class="text-center text-light mb-5">
+            <button class="btn-lg btn-warning btn-shimmer" @click="goToDonation">Faire un don </button>
         </div>
 
         <!-- LISTE DES AVIS -->
@@ -75,14 +80,14 @@
             <div v-if="reviews.data.length === 0" class="text-center text-danger-50">
                 Aucun avis pour le moment.
             </div>
-
+            <h2 class="text-center mb-2 fw-bold">Liste des avis </h2>
             <div v-for="review in reviews.data" :key="review.id" class="card mb-4 p-4 shadow rounded bg-secondary bg-opacity-10">
-                <div class="d-flex justify-content-between align-items-center mb-2">
                 
-                <button class="btn btn-md btn-dark btn-shimmer"><strong class="text-light">{{ review.user.name }}</strong></button>
-                <div class="stars text-warning">
-                    {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}
-                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <button class="btn btn-md btn-dark btn-shimmer"><strong class="text-light">{{ review.user.name }}</strong></button>
+                    <div class="stars text-warning">
+                        {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}
+                    </div>
                 </div>
 
                 <p class="text-light">{{ review.comment }}</p>
@@ -358,6 +363,50 @@
             })
             }
         })
+    }
+
+    async function goToDonation() {
+        // 1️⃣ Demander le montant
+        const { value: amount } = await Swal.fire({
+            title: "Faire un don",
+            input: "number",
+            inputLabel: "Entrez le montant de votre don (en XOF)",
+            inputPlaceholder: "Ex: 5000",
+            inputAttributes: { min: 100, step: 1 },
+            showCancelButton: true,
+            confirmButtonText: "Continuer",
+            cancelButtonText: "Annuler"
+        });
+
+        if (!amount) return;
+
+        Swal.fire({
+            title: "Paiement en cours...",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        try {
+            // 2️⃣ Appel API donation
+            const response = await axios.post("/donation/payment", {
+            amount: amount
+            });
+
+            if (!response.data || !response.data.payment_url) {
+            Swal.fire("Erreur", "Lien de paiement introuvable.", "error");
+            return;
+            }
+
+            // 3️⃣ Redirection vers KPrimePay
+            window.location.href = response.data.payment_url;
+
+        } catch (error) {
+            Swal.fire(
+            "Erreur",
+            error.response?.data?.message || "Impossible de démarrer le paiement.",
+            "error"
+            );
+        }
     }
 </script>
 

@@ -41,7 +41,7 @@ class CertificationController extends Controller
             "amount"         => $amount,
             "with_fees"      => 1,
             "mode"           => 1,
-            "description"    => "Paiement certification agence",
+            "description"    => "Certification",
             "return_url" => config('app.url') . '/profile',
             "metadata"       => ["user_id" => $user->id],
         ]);

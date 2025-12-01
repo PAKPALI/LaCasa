@@ -10,8 +10,8 @@
   <body style="font-family: Arial, sans-serif; background:#f7f9fb; padding:30px">
     <div style="max-width:700px;margin:auto;background:#fff;border-radius:8px;overflow:hidden;">
       <div style="background:#0e2e50;color:#fff;padding:18px;text-align:center;">
-        <!-- <h3 style="margin:0">{{ config('app.name') }}</h3> -->
-        <img src="{{ asset('images/logo2.png') }}" alt="Logo" class="logo" />
+        <h3 style="margin:0">{{ config('app.name') }}</h3>
+        <!-- <img src="{{ asset('images/logo2.png') }}" alt="Logo" class="logo" /> -->
       </div>
 
       <div style="padding:20px;color:#0e2e50;">

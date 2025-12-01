@@ -82,7 +82,7 @@ const navLinks = [
 const contact = {
   address: 'Lomé, Togo',
   phone: '+228 90 85 94 88',
-  email: 'support@lacasa.tg'
+  email: 'support@lacasaweb.com'
 }
 
 // const gallery = [prop1, prop2, prop3, prop4, prop5, prop6]

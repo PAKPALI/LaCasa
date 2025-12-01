@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReviewController;
 // use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\CertificationController;
 
@@ -40,6 +41,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/me/certify_payment', 'certifyPayment');
     });
 });
+
+Route::post('/donation/payment', [DonationController::class, 'pay']);
 
 // Routes publiques (tout le monde peut voir les avis)
 Route::controller(ReviewController::class)->group(function () {

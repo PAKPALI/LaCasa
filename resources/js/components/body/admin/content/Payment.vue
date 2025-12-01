@@ -28,7 +28,7 @@
               {{ selectedPayment.status }}
             </span>
           </p>
-          <p><strong>Utilisateur :</strong> {{ selectedPayment.user?.name }}</p>
+          <p><strong>Utilisateur :</strong> {{ selectedPayment.user?.name ?? 'Donateur anonyme' }}</p>
 
           <hr>
           <p><strong>Payload Webhook :</strong></p>
