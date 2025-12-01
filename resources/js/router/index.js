@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router' //fonction de Vue qu
 //createWebHistory : indique à Vue d’utiliser l’historique du navigateur (comme Laravel le fait) au lieu du # dans l’URL (qui serait createWebHashHistory).
 // import Home2 from '../components/body/home2/Home2.vue'
 import Home from '../components/body/home/Home.vue'
-import Publication from '../components/body/pub/Index.vue'
+import Publication from '../components/body/pub/index.vue'
 import CreatePublication from '../components/body/pub/create.vue'
 import Admin from '../components/body/admin/Admin.vue'
 import About from '../components/body/admin/About.vue'

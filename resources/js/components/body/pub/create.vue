@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5 my-5">
-    <h2 class="mb-4 mt-5 pt-5 fw-bold text-dark">Créer une publication</h2> <hr></hr>
+    <h2 class="mb-4 mt-5 pt-5 fw-bold text-dark">Créer une publication</h2> <hr>
     <form @submit.prevent="submitPublication" class="border-bottom pb-5">
 
       <!-- 🔵 SECTION : Informations obligatoires -->
