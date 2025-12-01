@@ -3,29 +3,63 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\TownController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CountryController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\PubTypeController;
-use App\Http\Controllers\AttributController;
+// use App\Http\Controllers\TownController;
+// use App\Http\Controllers\UserController;
+// use App\Http\Controllers\CountryController;
+// use App\Http\Controllers\PaymentController;
+// use App\Http\Controllers\PubTypeController;
+// use App\Http\Controllers\AttributController;
+use App\Http\Controllers\ReviewController;
+// use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\CertificationController;
 
 Route::post('/myLogin', [AuthController::class, 'login'])->name('myLogin');
-Route::middleware('auth')->group(function () {
-    Route::get('/me', [AuthController::class, 'me']);
-    Route::post('/me/update', [AuthController::class, 'update']);
-    Route::post('/me/updateEmail', [AuthController::class, 'updateEmail']);
-    Route::post('/me/update-password', [AuthController::class, 'updatePassword']);
-    Route::post('/me/update-social', [AuthController::class, 'updateSocial']);
-    Route::delete('/me/remove-image', [AuthController::class, 'removeProfileImage']);
 
-    Route::get('getMyPublication', [PublicationController::class, 'getMyPublication']);
-    Route::Resource('publication', PublicationController::class);
-    Route::post('/me/certify_payment', [CertificationController::class, 'certifyPayment']);
+// Routes protégées (auth)
+Route::middleware('auth')->group(function () {
+    // --- Routes AuthController ---
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/me', 'me');
+        Route::post('/me/update', 'update');
+        Route::post('/me/updateEmail', 'updateEmail');
+        Route::post('/me/update-password', 'updatePassword');
+        Route::post('/me/update-social', 'updateSocial');
+        Route::delete('/me/remove-image', 'removeProfileImage');
+    });
+
+    // --- Routes PublicationController ---
+    Route::controller(PublicationController::class)->group(function () {
+        Route::get('getMyPublication', 'getMyPublication');
+        Route::resource('publication', PublicationController::class);
+    });
+
+    // --- Routes CertificationController ---
+    Route::controller(CertificationController::class)->group(function () {
+        Route::post('/me/certify_payment', 'certifyPayment');
+    });
+});
+
+// Routes publiques (tout le monde peut voir les avis)
+Route::controller(ReviewController::class)->group(function () {
+    Route::get('/reviews', 'index');
+    Route::get('/reviews/{review}', 'show');
+});
+
+// Routes protégées (auth)
+Route::middleware('auth')->controller(ReviewController::class)->group(function () {
+    // Poster un avis
+    Route::post('/reviews', 'store');
+
+    // Répondre à un avis (admin dans contrôleur ou middleware)
+    Route::post('/reviews/{review}/comment', 'comment');
+
+    // Supprimer un avis (admin only)
+    Route::delete('/reviews/{review}', 'destroy');
+
+    // Supprimer un commentaire d'un avis (admin only)
+    Route::delete('/review-comments/{comment}', 'deleteComment');
 });
 
     // Route::middleware(['auth'])->group(function () {

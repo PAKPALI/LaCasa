@@ -24,16 +24,23 @@
           <li class="nav-item">
             <router-link to="/home" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Accueil</router-link>
           </li>
+
           <li class="nav-item">
             <router-link to="/publication" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Publications</router-link>
           </li>
+
           <li v-if="isAuthenticated && (user.role == 1 || user.role == 2)" class="nav-item">
             <router-link to="/admin" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Admin</router-link>
           </li>
+
           <li class="nav-item">
             <router-link to="/about" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">À propos</router-link>
           </li>
 
+          <li class="nav-item">
+            <router-link to="/review" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Vos avis</router-link>
+          </li>
+          
           <!-- Si l'utilisateur n'est pas connecté -->
           <li v-if="!isAuthenticated" class="nav-item">
             <router-link to="/login" class="nav-link">Login</router-link>

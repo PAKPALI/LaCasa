@@ -9,6 +9,8 @@ import About from '../components/body/admin/About.vue'
 import Register from '../components/auth/Register.vue'
 import Login from '../components/auth/Login.vue'
 import Profile from '../components/auth/Profile.vue'
+import Review from '../components/body/home/Review.vue'
+
 
 const routes = [
   // { path: '', name: 'home2', component: Home2 },
@@ -20,9 +22,8 @@ const routes = [
   { path: '/register', name: 'register', component: Register },
   { path: '/login', name: 'login', component: Login },
   { path: '/profile', name: 'profile', component: Profile },
+  { path: '/review', name: 'review', component: Review },
 ]
-
-
 
 const router = createRouter({
   history: createWebHistory(),

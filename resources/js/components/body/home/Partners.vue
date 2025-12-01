@@ -248,20 +248,18 @@
     return logo1
   }
 
-
   // Choisir entre utilisateurs certifiés ou liste par défaut
-    const partnersToShow = computed(() => {
-      return certifiedUsers.value.length > 0
-        ? certifiedUsers.value.map(u => ({
-            nom: u.name,
-            logo: getPartnerLogo(u),  // <-- ici le fallback appliqué
-            facebook: u.facebook_link,
-            whatsapp: u.whatsapp_link,
-            tiktok: u.tiktok_link
-          }))
-        : defaultPartners
-    })
-
+  const partnersToShow = computed(() => {
+    return certifiedUsers.value.length > 0
+      ? certifiedUsers.value.map(u => ({
+          nom: u.name,
+          logo: getPartnerLogo(u),  // <-- ici le fallback appliqué
+          facebook: u.facebook_link,
+          whatsapp: u.whatsapp_link,
+          tiktok: u.tiktok_link
+        }))
+      : defaultPartners
+  })
 
   function openWhatsappModal(number) {
     currentWhatsappNumber.value = number
