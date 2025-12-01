@@ -88,7 +88,7 @@
             </li>
             <li>Vous verrez un boutton <strong class="text-success">Payer Certification</strong>, cliquez simplement dessus et vous serez automatiquement redirigé vers la page sécurisée 
               <strong>KPrimePay</strong> afin d’effectuer le paiement de la certification
-              <strong class="text-success">(3000 FCFA)</strong>
+              <strong class="text-success">(5000 FCFA)</strong>
             </li>
           </ul>
 
@@ -138,8 +138,8 @@
           <h5 class="fw-bold mb-0 text-success">Y a-t-il un temps pour la certification ?</h5>
 
           <p class="text-dark">
-            Non, une fois la certification obtenue, elle est <strong>valable pour toujours</strong>.  
-            Vous n’aurez plus jamais à repayer tant que vous respectez les règles de la plateforme.
+            Oui, une fois la certification obtenue, elle est <strong>valable pour 1 an</strong>.  
+            Vous n’aurez plus jamais à repayer dans ce délai tant que vous respectez les règles de la plateforme.
           </p>
 
           <p class="text-danger fw-semibold">

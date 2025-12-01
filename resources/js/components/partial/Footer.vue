@@ -73,9 +73,11 @@ const socialIcons = [
 
 const navLinks = [
   { name: 'Accueil', link: '/home' },
-  { name: 'À propos', link: '/about' },
   { name: 'Publications', link: '/publication' },
-  // { name: 'Contact', link: '#' },
+  { name: 'À propos', link: '/about' },
+  { name: 'Vos avis', link: '/review'},
+  { name: 'S\'inscrire', link: '/register'},
+  { name: 'Se connecter', link: '/login'},
 ]
 
 

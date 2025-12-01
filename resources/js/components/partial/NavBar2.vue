@@ -43,7 +43,7 @@
           
           <!-- Si l'utilisateur n'est pas connecté -->
           <li v-if="!isAuthenticated" class="nav-item">
-            <router-link to="/login" class="nav-link">Connexion</router-link>
+            <router-link to="/login" class="nav-link">Se connecter</router-link>
           </li>
 
           <!-- Si l'utilisateur est connecté, afficher profil -->
