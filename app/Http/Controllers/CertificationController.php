@@ -15,7 +15,7 @@ class CertificationController extends Controller
     public function certifyPayment(KPrimePayService $kpp, PaymentRepository $repo)
     {
         $user = Auth::user();
-        $amount = 5000;
+        $amount = 2;
 
         if ($user->certify_payment_status) {
             return response()->json([
