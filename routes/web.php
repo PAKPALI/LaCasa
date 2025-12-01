@@ -16,7 +16,6 @@ use App\Http\Controllers\DonationController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\CertificationController;
 
-<<<<<<< Updated upstream
 Route::post('/myLogin', [AuthController::class, 'login'])->name('myLogin');
 
 // Routes protégées (auth)
@@ -97,19 +96,6 @@ Route::get('/{any}', function () {
     return view('index');
     // return view('index2');
 })->where('any', '^(?!api).*$');
-=======
-Route::get('/{any}', function () {
-    return view('index');
-})->where('any', '^(?!api).*$');
-
-// Route::get('/', function () {
-//     return Inertia::render('Welcome');
-// })->name('home');
-
-// Route::get('dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
->>>>>>> Stashed changes
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

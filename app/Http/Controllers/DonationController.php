@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Services\SmsService;
 use Illuminate\Http\Request;
 use App\Services\KPrimePayService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use App\Repositories\PaymentRepository;
 
 class DonationController extends Controller
