@@ -10,7 +10,7 @@ class DistrictSeeder extends Seeder
     public function run(): void
     {
         // Liste des quartiers de Lomé
-        $$districts = [
+        $districts = [
             'Abobokomé',
             'Ablogamé',
             'Abové',
