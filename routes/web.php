@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
     // --- Routes PublicationController ---
     Route::controller(PublicationController::class)->group(function () {
         Route::get('getMyPublication', 'getMyPublication');
-        Route::resource('publication', PublicationController::class);
+        // Route::resource('publication', PublicationController::class);
     });
 
     // --- Routes CertificationController ---
