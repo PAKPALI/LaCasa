@@ -70,7 +70,10 @@ class PaymentController extends Controller
 
             if ($user) {
                 // Pour la certification seulement (pas donation)
-                $user->update(['certify_payment_status' => true]);
+                $user->update([
+                    'certify_payment_status' => true,
+                    'certify_payment_date'   => now(),
+                ]);
 
                 // Envoi email + PDF
                 try {
