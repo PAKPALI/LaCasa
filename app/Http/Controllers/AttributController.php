@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Attribut;
+use Illuminate\Http\Request;
+use App\Services\SyncService;
 use Illuminate\Support\Facades\Validator;
 
 class AttributController extends Controller
@@ -19,7 +20,7 @@ class AttributController extends Controller
         return response()->json($query->get());
     }
 
-    public function store(Request $request)
+    public function store(Request $request, SyncService $syncService)
     {
         $validator = Validator::make($request->all(), [
             'name'        => ['required', 'string', 'max:255'],
@@ -39,6 +40,7 @@ class AttributController extends Controller
         }
 
         $attribute = Attribut::create($validator->validated());
+        $syncService->replicateAttribute($attribute);
 
         return response()->json([
             'status'  => true,

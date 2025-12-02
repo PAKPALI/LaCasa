@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Services\SyncService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,8 +22,7 @@ class CategoryController extends Controller
         return response()->json($query->get());
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request, SyncService $syncService){
         $error_messages = [
             "name.required"    => "Remplir le champ nom de la categorie !",
             "name.max"         => "Le nom du pays dépasse 255 caractères !",
@@ -44,6 +44,13 @@ class CategoryController extends Controller
 
         $category = Category::create($validator->validated());
 
+         // Synchroniser les types depuis "Maison"
+        // Copier tous les types + attributs depuis "Maison"
+        $sourceCategory = Category::where('name', 'Maison')->first();
+        if ($sourceCategory) {
+            $syncService->syncPubTypesFromCategory($sourceCategory, $category);
+        }
+
         return response()->json([
             "status"  => true,
             "message" => "Catégorie « ".$category->name." » ajoutée avec succès",
@@ -51,8 +58,7 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function update(Request $request, Category $category)
-    {
+    public function update(Request $request, Category $category){
         $error_messages = [
             "name.required"    => "Remplir le champ nom de la categorie !",
             "name.max"         => "Le nom du pays dépasse 255 caractères !",
@@ -80,8 +86,7 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function destroy(Category $category)
-    {
+    public function destroy(Category $category) {
         if ($category->PubType()->exists()) {
             return response()->json([
                 'status'  => false,

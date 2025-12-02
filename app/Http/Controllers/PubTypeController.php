@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\PubType;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use App\Services\SyncService;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class PubTypeController extends Controller
@@ -22,8 +24,7 @@ class PubTypeController extends Controller
     }
 
     // Ajouter un type
-    public function store(Request $request)
-    {
+    public function store(Request $request, SyncService $syncService){
         $validator = Validator::make($request->all(), [
             'name'        => ['required','string','max:255'],
             'category_id' => ['required','exists:categories,id'],
@@ -42,6 +43,21 @@ class PubTypeController extends Controller
         }
 
         $pubType = PubType::create($validator->validated());
+        // Répliquer vers toutes les autres catégories
+        // $syncService->replicatePubType($pubType);
+
+        // Copier les attributs depuis le type source "Maison" si existant
+        $sourceCategory = Category::where('name', 'Maison')->first();
+        if ($sourceCategory) {
+            $sourceType = $sourceCategory->PubType()->where('name', 'Piece')->first();
+            if ($sourceType) {
+                // Copier les attributs vers le PubType principal
+                $syncService->replicateAttributes($sourceType, $pubType);
+            }
+        }
+
+        // 2️⃣ Répliquer le PubType principal avec ses attributs vers toutes les autres catégories
+        $syncService->replicatePubType($pubType);
 
         return response()->json([
             "status"  => true,

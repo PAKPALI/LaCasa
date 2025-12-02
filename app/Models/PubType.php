@@ -22,4 +22,9 @@ class PubType extends Model
     {
         return $this->hasMany(Attribut::class);
     }
+
+    public function attributes()
+    {
+        return $this->hasMany(Attribut::class);
+    }
 }
