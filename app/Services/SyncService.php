@@ -98,4 +98,23 @@ class SyncService
             }
         }
     }
+
+    public function updatePubTypeSync(PubType $pubType, string $oldName): void
+    {
+        PubType::where('name', $oldName)
+            ->where('id', '!=', $pubType->id)
+            ->update([
+                'name' => $pubType->name
+            ]);
+    }
+
+    public function updateAttributeSync(Attribut $attribute, string $oldName): void
+    {
+        Attribut::where('name', $oldName)
+            ->where('id', '!=', $attribute->id)
+            ->update([
+                'name' => $attribute->name
+            ]);
+    }
+
 }

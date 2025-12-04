@@ -153,6 +153,12 @@ class UserController extends Controller
         });
     }
 
+    public function sendSms($number, $message)
+    {
+        $smsService = new SmsService ();
+        $response = $smsService->send($number, $message);
+    }
+
     public function update(Request $request, $id)
     {
         Log::info($request->all());

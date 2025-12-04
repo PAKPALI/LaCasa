@@ -67,7 +67,7 @@ class PubTypeController extends Controller
     }
 
     // Mettre à jour un type
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, SyncService $syncService)
     {
         $pubType = PubType::find($id);
         if (!$pubType) {
@@ -88,8 +88,10 @@ class PubTypeController extends Controller
                 "message" => $validator->errors()->first()
             ]);
         }
-
+        $oldName = $pubType->name;
         $pubType->update($validator->validated());
+        
+        $syncService->updatePubTypeSync($pubType, $oldName);
 
         return response()->json([
             "status" => true,

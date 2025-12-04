@@ -95,25 +95,25 @@
 
                 <!-- COMMENTAIRES -->
                 <div v-if="review.comments.length" class="mt-3 ps-3 border-start border-light">
-                <div v-for="c in review.comments" :key="c.id" class="mb-2">
-                    <strong class="text-primary">
-                        {{ c.is_admin_comment ? "LaCasa" : c.user.name }}
-                    </strong> :
-                    <span class="text-light">{{ c.comment }}</span>
-                    <br>
-                    <small class="text-light-50">{{ formatDate(c.created_at) }}</small>
+                    <div v-for="c in review.comments" :key="c.id" class="mb-2">
+                        <strong class="text-primary">
+                            {{ c.is_admin_comment ? "LaCasa" : c.user.name }}
+                        </strong> :
+                        <span class="text-light">{{ c.comment }}</span>
+                        <br>
+                        <small class="text-light-50">{{ formatDate(c.created_at) }}</small>
 
-                    <button v-if="isAdmin" class="btn btn-sm btn-danger ms-2" @click="deleteComment(c.id)" :disabled="loading.deleteComment[c.id]">
-                        <span v-if="loading.deleteComment[c.id]" class="spinner-border spinner-border-sm"></span>
-                        <span v-else>Supprimer</span>
-                    </button>
+                        <button v-if="isAdmin" class="btn btn-sm btn-danger ms-2" @click="deleteComment(c.id)" :disabled="loading.deleteComment[c.id]">
+                            <span v-if="loading.deleteComment[c.id]" class="spinner-border spinner-border-sm"></span>
+                            <span v-else>Supprimer</span>
+                        </button>
 
-                </div>
+                    </div>
                 </div>
 
                 <!-- RÉPONSE ADMIN -->
                 <div v-if="isAdmin" class="mt-3">
-                <input v-model="replyText[review.id]" placeholder="Répondre..." class="form-control mb-2"/>
+                    <input v-model="replyText[review.id]" placeholder="Répondre..." class="form-control mb-2"/>
                     <button class="btn btn-sm btn-primary" @click="sendReply(review.id)" :disabled="loading.reply[review.id]">
                         <span v-if="loading.reply[review.id]" class="spinner-border spinner-border-sm"></span>
                         <span v-else>Envoyer</span>

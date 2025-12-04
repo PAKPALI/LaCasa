@@ -19,7 +19,7 @@
         <div class="col-lg-3 col-md-6">
           <h5 class="text-light mb-4">Navigation</h5>
           <div v-for="(nav, i) in navLinks" :key="i">
-            <router-link :to="nav.link" class="btn btn-link text-light">
+            <router-link :to="nav.link" class="btn btn-link nav-item">
               {{ nav.name }}
             </router-link>
           </div>
@@ -28,9 +28,20 @@
         <!-- Contact -->
         <div class="col-lg-3 col-md-6">
           <h5 class="text-light mb-4">Contact</h5>
-          <p><i class="fa fa-map-marker-alt me-3"></i>{{ contact.address }}</p>
-          <p><i class="fa fa-phone-alt me-3"></i>{{ contact.phone }}</p>
-          <p><i class="fa fa-envelope me-3"></i>{{ contact.email }}</p>
+          <p><i class="text-primary fa fa-map-marker-alt me-3"></i>{{ contact.address }}</p>
+          <p>
+            <i class="text-primary fa fa-phone-alt me-3"></i>
+            <a :href="`tel:${contact.phone}`" class="text-light">
+              {{ contact.phone }}
+            </a>
+          </p>
+
+          <p>
+            <i class="text-primary fa fa-envelope me-3"></i>
+            <a :href="`mailto:${contact.email}`" class="text-light">
+              {{ contact.email }}
+            </a>
+          </p>
         </div>
 
         <!-- Galerie -->
@@ -83,9 +94,25 @@ const navLinks = [
 
 const contact = {
   address: 'Lomé, Togo',
-  phone: '+228 90 85 94 88',
+  phone: '+22879685106',
   email: 'support@lacasaweb.com'
 }
 
 // const gallery = [prop1, prop2, prop3, prop4, prop5, prop6]
 </script>
+<style scoped>
+  .nav-item {
+    color: #fff !important;
+  }
+
+  /* Survol */
+  .nav-item:hover {
+    color: var(--bs-primary) !important;
+  }
+
+  /* Lien actif */
+  .router-link-active {
+    color: var(--bs-primary) !important;
+    font-weight: bold;
+  }
+</style>

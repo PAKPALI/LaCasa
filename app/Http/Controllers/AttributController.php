@@ -49,7 +49,7 @@ class AttributController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, SyncService $syncService)
     {
         $attribute = Attribut::find($id);
         if (!$attribute) {
@@ -75,8 +75,10 @@ class AttributController extends Controller
                 'message' => $validator->errors()->first(),
             ]);
         }
-
+        $oldName = $attribute->name;
         $attribute->update($validator->validated());
+        
+        $syncService->updateAttributeSync($attribute, $oldName);
 
         return response()->json([
             'status'  => true,

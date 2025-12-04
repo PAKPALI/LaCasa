@@ -10,7 +10,7 @@ class DistrictController extends Controller
 {
     public function index(Request $request)
     {
-        $query = District::with(['town.country']);
+        $query = District::with(['town.country'])->orderBy('name', 'ASC');
 
         // Filtrer si town_id passé (pour le formulaire)
         if ($request->has('town_id')) {
