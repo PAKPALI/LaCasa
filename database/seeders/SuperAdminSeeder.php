@@ -16,11 +16,23 @@ class SuperAdminSeeder extends Seeder
     // php artisan db:seed --class=SuperAdminSeeder
     public function run(): void
     {
+        // User::create([
+        //     'name' => 'Didier PAKPALI',
+        //     'email' => 'pakpalididier@gmail.com',
+        //     'password' => Hash::make('Didier@95'), // mot de passe
+        //     'user_type' => 1, // 1: personne, 2: agence
+        //     'role' => 1,      // 1: super admin
+        //     'country_id' => null, // si tu veux renseigner un pays, mets son ID
+        //     'town_id' => null,
+        //     'district_id' => null,
+        //     'profile_image' => null, // si tu veux une image par défaut
+        // ]);
+
         User::create([
-            'name' => 'Didier PAKPALI',
-            'email' => 'pakpalididier@gmail.com',
-            'password' => Hash::make('Didier@95'), // mot de passe
-            'user_type' => 1, // 1: personne, 2: agence
+            'name' => 'LaCasa',
+            'email' => 'lacasa@gmail.com',
+            'password' => Hash::make('lacasa@2025'), // mot de passe
+            'user_type' => 2, // 1: personne, 2: agence
             'role' => 1,      // 1: super admin
             'country_id' => null, // si tu veux renseigner un pays, mets son ID
             'town_id' => null,
