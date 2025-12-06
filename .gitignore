@@ -8,7 +8,7 @@
 /public/hot
 /public/storage
 /public/build      # tu peux commenter si jamais build utilisé
-/public/LaCasa/pub # dossier des images uploadées
+/public/LaCasa/pub
 /public/default.php
 
 # Storage sécurisé
