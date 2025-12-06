@@ -140,7 +140,7 @@
             <input type="number" class="form-control" v-model="form.bathroom" />
           </div>
           <div class="col-md-4 mb-3">
-            <label class="form-label">Surface (m²)</label>
+            <label class="form-label">Ménage</label>
             <input type="number" class="form-control" v-model="form.surface" />
           </div>
         </div>

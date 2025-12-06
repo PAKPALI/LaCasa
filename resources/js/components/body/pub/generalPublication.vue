@@ -342,9 +342,9 @@
                 <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} Mois</td></tr>
                 <tr><th>Avance</th><td>{{ selectedPublication?.advance }} Mois</td></tr>
                 <tr><th>Commission</th><td>{{ formatPrice(selectedPublication?.commission || '-')}}</td></tr>
-                <tr><th>Visit</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
+                <tr><th>Visite</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
                 <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
-                <tr><th>Superficie</th><td>{{ selectedPublication?.surface || '-'}} m²</td></tr>
+                <tr><th>Ménage</th><td>{{ selectedPublication?.surface || '-'}} </td></tr>
                 <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || '-' }}</td></tr>
                 <tr><th>Description</th><td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td></tr>
                   <tr>

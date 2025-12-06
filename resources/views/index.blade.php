@@ -5,7 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>LaCasa &mdash; Bouger simplement</title>
+    <!-- SEO de base -->
+    <title>LaCasa – Trouvez un logement au Togo | Bouger simplement</title>
+    <meta name="description" content="LaCasa est la plateforme moderne pour trouver un logement au Togo et en Afrique : chambres, appartements, maisons, villas. Annonces fiables, filtrage rapide, démarcheurs vérifiés. Bouger simplement.">
+
+    <meta name="keywords" content="location Togo, maison à louer Lomé, logement Togo, logement Afrique, location Afrique, appartement à louer, annonces immobilières Togo, annonces Afrique, chambre salon, villa à louer, plateforme immobilière Afrique, LaCasa">
+    <meta name="author" content="PAKPALI Essolissam Didier">
+
+    <!-- SEO géographique (important !) -->
+    <meta name="geo.region" content="TG">
+    <meta name="geo.placename" content="Togo">
+    <meta name="geo.position" content="8.619543;-0.824782">
+    <meta name="ICBM" content="8.619543, -0.824782">
+
+    <!-- Open Graph (Afrique + Togo) -->
+    <meta property="og:title" content="LaCasa – Location de logements au Togo & Afrique">
+    <meta property="og:description" content="Découvrez des annonces fiables de logements au Togo et en Afrique. Appartements, villas, maisons. Plateforme simple et moderne.">
+    <meta property="og:image" content="{{ config('app.url') }}/logo/logo.jpeg">
+    <meta property="og:url" content="{{ config('app.url') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- 6. Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LaCasa – Logements au Togo et en Afrique">
+    <meta name="twitter:description" content="Plateforme moderne pour trouver un logement au Togo & Afrique. Simple, rapide et fiable.">
+    <meta name="twitter:image" content="{{ config('app.url') }}/logo/logo.jpeg">
+
+    <!-- Logo du site -->
+    <meta name="logo" content="{{ config('app.url') }}/logo/logo.jpeg">
 
     <!-- Assets locaux -->
     <!-- Favicon -->
@@ -48,5 +77,25 @@
 
     <!-- Template Javascript -->
     <script src="{{ asset('template/js/main.js') }}"></script>
+
+    <!-- 7. JSON-LD (Google Rich Snippet) -->
+    @verbatim
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "RealEstateAgent",
+            "name": "LaCasa",
+            "url": "https://ton-site.com",
+            "logo": "https://ton-site.com/logo/logo.jpeg",
+            "description": "Plateforme de location immobilière au Togo et en Afrique.",
+            "areaServed": ["Togo", "Afrique de l'Ouest", "Afrique"],
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "TG"
+            }
+        }
+        </script>
+    @endverbatim
+
 </body>
 </html>

@@ -107,7 +107,7 @@
           <div class="row mb-3">
             <div class="col-md-4"><label>Prix (FCFA)</label><input type="number" v-model="form.price" class="form-control" /></div>
             <div class="col-md-4"><label>Chambres</label><input type="number" v-model="form.bathroom" class="form-control" /></div>
-            <div class="col-md-4"><label>Surface (m²)</label><input type="number" v-model="form.surface" class="form-control" /></div>
+            <div class="col-md-4"><label>Ménage</label><input type="number" v-model="form.surface" class="form-control" /></div>
           </div>
 
           <div class="row mb-3">

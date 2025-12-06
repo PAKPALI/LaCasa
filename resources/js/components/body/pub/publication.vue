@@ -35,7 +35,7 @@
       <div class="tab-content">
         <div class="tab-pane fade show p-0 active">
           <div class="row g-4">
-            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp" :data-wow-delay="p.delay || '0.1s'">
+            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp" :data-wow-delay="p.delay || '0.1s'" @click="openModal(p)">
               <div class="property-item rounded overflow-hidden shadow">
                 <div class="position-relative overflow-hidden">
                   <div v-if="p.images && p.images.length" :id="'carouselList' + i" class="carousel slide" data-bs-ride="carousel" :data-bs-interval="5000">
@@ -68,9 +68,9 @@
                   </div>
 
                   <!-- 👁 Bouton voir plus avec animation -->
-                  <button class="btn eye-alert-btn position-absolute end-0 top-0 m-2 shadow" @click="openModal(p)">
+                  <!-- <button class="btn eye-alert-btn position-absolute end-0 top-0 m-2 shadow" @click="openModal(p)">
                     <i class="fa fa-eye"></i>
-                  </button>
+                  </button> -->
                 </div>
 
                 <!-- Attributs sous le prix / titre -->
@@ -129,7 +129,6 @@
                 </div>
               </div>
             </div>
-
             <div class="col-12 text-center py-5">
               <div v-if="loadingPublications" class="d-flex justify-content-center align-items-center" style="height: 200px;">
                 <div class="spinner-border text-primary" role="status">
@@ -168,11 +167,11 @@
   </div>
 
   <!-- 📌 Modal de détails de la publication -->
-  <div class="modal fade" id="publicationModal" tabindex="-1" aria-hidden="true" ref="modal">
+  <div class="modal fade mt-5" id="publicationModal" tabindex="-1" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-dark">
-          <h5 class="modal-title">{{ selectedPublication?.title || 'Détails de la publication' }}</h5>
+          <h5 class="modal-title text-light">{{ selectedPublication?.title || 'Détails de la publication' }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
@@ -213,9 +212,9 @@
                 <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} Mois</td></tr>
                 <tr><th>Avance</th><td>{{ selectedPublication?.advance }} Mois</td></tr>
                 <tr><th>Commission</th><td>{{ selectedPublication?.commission || '-'}}</td></tr>
-                <tr><th>Visit</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
+                <tr><th>Visite</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
                 <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
-                <tr><th>Superficie</th><td>{{ selectedPublication?.surface || '-'}} m²</td></tr>
+                <tr><th>Ménage</th><td>{{ selectedPublication?.surface || '-'}} </td></tr>
                 <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || '-' }}</td></tr>
                 <tr><th>Description</th><td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td></tr>
                 <tr>
