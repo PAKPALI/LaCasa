@@ -39,7 +39,7 @@
 
     <!-- Assets locaux -->
     <!-- Favicon -->
-    <link rel="icon" href="{{ config('app.url') }}/logo/logo.jpeg" type="image/png">
+    <link rel="icon" href="{{ config('app.url') }}/logo/logo.jpeg" type="image/jpeg">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
