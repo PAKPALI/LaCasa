@@ -39,14 +39,22 @@
 
     <!-- Assets locaux -->
 
-    <!-- Favicon classiques -->  
-    <link rel="icon" type="image/x-icon" href="{{ config('app.url') }}/logo/favicon/favicon.ico">
+    <!-- FAVICONS (Google, Apple, Android, Navigateurs) -->
+
+    <!-- PNG pour navigateurs modernes -->
     <link rel="icon" type="image/png" sizes="96x96" href="{{ config('app.url') }}/logo/favicon/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ config('app.url') }}/logo/favicon/favicon-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="{{ config('app.url') }}/logo/favicon/favicon-512x512.png">
 
-    <!-- Pour Android / PWA -->
-    <link rel="apple-touch-icon" sizes="512x512" href="{{ config('app.url') }}/logo/favicon/apple.png">
+    <!-- Apple Touch Icon (iPhone / iPad) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ config('app.url') }}/logo/favicon/apple.png">
+
+    <!-- Pour Android / PWA (facultatif mais conseillé) -->
+    <link rel="manifest" href="{{ config('app.url') }}/logo/favicon/site.webmanifest">
+
+    <!-- Favicon par défaut (.ico) -->
+    <link rel="icon" type="image/x-icon" href="{{ config('app.url') }}/logo/favicon/favicon.ico">
+
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
