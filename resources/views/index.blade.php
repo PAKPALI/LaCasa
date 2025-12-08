@@ -38,8 +38,15 @@
     <meta name="logo" content="{{ config('app.url') }}/logo/logo.jpeg">
 
     <!-- Assets locaux -->
-    <!-- Favicon -->
-    <link rel="icon" href="{{ config('app.url') }}/logo/logo.jpeg" type="image/jpeg">
+
+    <!-- Favicon classiques -->  
+    <link rel="icon" type="image/x-icon" href="{{ config('app.url') }}/logo/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ config('app.url') }}/logo/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ config('app.url') }}/logo/favicon/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ config('app.url') }}/logo/favicon/favicon-512x512.png">
+
+    <!-- Pour Android / PWA -->
+    <link rel="apple-touch-icon" sizes="512x512" href="{{ config('app.url') }}/logo/favicon/apple.png">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
