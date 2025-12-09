@@ -108,12 +108,12 @@
     "src": "resources/js/images/web.avif"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-LdG3OWfI.js",
+    "file": "assets/app2-CRvgHgDo.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-BfoS0b6u.css"
+      "assets/app2-BxIGltDE.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
@@ -134,7 +134,6 @@
       "assets/son-Ccz_J6P1.avif",
       "assets/ana2-CEh9ZmNo.avif",
       "assets/web-BYbicTTC.avif",
-      "assets/agent-D7KwoOhe.avif",
       "assets/empty-ChuaEKUH.gif",
       "assets/disconnect-DA4azbkO.png",
       "assets/immo1-CVI-aI6_.avif",
