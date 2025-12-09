@@ -14,6 +14,9 @@ class Kernel extends ConsoleKernel
     {
         // Ta tâche toutes les minutes
         $schedule->command('certification:check')->everyMinute();
+
+        // Scheduler pour le rapport hebdomadaire
+        $schedule->job(new \App\Jobs\SendWeeklyUserStats)->sundays()->at('23:59');  
     }
 
     /**
