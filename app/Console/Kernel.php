@@ -16,7 +16,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('certification:check')->everyMinute();
 
         // Scheduler pour le rapport hebdomadaire
-        $schedule->job(new \App\Jobs\SendWeeklyUserStats)->sundays()->at('23:59');  
+        $schedule->job(new \App\Jobs\SendWeeklyUserStats)->sundays()->at('23:59');
+
+        // Rapport mensuel : dernier jour du mois, à 23h59
+        $schedule->job(new \App\Jobs\SendMonthlyUserStats)
+        ->monthlyOn(date('t'), '23:59');
     }
 
     /**
