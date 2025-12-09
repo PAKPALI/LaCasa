@@ -179,8 +179,9 @@ const registerUser = async () => {
   if (!form.value.user_type) 
     return Swal.fire({ icon:'error', title:'Veuillez choisir votre type (Personne ou Agence)', toast:true, position:'top-end', showConfirmButton:false, timer:3000 })
 
-  if (!selectedCountry.value || !selectedTown.value || !selectedDistrict.value)
-    return Swal.fire({ icon:'error', title:'Veuillez sélectionner votre pays, ville et quartier', toast:true, position:'top-end', showConfirmButton:false, timer:3000 })
+  // if (!selectedCountry.value || !selectedTown.value || !selectedDistrict.value)
+  if (!selectedCountry.value || !selectedTown.value)
+    return Swal.fire({ icon:'error', title:'Veuillez sélectionner votre pays et ville', toast:true, position:'top-end', showConfirmButton:false, timer:3000 })
 
   if (!form.value.phone1 && !form.value.phone2)
     return Swal.fire({ icon:'error', title:'Veuillez entrer au moins un numéro de téléphone', toast:true, position:'top-end', showConfirmButton:false, timer:3000 })
@@ -190,7 +191,7 @@ const registerUser = async () => {
     for(const key in form.value) payload.append(key, form.value[key])
     payload.append('country_id', selectedCountry.value)
     payload.append('town_id', selectedTown.value)
-    payload.append('district_id', selectedDistrict.value)
+    payload.append('district_id', selectedDistrict.value ?? '')
     if(profileImage.value) payload.append('profile_image', profileImage.value)
     const res = await axios.post('/api/register', payload, { headers:{ 'Content-Type':'multipart/form-data' } })
     if(res.data.status){

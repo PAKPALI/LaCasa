@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Repositories\PaymentRepository;
 use Illuminate\Support\Facades\Validator;
+use App\Jobs\SendUserRegistrationNotifications;
 
 class UserController extends Controller
 {
@@ -74,7 +75,8 @@ class UserController extends Controller
             'phone2'         => ['nullable', 'string', 'max:20'],
             'country_id'     => ['nullable', 'exists:countries,id'],
             'town_id'        => ['nullable', 'exists:towns,id'],
-            'district_id'    => ['nullable', 'exists:districts,id'],
+            // 'district_id'    => ['nullable', 'exists:districts,id'],
+            'district_id'    => ['nullable'],
             'profile_image'  => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ], $error_messages);
 
@@ -115,12 +117,8 @@ class UserController extends Controller
                 // Si tu as une relation images (optionnel)
                 // $user->images()->create(['path' => 'LaCasa/pub/' . $imageName]);
             }
-
-            $this->sendEmailMargin($user->name, $user->email, $request->password);
-
-            $message = "Bienvenue " . $user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance!";
-            $user->phone1 ? $number = $user->phone1 : $number = $user->phone2;
-            $this->sendSms($number, $message);
+            // php artisan make:job SendUserRegistrationNotifications
+            SendUserRegistrationNotifications::dispatch($user, $request->password);
 
             return response()->json([
                 "status"  => true,
@@ -151,6 +149,31 @@ class UserController extends Controller
             $message->to($email);
             $message->subject('Bienvenue sur notre plateforme');
         });
+    }
+
+    public function notifyAdminsByUserRegister($user)
+    {
+        // Récupérer tous les admins (role ≠ 3)
+        $admins = User::where('role', '!=', 3)->get();
+
+        foreach ($admins as $admin) {
+            if($admin ->user_type == 2){
+                Mail::send('emails.admin.registerAlert', ['user_name' => $user->name], 
+                    function($message) use ($admin) {
+                        $message->to($admin->email);
+                        $message->subject('Nouveau enregistrement d\'utilisateur');
+                    }
+                );
+            }else{
+                Mail::send('emails.admin.registerAlert', ['user_name' => $user->name],
+                    function($message) use ($admin) {
+                        $message->to($admin->email);
+                        $message->subject('Nouveau enregistrement d\'utilisateur');
+                    }
+                );
+            }
+            
+        }
     }
 
     public function sendSms($number, $message)
