@@ -39,12 +39,19 @@
             <span class="input-group-text neon-input-prepend">
               <i class="bi bi-lock-fill text-light"></i>
             </span>
+
+            <!-- Input mot de passe avec toggle -->
             <input
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               v-model="form.password"
               class="form-control neon-input"
               placeholder="••••••••"
             />
+
+            <!-- Icône œil -->
+            <span class="input-group-text neon-input-prepend" role="button" @click="showPassword = !showPassword">
+              <i :class="showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'" class="text-light"></i>
+            </span>
           </div>
         </div>
 
@@ -83,6 +90,7 @@ const router = useRouter()
 
 const form = ref({ email: '', password: '', remember: false })
 const isSubmitting = ref(false)
+const showPassword = ref(false)
 
 const loginUser = async () => {
   if (isSubmitting.value) return
@@ -244,4 +252,9 @@ const loginUser = async () => {
   0%, 100% { transform: scale(1); opacity: 0.5; }
   50% { transform: scale(1.05); opacity: 0.8; }
 }
+
+.input-group-text[role="button"] {
+  cursor: pointer;
+}
+
 </style>

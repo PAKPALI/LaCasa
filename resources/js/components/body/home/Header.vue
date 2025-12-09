@@ -67,22 +67,22 @@ import carousel2 from '@images2/carousel-2.jpg'
   filter: brightness(1);
 }
 
-/* .flash {
+/* Flashs tonnerre (désactivés pour mobile) */
+.flash {
   position: absolute;
   inset: 0;
   background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
   opacity: 0;
   animation: flashThunder 12s infinite;
 }
-
 .flash:nth-child(2) { animation-delay: 5s; }
-.flash:nth-child(3) { animation-delay: 9s; } */
+.flash:nth-child(3) { animation-delay: 9s; }
 
-/* @keyframes flashThunder {
+@keyframes flashThunder {
   0%, 97%, 100% { opacity: 0; }
   98% { opacity: 1; }
   99% { opacity: 0.3; }
-} */
+}
 
 @keyframes backgroundMove {
   0% { background-position: center; }
@@ -107,17 +107,17 @@ import carousel2 from '@images2/carousel-2.jpg'
 }
 
 @keyframes floatRandom {
-  0% { transform: translate(0px, 0px) rotate(0deg); }
-  10% { transform: translate(3px, -5px) rotate(1deg); }
-  20% { transform: translate(-2px, 4px) rotate(-1deg); }
-  30% { transform: translate(4px, -2px) rotate(0.5deg); }
-  40% { transform: translate(-3px, 3px) rotate(-0.5deg); }
-  50% { transform: translate(2px, -3px) rotate(1deg); }
-  60% { transform: translate(-4px, 5px) rotate(-1deg); }
-  70% { transform: translate(5px, -4px) rotate(0.5deg); }
-  80% { transform: translate(-3px, 2px) rotate(-0.5deg); }
-  90% { transform: translate(4px, -1px) rotate(1deg); }
-  100% { transform: translate(0px, 0px) rotate(0deg); }
+  0% { transform: translate3d(0px, 0px,0) rotate(0deg); }
+  10% { transform: translate3d(3px, -5px,0) rotate(1deg); }
+  20% { transform: translate3d(-2px, 4px,0) rotate(-1deg); }
+  30% { transform: translate3d(4px, -2px,0) rotate(0.5deg); }
+  40% { transform: translate3d(-3px, 3px,0) rotate(-0.5deg); }
+  50% { transform: translate3d(2px, -3px,0) rotate(1deg); }
+  60% { transform: translate3d(-4px, 5px,0) rotate(-1deg); }
+  70% { transform: translate3d(5px, -4px,0) rotate(0.5deg); }
+  80% { transform: translate3d(-3px, 2px,0) rotate(-0.5deg); }
+  90% { transform: translate3d(4px, -1px,0) rotate(1deg); }
+  100% { transform: translate3d(0px, 0px,0) rotate(0deg); }
 }
 
 /* Animation d’apparition du texte */
@@ -126,7 +126,6 @@ import carousel2 from '@images2/carousel-2.jpg'
   transform: translateY(15px);
   animation: fadeInUp 1s forwards;
 }
-
 .fade-in.delay-1 { animation-delay: 0.5s; }
 .fade-in.delay-2 { animation-delay: 1s; }
 
@@ -141,9 +140,42 @@ import carousel2 from '@images2/carousel-2.jpg'
   color: #00b98e !important;
 }
 
-/* Responsive */
+/* === RESPONSIVE OPTIMISÉ MOBILE === */
 @media (max-width: 768px) {
-  .header-section { height: auto; padding-bottom: 2rem; }
-  .text-content { text-align: center; }
+  .header-section {
+    height: auto;
+    padding-bottom: 2rem;
+  }
+
+  /* Texte centré et plus léger */
+  .text-content {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  /* Désactivation du floating pour fluidité */
+  .floating {
+    animation: floatMobile 12s ease-in-out infinite;
+  }
+  @keyframes floatMobile {
+    0%,100% { transform: translate3d(0,0,0) rotate(0deg); }
+    25% { transform: translate3d(1px,-1px,0) rotate(0.2deg); }
+    50% { transform: translate3d(-1px,1px,0) rotate(-0.2deg); }
+    75% { transform: translate3d(1px,1px,0) rotate(0.1deg); }
+  }
+
+  /* Désactivation des flashes */
+  .flash { display: none; }
+
+  /* Fond fixe pour performance */
+  .thunder-background { animation: none; background-position: center; }
+
+  /* Désactiver fade-in pour fluidité */
+  .fade-in, .fade-in.delay-1, .fade-in.delay-2 {
+    animation: none;
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 </style>

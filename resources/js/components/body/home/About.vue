@@ -173,16 +173,37 @@ onMounted(() => {
   white-space: nowrap;
   overflow: hidden;
   padding-right: 2px;
+  /* sur mobile, on désactive l’animation pour fluidité */
+}
+
+/* --- Image hover --- */
+.about-section img {
+  transition: transform 0.5s;
 }
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
   .about-section {
     text-align: center;
+    backdrop-filter: none; /* plus léger */
+    background: rgba(255,255,255,0.9);
   }
 
-  /* .floating-icon {
-    display: none;
-  } */
+  .content-box {
+    box-shadow: none; /* plus léger */
+    border: 1px solid rgba(0,185,142,0.2);
+    padding: 1rem;
+  }
+
+  /* Image hover désactivé sur mobile pour fluidité */
+  .about-section img {
+    transition: none !important;
+  }
+
+  /* Machine à écrire désactivée pour fluidité */
+  .typing-text {
+    border-right: none;
+  }
 }
+
 </style>

@@ -24,13 +24,33 @@
           <!-- Mot de passe -->
           <div class="col-md-6 mb-3">
             <label class="form-label">Mot de passe</label>
-            <input type="password" v-model="form.password" class="form-control" placeholder="••••••••" />
+            <div class="input-group">
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                v-model="form.password"
+                class="form-control"
+                placeholder="••••••••"
+              />
+              <span class="input-group-text" role="button" @click="showPassword = !showPassword">
+                <i :class="showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+              </span>
+            </div>
           </div>
 
           <!-- Confirmation -->
           <div class="col-md-6 mb-3">
             <label class="form-label">Confirmer le mot de passe</label>
-            <input type="password" v-model="form.password_confirmation" class="form-control" placeholder="••••••••" />
+            <div class="input-group">
+              <input
+                :type="showPasswordConfirm ? 'text' : 'password'"
+                v-model="form.password_confirmation"
+                class="form-control"
+                placeholder="••••••••"
+              />
+              <span class="input-group-text" role="button" @click="showPasswordConfirm = !showPasswordConfirm">
+                <i :class="showPasswordConfirm ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
+              </span>
+            </div>
           </div>
 
           <!-- Type d'utilisateur -->
@@ -120,6 +140,9 @@ import { useRouter } from 'vue-router'
 
 const profileImage = ref(null)
 const previewImage = ref(null)
+const showPassword = ref(false)
+const showPasswordConfirm = ref(false)
+
 
 const handleProfileImage = (event) => {
   const file = event.target.files[0]
@@ -404,4 +427,8 @@ const registerUser = async () => {
   fill: #f1f4f8;
   transform: rotate(180deg);
 } 
+
+.input-group-text[role="button"] {
+  cursor: pointer;
+}
 </style>
