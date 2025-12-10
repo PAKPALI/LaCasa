@@ -71,11 +71,45 @@
 
         <div class="text-center mt-4">
           <router-link to="/register" class="nav-link neon-text small">Créer un compte ?</router-link>
-          <a href="#" class="neon-text small">Mot de passe oublié ?</a>
+          <p class="text-center mt-2">
+            <span class="text-primary" style="cursor:pointer;"
+                  @click="openForgotPasswordModal">
+              Mot de passe oublié ?
+            </span>
+          </p>
         </div>
       </form>
     </div>
+
+    <!-- Modal Mot de Passe Oublié -->
+    <div class="modal fade mt-5" id="forgotPasswordModal" tabindex="-1">
+      <div class="modal-dialog mt-5">
+        <div class="modal-content">
+          <div class="modal-header bg-dark ">
+            <h5 class="modal-title text-light">Réinitialisation du mot de passe</h5>
+            <button class="btn-close bg-light" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body text-dark">
+            <p>Veuillez entrer votre adresse email pour recevoir un nouveau mot de passe.</p>
+
+            <input type="email" class="form-control" placeholder="Votre email"
+                  v-model="forgotEmail">
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button class="btn btn-primary" @click="submitForgotPassword" :disabled="loadingButton==='forgot'">
+                <span v-if="loadingButton==='forgot'" class="spinner-border spinner-border-sm"></span>
+                Envoyer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  
 </template>
 
 <script setup>
@@ -84,56 +118,95 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'vue-router'
 import { setUser } from './auth.js'
+import { Modal } from 'bootstrap';
+
 
 axios.defaults.withCredentials = true
-const router = useRouter()
+  const router = useRouter()
 
-const form = ref({ email: '', password: '', remember: false })
-const isSubmitting = ref(false)
-const showPassword = ref(false)
+  const form = ref({ email: '', password: '', remember: false })
+  const isSubmitting = ref(false)
+  const showPassword = ref(false)
+  const loadingButton = ref("");
 
-const loginUser = async () => {
-  if (isSubmitting.value) return
-  try {
-    isSubmitting.value = true
-    await axios.get('/sanctum/csrf-cookie')
-    const res = await axios.post('/myLogin', form.value, { withCredentials: true })
-    setUser(res.data.user)
-    if (res.data.status) {
-      Swal.fire({
-        icon: 'success',
-        title: res.data.message || 'Connexion réussie ✅',
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 2500,
-      })
-      setTimeout(() => {
-        res.data.user.role === 1 ? router.push('/admin') : router.push('/home')
-      }, 800)
-    } else {
+
+  const forgotEmail = ref("");
+    function openForgotPasswordModal() {
+    const modal = new Modal(document.getElementById("forgotPasswordModal"));
+    modal.show();
+  }
+
+  async function submitForgotPassword() {
+    if (!forgotEmail.value.trim()) {
+      return Swal.fire("Erreur", "Veuillez renseigner votre email", "error");
+    }
+
+    loadingButton.value = "forgot";
+    
+    try {
+      const res = await axios.post("/api/forgot-password", { email: forgotEmail.value });
+
+      // 👉 On teste la réponse avant d'afficher un succès
+      console.log(res.data);
+      if (res.data.status === true) {
+        Swal.fire("Succès", res.data.message, "success");
+
+        const modal = Modal.getInstance(document.getElementById("forgotPasswordModal"));
+        modal.hide();
+        forgotEmail.value = "";
+
+      } else {
+        Swal.fire("Erreur", res.data.message, "error");
+      }
+    } catch (error) {
+      Swal.fire("Erreur", error.response.data.message ?? "Une erreur est survenue", "error");
+    } finally {
+      loadingButton.value = "";
+    }
+  }
+
+  const loginUser = async () => {
+    if (isSubmitting.value) return
+    try {
+      isSubmitting.value = true
+      await axios.get('/sanctum/csrf-cookie')
+      const res = await axios.post('/myLogin', form.value, { withCredentials: true })
+      setUser(res.data.user)
+      if (res.data.status) {
+        Swal.fire({
+          icon: 'success',
+          title: res.data.message || 'Connexion réussie ✅',
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          timer: 2500,
+        })
+        setTimeout(() => {
+          res.data.user.role === 1 ? router.push('/admin') : router.push('/home')
+        }, 800)
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: res.data.message || 'Email ou mot de passe incorrect',
+          toast: true,
+          position: 'top',
+          showConfirmButton: false,
+          timer: 3000,
+        })
+      }
+    } catch (err) {
       Swal.fire({
         icon: 'error',
-        title: res.data.message || 'Email ou mot de passe incorrect',
+        title: err.response?.data?.message || 'Erreur lors de la connexion',
         toast: true,
         position: 'top',
         showConfirmButton: false,
         timer: 3000,
       })
+    } finally {
+      isSubmitting.value = false
     }
-  } catch (err) {
-    Swal.fire({
-      icon: 'error',
-      title: err.response?.data?.message || 'Erreur lors de la connexion',
-      toast: true,
-      position: 'top',
-      showConfirmButton: false,
-      timer: 3000,
-    })
-  } finally {
-    isSubmitting.value = false
   }
-}
 </script>
 
 <style scoped>

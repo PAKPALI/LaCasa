@@ -2,6 +2,7 @@
 // routes/api.php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TownController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CountryController;
@@ -28,6 +29,7 @@ Route::apiResource('payments', PaymentController::class);
 Route::post('/users/{user}/toggle-verification', [CertificationController::class, 'toggleVerification']);
 Route::post('/certification/revoke/{user}', [CertificationController::class, 'revoke']);
 Route::post('/certification/reject/{user}', [CertificationController::class, 'reject']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 Route::post('/kprimepay/webhook', [PaymentController::class, 'webhook']);
 
