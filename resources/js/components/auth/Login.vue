@@ -145,18 +145,17 @@ axios.defaults.withCredentials = true
     
     try {
       const res = await axios.post("/api/forgot-password", { email: forgotEmail.value });
-
-      // 👉 On teste la réponse avant d'afficher un succès
-      console.log(res.data);
       if (res.data.status === true) {
-        Swal.fire("Succès", res.data.message, "success");
+        // Swal.fire("Succès", res.data.message, "success");
+        Swal.fire({ toast:true, position:'top-end', icon:'success', title:res.data.message, showConfirmButton:false, timer:5000 })
 
         const modal = Modal.getInstance(document.getElementById("forgotPasswordModal"));
         modal.hide();
         forgotEmail.value = "";
 
       } else {
-        Swal.fire("Erreur", res.data.message, "error");
+        // Swal.fire("Erreur", res.data.message, "error");
+        Swal.fire({ toast:true, position:'top-end', icon:'error', title:res.data.message, showConfirmButton:false, timer:5000 })
       }
     } catch (error) {
       Swal.fire("Erreur", error.response.data.message ?? "Une erreur est survenue", "error");

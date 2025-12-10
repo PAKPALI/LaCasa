@@ -167,7 +167,7 @@
       <div class="tab-content">
         <div class="tab-pane fade show p-0 active">
           <div class="row g-4">
-            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp" @click="openModal(p)"
+            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp"
               :data-wow-delay="p.delay || '0.1s'">
               <!-- CARD PROPRIETE -->
               <div class="property-item rounded overflow-hidden shadow">
@@ -213,17 +213,17 @@
                 </div>
 
                 <!-- ATTRIBUTES -->
-                <div class="mb-2 d-flex flex-wrap px-4 pt-3">
+                <div class="mb-2 d-flex flex-wrap px-4 pt-3"  @click="openModal(p)">
                   <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-success me-1 mb-1">{{ attr.name}}</span>
                 </div>
 
                 <!-- DESCRIPTION -->
-                <div class="p-2 pb-0">
+                <div class="p-2 pb-0"  @click="openModal(p)">
                   <div class="row bg-dark text-light border-top gx-2">
                     <div class="col-12 col-md-12 text-center">
                       
                       <u class="d-block h4 text-light mb-2" href="#">{{ p.title || 'Titre non défini' }}</u>
-                      <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }} / Mois</h5>
+                      <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }} / {{ formatPeriod(p.price_period) }}</h5>
                       <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{p.town_name }}</p>
                       
                     </div>
@@ -266,10 +266,19 @@
 
                 <!-- SURFACE / CHAMBRES -->
                 <div class="d-flex bg-dark text-light border-top">
+                  <!-- Caution -->
                   <small v-if="p.deposit" class="flex-fill text-center py-2">
-                    <i class="fa fa-lock text-warning me-2"></i> Caution: {{ p.deposit }} mois</small>
+                    <i class="fa fa-lock text-warning me-2"></i>
+                    Caution:
+                    {{ p.deposit }} {{ p.deposit > 12 ? 'F CFA' : 'mois' }}
+                  </small>
+
+                  <!-- Avance -->
                   <small v-if="p.advance" class="flex-fill text-center py-2">
-                    <i class="fa fa-credit-card text-warning me-2"></i> Avance: {{ p.advance }} mois</small>
+                    <i class="fa fa-credit-card text-warning me-2"></i>
+                    Avance:
+                    {{ p.advance }} {{ p.advance > 12 ? 'F CFA' : 'mois' }}
+                  </small>
                 </div>
 
               </div>
@@ -291,93 +300,90 @@
           </div>
         </div>
       </div>
-
-    </div>
-
-    <!-- MODAL -->
-    <div class="modal fade mt-5" id="publicationModal" tabindex="-1">
-      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header text-light">
-            <h5 class="modal-title">{{ selectedPublication?.title }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Carrousel d'images modal -->
-            <div v-if="selectedPublication?.images?.length" id="carouselImages" class="carousel slide"
-              data-bs-ride="carousel" data-bs-interval="5000">
-              <div class="carousel-inner rounded">
-                <div v-for="(img, index) in selectedPublication.images" :key="index" class="carousel-item"
-                  :class="{ active: index === 0 }">
-                  <img :src="img" class="d-block w-100" style="max-height: 400px; object-fit: cover;"
-                    alt="Image de la publication">
-                </div>
-              </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-              </button>
+      <!-- MODAL -->
+      <div class="modal fade mt-5" id="publicationModal" tabindex="-1">
+        <div class="modal-dialog mt-2 mt-0 modal-lg modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header bg-dark">
+              <h5 class="modal-title text-light">{{ selectedPublication?.title }}</h5>
+              <button  type="button" class="btn-close bg-light" data-bs-dismiss="modal"></button>
             </div>
+            <div class="modal-body">
+              <!-- Carrousel d'images modal -->
+              <div v-if="selectedPublication?.images?.length" id="carouselImages" class="carousel slide"
+                data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-inner rounded">
+                  <div v-for="(img, index) in selectedPublication.images" :key="index" class="carousel-item"
+                    :class="{ active: index === 0 }">
+                    <img :src="img" class="d-block w-100" style="max-height: 400px; object-fit: cover;"
+                      alt="Image de la publication">
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </button>
+              </div>
 
-            <!-- Infos détaillées -->
-            <div class="mt-4 bg-dark">
-              <table class="table custom-info-table">
-                <tbody>
-                  <tr><th>Code</th><td>{{ selectedPublication?.code || 'JHSHS4568D45SDJ' }}</td></tr>
-                <tr><th>Catégorie</th><td>{{ selectedPublication?.category_name || 'Catégorie inconnue' }}</td></tr>
-                <tr><th>Type d'offre</th><td>{{ selectedPublication?.offer_type === 'sale' ? 'À vendre' : 'À louer' }}</td></tr>
-                <tr v-if="selectedPublication?.attributes?.length">
-                  <th>Attributs</th>
-                  <td>
-                    <div class="d-flex flex-wrap">
-                      <span v-for="attr in selectedPublication.attributes" :key="attr.id" class="badge bg-success me-1 mb-1">
-                        {{ attr.name }}
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-                <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }}</td></tr>
-                <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} Mois</td></tr>
-                <tr><th>Avance</th><td>{{ selectedPublication?.advance }} Mois</td></tr>
-                <tr><th>Commission</th><td>{{ formatPrice(selectedPublication?.commission || '-')}}</td></tr>
-                <tr><th>Visite</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
-                <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
-                <tr><th>Ménage</th><td>{{ selectedPublication?.surface || '-'}} </td></tr>
-                <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || '-' }}</td></tr>
-                <tr><th>Description</th><td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td></tr>
-                  <tr>
-                    <th>Téléphones</th>
+              <!-- Infos détaillées -->
+              <div class="mt-1 bg-dark">
+                <table class="table custom-info-table">
+                  <tbody>
+                    <tr><th>Code</th><td>{{ selectedPublication?.code || 'JHSHS4568D45SDJ' }}</td></tr>
+                  <tr><th>Catégorie</th><td>{{ selectedPublication?.category_name || 'Catégorie inconnue' }}</td></tr>
+                  <tr><th>Type d'offre</th><td>{{ selectedPublication?.offer_type === 'sale' ? 'À vendre' : 'À louer' }}</td></tr>
+                  <tr v-if="selectedPublication?.attributes?.length">
+                    <th>Attributs</th>
                     <td>
-                      <p v-if="selectedPublication?.phone1">
-                        <i class="fa fa-phone text-primary me-2">1</i>: 
-                        <span :class="{ 'blur-phone': !isAuthResp }">{{ selectedPublication.phone1 }}</span>
-                      </p>
-                      <p v-if="selectedPublication?.phone2">
-                        <i class="fa fa-phone text-primary me-2">2</i>: 
-                        <span :class="{ 'blur-phone': !isAuthResp }">{{ selectedPublication.phone2 }}</span>
-                      </p>
-                      <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Pas de Numéro
-                        Disponible</span>
+                      <div class="d-flex flex-wrap">
+                        <span v-for="attr in selectedPublication.attributes" :key="attr.id" class="badge bg-success me-1 mb-1">
+                          {{ attr.name }}
+                        </span>
+                      </div>
                     </td>
                   </tr>
-                </tbody>
-              </table>
+                  <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }} / {{ formatPeriod(selectedPublication?.price_period) }}</td></tr>
+                  <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} {{ selectedPublication?.deposit>12?'F CFA':'Mois' }}</td></tr>
+                  <tr><th>Avance</th><td>{{ selectedPublication?.advance }} {{ selectedPublication?.advance>12?'F CFA':'Mois' }}</td></tr>
+                  <tr><th>Commission</th><td>{{ formatPrice(selectedPublication?.commission || '-')}}</td></tr>
+                  <tr><th>Visite</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
+                  <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
+                  <tr><th>Ménage</th><td>{{ selectedPublication?.surface || '-'}} </td></tr>
+                  <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || '-' }}</td></tr>
+                  <tr><th>Description</th><td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td></tr>
+                    <tr>
+                      <th>Téléphones</th>
+                      <td>
+                        <p v-if="selectedPublication?.phone1">
+                          <i class="fa fa-phone text-primary me-2">1</i>: 
+                          <span :class="{ 'blur-phone': !isAuthResp }">{{ selectedPublication.phone1 }}</span>
+                        </p>
+                        <p v-if="selectedPublication?.phone2">
+                          <i class="fa fa-phone text-primary me-2">2</i>: 
+                          <span :class="{ 'blur-phone': !isAuthResp }">{{ selectedPublication.phone2 }}</span>
+                        </p>
+                        <span v-if="!selectedPublication?.phone1 && !selectedPublication?.phone2">Pas de Numéro
+                          Disponible</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
 
-          <div class="modal-footer">
-            <button class="btn btn-outline-primary" :disabled="!selectedPublication?.phone1"
-              @click="window.location.href = 'tel:' + selectedPublication.phone1">
-              <i class="fa fa-phone me-2"></i> Contacter
-            </button>
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <!-- <div class="modal-footer">
+              <button class="btn btn-outline-primary" :disabled="!selectedPublication?.phone1"
+                @click="window.location.href = 'tel:' + selectedPublication.phone1">
+                <i class="fa fa-phone me-2"></i> Contacter
+              </button>
+              <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div> -->
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -506,6 +512,16 @@
 
     return list
   })
+
+  const formatPeriod = (period) => {
+  switch(period){
+    case 'month': return 'Mois'
+    case 'week': return 'Semaine'
+    case 'day': return 'Jour'
+    default: return ''
+  }
+}
+
 
   // -----------------
   // FETCH OPTIONS

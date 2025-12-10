@@ -105,15 +105,26 @@
 
           <!-- Infos complémentaires -->
           <div class="row mb-3">
-            <div class="col-md-4"><label>Prix (FCFA)</label><input type="number" v-model="form.price" class="form-control" /></div>
-            <div class="col-md-4"><label>Chambres</label><input type="number" v-model="form.bathroom" class="form-control" /></div>
-            <div class="col-md-4"><label>Ménage</label><input type="number" v-model="form.surface" class="form-control" /></div>
+            <div class="col-md-6">
+              <label>Période de paiement</label>
+              <v-select
+                v-model="form.price_period"
+                :options="pricePeriodOptions"
+                label="label"
+                :reduce="p => p.value"
+                placeholder="Sélectionnez une période"
+              />
+            </div>
+
+            <div class="col-md-6"><label>Prix (FCFA)</label><input type="number" v-model.number="form.price" class="form-control" /></div>
+            <div class="col-md-6"><label>Chambres</label><input type="number" v-model.number="form.bathroom" class="form-control" /></div>
+            <div class="col-md-6"><label>Ménage</label><input type="number" v-model.number="form.surface" class="form-control" /></div>
           </div>
 
           <div class="row mb-3">
-            <div class="col-md-4"><label>Avance (mois)</label><input type="number" v-model="form.advance" class="form-control" /></div>
-            <div class="col-md-4"><label>Caution (mois)</label><input type="number" v-model="form.deposit" class="form-control" /></div>
-            <div class="col-md-4"><label>Prix de visite (FCFA)</label><input type="number" v-model="form.visit" class="form-control" /></div>
+            <div class="col-md-4"><label>Avance (Mois/F CFA)</label><input type="number" v-model.number="form.advance" class="form-control" /></div>
+            <div class="col-md-4"><label>Caution (Mois/F CFA)</label><input type="number" v-model.number="form.deposit" class="form-control" /></div>
+            <div class="col-md-4"><label>Prix de visite (FCFA)</label><input type="number" v-model.number="form.visit" class="form-control" /></div>
           </div>
 
           <div class="mb-3">
@@ -178,6 +189,11 @@ const emit = defineEmits(['close', 'updated'])
 const modalInstance = ref(null)
 const saleOrRentOptions = [{ value:'sale', label:'À vendre' }, { value:'rent', label:'À louer' }]
 const statusOptions = [{ value:'active', label:'Actif' }, { value:'inactive', label:'Inactif' }]
+const pricePeriodOptions = [
+  { value: 'month', label: 'Mois' },
+  { value: 'week', label: 'Semaine' },
+  { value: 'day', label: 'Jour' }
+]
 
 // Selects & données
 const countries = ref([]), towns = ref([]), districts = ref([]), categories = ref([]), pubTypes = ref([]), attributes = ref([])
@@ -200,8 +216,9 @@ const validateForm = () => {
   if(!selectedPubType.value) errors.push('Sélectionnez un type de publication')
   if(!selectedAttributes.value.length || selectedAttributes.value.some(a=>!a)) errors.push('Ajoutez au moins un attribut')
   if(!form.value.images.some(f=>f) && existingImages.value.length===0) errors.push('Ajoutez au moins une image')
+  if(!form.value.price_period) errors.push('Période de paiement obligatoire')
   if(!form.value.price) errors.push('Prix obligatoire')
-  if(!form.value.surface) errors.push('Surface obligatoire')
+  // if(!form.value.surface) errors.push('Ménage obligatoire')
   if(!form.value.phone1 && !form.value.phone2) errors.push('Au moins un numéro de téléphone requis')
   if(!form.value.sale_or_rent) errors.push('Sélectionnez à vendre / à louer')
   if(!form.value.status) errors.push('Sélectionnez un statut')
@@ -243,7 +260,7 @@ const loadPublication = async () => {
     selectedAttributes.value = pub.attributes.map(a=>a.id)
 
     form.value = {
-      price: pub.price, bathroom: pub.bathroom, surface: pub.surface,
+      price_period: pub.price_period,price: pub.price, bathroom: pub.bathroom, surface: pub.surface,
       advance: pub.advance, deposit: pub.deposit, description: pub.description,
       visit: pub.visit, sale_or_rent: pub.offer_type, status: pub.is_active?'active':'inactive',
       images: pub.images.map(()=>null), phone1: pub.phone1, phone2: pub.phone2
@@ -314,6 +331,7 @@ const submitPublication = async () => {
   if(!validateForm() || isSubmitting.value) return
   isSubmitting.value = true
   try {
+
     const payload = new FormData()
     payload.append('_method','PUT')
     payload.append('country_id',selectedCountry.value)
@@ -322,6 +340,7 @@ const submitPublication = async () => {
     payload.append('category_id',selectedCategory.value)
     payload.append('pub_type_id',selectedPubType.value)
     selectedAttributes.value.forEach(a=>payload.append('attributes[]',a))
+
     for(const key in form.value){
       if(key==='images') continue
       if(key==='sale_or_rent') payload.append('offer_type', form.value[key])
@@ -331,14 +350,20 @@ const submitPublication = async () => {
     form.value.images.forEach(f=>{if(f) payload.append('images[]',f)})
     existingImages.value.forEach(id=>payload.append('existing_images[]',id))
     const res = await axios.post(`/api/publication/${props.publicationId}`, payload, { headers:{'Content-Type':'multipart/form-data'} })
-    Swal.fire({ toast:true, position:'top-end', icon:'success', title:res.data.message||'Publication mise à jour ✅', showConfirmButton:false, timer:3000 })
-    emit('updated', res.data)
-    closeModal()
+    if(res.data.status){
+      Swal.fire({ toast:true, position:'top-end', icon:'success', title:res.data.message||'Publication mise à jour ✅', showConfirmButton:false, timer:3000 })
+      emit('updated', res.data)
+      closeModal()
+    }else{
+      Swal.fire({ toast:true, position:'top-end', icon:'error', title:res.data.message||'Erreur lors de la mise à jour', showConfirmButton:false, timer:3000 })
+    }
   } catch(err){
     console.error('❌ Erreur lors de la mise à jour', err.response?.data || err)
-    Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Erreur lors de la mise à jour', showConfirmButton:false, timer:3000 })
+    Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Erreur lors de la mise à jour(Renseignez Ménage, avance, caution et prix de visite)', showConfirmButton:false, timer:5000 })
   } finally { isSubmitting.value=false }
 }
+
+
 
 </script>
 

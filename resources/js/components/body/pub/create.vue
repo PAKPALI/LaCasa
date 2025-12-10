@@ -131,15 +131,33 @@
       <div class="p-3 mb-4 rounded shadow-sm text-light border" style="background-color: rgba(14, 46, 80, 0.85);">
         <h5 class="fw-bold text-light border-bottom mb-3">Informations complémentaires</h5>
         <div class="row">
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Payable par</label>
+            <v-select
+              v-model="form.price_period"
+              :options="[
+                { value: 'month', label: 'Mois' },
+                { value: 'week', label: 'Semaine' },
+                { value: 'day', label: 'Jour' }
+              ]"
+              label="label"
+              :reduce="option => option.value"
+              placeholder="Sélectionner une période"
+            ></v-select>
+
+          </div>
+
+          <div class="col-md-6 mb-3">
             <label class="form-label">Prix (FCFA)</label>
             <input type="number" class="form-control" v-model="form.price" />
           </div>
-          <div class="col-md-4 mb-3">
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
             <label class="form-label">Chambres</label>
             <input type="number" class="form-control" v-model="form.bathroom" />
           </div>
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label class="form-label">Ménage</label>
             <input type="number" class="form-control" v-model="form.surface" />
           </div>
@@ -147,11 +165,11 @@
 
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">Avance (En mois)</label>
+            <label class="form-label">Avance (Mois/F CFA)</label>
             <input type="number" class="form-control" v-model="form.advance" />
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label">Caution (En mois)</label>
+            <label class="form-label">Caution (Mois/F CFA)</label>
             <input type="number" class="form-control" v-model="form.deposit" />
           </div>
         </div>
@@ -262,7 +280,7 @@ const loadingAttributes = ref(false)
 const form = ref({
   price: '', bathroom: '', surface: '', advance: '', deposit: '', 
   description: '', visit: '', sale_or_rent: '', status: '', images: [],
-  phone1: '', phone2: ''
+  phone1: '', phone2: '',price_period: 'month',
 })
 
   // form.value.phone1 = user.value.is_active
@@ -415,6 +433,7 @@ const submitPublication = async () => {
   if (!selectedPubType.value) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner un type de publication', showConfirmButton:false, timer:3000 })
   if (selectedAttributes.value.length === 0 || selectedAttributes.value.includes(null)) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner au moins un attribut', showConfirmButton:false, timer:3000 })
   if (form.value.images.length === 0 || form.value.images.includes(null)) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez ajouter au moins une photo', showConfirmButton:false, timer:3000 })
+   if (!form.value.price_period) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner une période de paiement', showConfirmButton:false, timer:3000 })
   if (!form.value.price) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le prix', showConfirmButton:false, timer:3000 })
   if (!form.value.bathroom) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le nombre de chambres', showConfirmButton:false, timer:3000 })
   // if (!form.value.surface) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner la surface', showConfirmButton:false, timer:3000 })
@@ -433,6 +452,7 @@ const submitPublication = async () => {
     payload.append('district_id', selectedDistrict.value)
     payload.append('category_id', selectedCategory.value)
     payload.append('pub_type_id', selectedPubType.value)
+    payload.append('price_period', form.value.price_period)
     
     selectedAttributes.value.forEach(attr => payload.append('attributes[]', attr))
     

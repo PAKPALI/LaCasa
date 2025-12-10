@@ -35,7 +35,7 @@
       <div class="tab-content">
         <div class="tab-pane fade show p-0 active">
           <div class="row g-4">
-            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp" :data-wow-delay="p.delay || '0.1s'" @click="openModal(p)">
+            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp" :data-wow-delay="p.delay || '0.1s'" >
               <div class="property-item rounded overflow-hidden shadow">
                 <div class="position-relative overflow-hidden">
                   <div v-if="p.images && p.images.length" :id="'carouselList' + i" class="carousel slide" data-bs-ride="carousel" :data-bs-interval="5000">
@@ -74,17 +74,20 @@
                 </div>
 
                 <!-- Attributs sous le prix / titre -->
-                <div class="mb-2 d-flex flex-wrap px-4 pt-3">
+                <div class="mb-2 d-flex flex-wrap px-4 pt-3" @click="openModal(p)">
                   <span v-for="attr in p.attributes || []" :key="attr.id" class="badge bg-dark me-1 mb-1">
                     {{ attr.name }}
                   </span>
                 </div>
 
                 <!-- Contenu principal en deux colonnes côte-à-côte -->
-                <div class="p-2  pb-0">
+                <div class="p-2  pb-0" @click="openModal(p)">
                   <div class="row bg-dark text-light border-top gx-2">
                     <div class="col-12 col-md-10 text-center">
-                      <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }} / Mois</h5>
+                      <h5 class="text-light text-center mb-3">
+                        {{ formatPrice(p.price) }} / {{ formatPeriod(p.price_period) }}
+                      </h5>
+
                       <a class="d-block h4 text-light mb-2" href="#">{{ p.title || 'Titre non défini' }}</a>
                       <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{ p.town_name }}</p>
                     </div>
@@ -172,7 +175,7 @@
       <div class="modal-content">
         <div class="modal-header bg-dark">
           <h5 class="modal-title text-light">{{ selectedPublication?.title || 'Détails de la publication' }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
@@ -208,10 +211,10 @@
                     </div>
                   </td>
                 </tr>
-                <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }}</td></tr>
-                <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} Mois</td></tr>
-                <tr><th>Avance</th><td>{{ selectedPublication?.advance }} Mois</td></tr>
-                <tr><th>Commission</th><td>{{ selectedPublication?.commission || '-'}}</td></tr>
+                <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }} / {{ formatPeriod(selectedPublication?.price_period) }}</td></tr>
+                <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} {{ selectedPublication?.deposit>12?'F CFA':'Mois' }}</td></tr>
+                <tr><th>Avance</th><td>{{ selectedPublication?.advance }} {{ selectedPublication?.advance>12?'F CFA':'Mois' }}</td></tr>
+                <tr><th>Commission</th><td>{{ selectedPublication?.commission || '-'}} F CFA</td></tr>
                 <tr><th>Visite</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
                 <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
                 <tr><th>Ménage</th><td>{{ selectedPublication?.surface || '-'}} </td></tr>
@@ -234,13 +237,13 @@
           </div>
         </div>
 
-        <div class="modal-footer">
+        <!-- <div class="modal-footer">
           <button class="btn btn-outline-primary" :disabled="!selectedPublication?.phone1"
                   @click="window.location.href = 'tel:' + selectedPublication.phone1">
             <i class="fa fa-phone me-2"></i> Contacter
           </button>
           <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -268,6 +271,15 @@ const codeFilter = ref('')
 
 const goToLogin = () => {
   router.push('/login')
+}
+
+const formatPeriod = (period) => {
+  switch(period){
+    case 'month': return 'Mois'
+    case 'week': return 'Semaine'
+    case 'day': return 'Jour'
+    default: return ''
+  }
 }
 
 const showEditModal = ref(false)
@@ -336,6 +348,7 @@ const activeTab = ref('featured')
 
 // Ouvrir le modal et initialiser le carrousel
 const openModal = (pub) => {
+   console.log('Publication sélectionnée:', pub); 
   selectedPublication.value = pub
   nextTick(() => {
     if (!modalInstance.value) modalInstance.value = new Modal(document.getElementById('publicationModal'))

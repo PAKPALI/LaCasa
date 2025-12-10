@@ -22,7 +22,7 @@ class Publication extends Model
     protected $fillable = [
         'user_id','country_id','town_id','district_id','category_id','pub_type_id','price',
         'bathroom','surface','advance','deposit','description','visit','offer_type','is_active',
-        'phone1','phone2','code','commission','deactivated_at','reactivated_at'
+        'phone1','phone2','code','commission','deactivated_at','reactivated_at','price_period'
     ];
 
     public function user()

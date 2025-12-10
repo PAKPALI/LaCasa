@@ -91,6 +91,7 @@ class PublicationController extends Controller
                 'id' => $pub->id,
                 'code' => $pub->code,
                 'title' => $pub->pubType->name ?? 'Type inconnu',
+                'price_period' => $pub->price_period,
                 'price' => $pub->price,
                 'commission' => $pub->commission,
                 'bathroom' => $pub->bathroom,
@@ -163,6 +164,7 @@ class PublicationController extends Controller
                 'id' => $pub->id,
                 'code' => $pub->code,
                 'title' => $pub->pubType->name ?? 'Type inconnu',
+                'price_period' => $pub->price_period,
                 'price' => $pub->price,
                 'commission' => $pub->commission,
                 'bathroom' => $pub->bathroom,
@@ -240,8 +242,9 @@ class PublicationController extends Controller
                 'attributes'  => ['array'],
                 'attributes.*'=> ['exists:attributes,id'],
                 'images.*' => ['image','mimes:jpg,jpeg,png,webp','max:2048'],
-                'phone1'      => ['nullable','string','max:20'], // ajouté
-                'phone2'      => ['nullable','string','max:20'], // ajouté
+                'phone1'      => ['nullable','string','max:20'],
+                'phone2'      => ['nullable','string','max:20'],
+                'price_period' => ['required', 'in:day,week,month'],
             ],
             [
                 'country_id.required'  => 'Veuillez sélectionner un pays.',
@@ -261,6 +264,7 @@ class PublicationController extends Controller
                 'images.*.max'         => 'Chaque image doit être inférieure à 2 Mo.',
                 'phone1.max'           => 'Le numéro 1 ne peut pas dépasser 20 caractères.',
                 'phone2.max'           => 'Le numéro 2 ne peut pas dépasser 20 caractères.',
+                'price_period.required' => 'Veuillez sélectionner la période de payement.',
             ]
         );
 
@@ -319,6 +323,7 @@ class PublicationController extends Controller
                 'district_id' => ['required', 'exists:districts,id'],
                 'category_id' => ['required', 'exists:categories,id'],
                 'pub_type_id' => ['required', 'exists:pub_types,id'],
+                'price_period' => ['required', 'in:month,week,day'],
                 'price'       => ['nullable', 'numeric'],
                 'bathroom'    => ['nullable', 'integer'],
                 'surface'     => ['nullable', 'numeric'],
@@ -352,6 +357,8 @@ class PublicationController extends Controller
                 'images.*.max'         => 'Chaque image doit être inférieure à 2 Mo.',
                 'phone1.max'           => 'Le numéro 1 ne peut pas dépasser 20 caractères.',
                 'phone2.max'           => 'Le numéro 2 ne peut pas dépasser 20 caractères.',
+                'price_period.required' => 'Veuillez choisir une période de paiement.',
+                'price_period.in' => 'La période doit être mois, semaine ou jour.',
             ]
         );
 
