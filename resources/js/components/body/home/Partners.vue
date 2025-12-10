@@ -144,8 +144,8 @@
 
           <p class="text-danger fw-semibold">
             ⚠️ Cependant, si nous constatons que votre agence publie des contenus qui sortent du
-            contexte immobilier ou enfreignent nos règles, votre certification pourra être
-            <strong>retirée</strong> et votre compte potentiellement <strong>décativé temporairement</strong>.
+            contexte immobilier ou enfreignent nos règles, votre certification pourrait être
+            <strong>retirée</strong> et votre compte potentiellement <strong>désactivé temporairement</strong>.
           </p>
 
           <p class="text-dark">
