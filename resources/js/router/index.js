@@ -15,7 +15,7 @@ import Review from '../components/body/home/Review.vue'
 const routes = [
   { path: '/', name: 'home', component: Home },
   { path: '/home', name: 'home2', component: Home },
-  { path: '/publication', name: 'Publications', component: Publication },
+  { path: '/publications', name: 'Publications', component: Publication },
   { path: '/createPub', name: 'Create pub', component: CreatePublication },
   { path: '/admin', name: 'admin', component: Admin },
   { path: '/about', name: 'about', component: About },

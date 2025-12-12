@@ -45,7 +45,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import aboutImage from '@images2/about.jpg'
+import aboutImage from '@images2/afrik.avif'
 
 const hoverImage = ref(false)
 

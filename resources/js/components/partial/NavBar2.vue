@@ -26,7 +26,7 @@
           </li>
 
           <li class="nav-item">
-            <router-link to="/publication" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Publications</router-link>
+            <router-link to="/publications" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Publications</router-link>
           </li>
 
           <li v-if="isAuthenticated && (user.role == 1 || user.role == 2)" class="nav-item">

@@ -90,7 +90,9 @@ Route::middleware('auth')->controller(ReviewController::class)->group(function (
 //     Route::resource('attribute', AttributController::class);
 
 //     // Publications
-        Route::resource('publication', PublicationController::class);
+        // Route API séparée
+        Route::get('/api/publications', [PublicationController::class, 'index']);
+
 
 //     // Utilisateurs
 //     Route::resource('users', UserController::class);

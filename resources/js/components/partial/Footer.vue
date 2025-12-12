@@ -84,7 +84,7 @@ const socialIcons = [
 
 const navLinks = [
   { name: 'Accueil', link: '/home' },
-  { name: 'Publications', link: '/publication' },
+  { name: 'Publications', link: '/publications' },
   { name: 'À propos', link: '/about' },
   { name: 'Vos avis', link: '/review'},
   { name: 'S\'inscrire', link: '/register'},

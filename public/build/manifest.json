@@ -31,9 +31,9 @@
     "file": "assets/logo2-BjkGqu9a.png",
     "src": "resources/js/images/logo2.png"
   },
-  "resources/js/images/template/about.jpg": {
-    "file": "assets/about-cr2Rp6N1.jpg",
-    "src": "resources/js/images/template/about.jpg"
+  "resources/js/images/template/afrik.avif": {
+    "file": "assets/afrik-DXituCTH.avif",
+    "src": "resources/js/images/template/afrik.avif"
   },
   "resources/js/images/template/carousel-1.jpg": {
     "file": "assets/carousel-1-BEvSPtMg.jpg",
@@ -108,12 +108,12 @@
     "src": "resources/js/images/web.avif"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-Cx88czxB.js",
+    "file": "assets/app2-DlzDV2p8.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-BiKwoDYk.css"
+      "assets/app2-Mxah7bdi.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
@@ -130,7 +130,7 @@
       "assets/icon-housing-CqEGwLgX.png",
       "assets/icon-building-DTY53NhC.png",
       "assets/icon-condominium-Bl6drNCS.png",
-      "assets/about-cr2Rp6N1.jpg",
+      "assets/afrik-DXituCTH.avif",
       "assets/son-Ccz_J6P1.avif",
       "assets/ana2-CEh9ZmNo.avif",
       "assets/web-BYbicTTC.avif",

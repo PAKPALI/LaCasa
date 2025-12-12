@@ -391,18 +391,24 @@
   import gif from '@images2/empty.gif'
   import disconnect from '@images2/disconnect.png'
 
-  import { ref, computed, watch, nextTick } from 'vue'
+  import { ref, computed, watch, onMounted, nextTick } from 'vue'
   import axios from 'axios'
   import { Modal, Carousel } from 'bootstrap'
   import vSelect from "vue-select"
   import "vue-select/dist/vue-select.css"
-  import { user, isAuthenticated } from '../../auth/auth.js'
+  import { user, isAuthenticated, fetchUser } from '../../auth/auth.js'
   import Swal from 'sweetalert2'
   import 'sweetalert2/dist/sweetalert2.min.css'
   import { useRouter } from 'vue-router'
   const router = useRouter()
 
-  const isAuthResp = isAuthenticated.value
+  // const isAuthResp = isAuthenticated.value
+
+  const isAuthResp = computed(() => isAuthenticated.value)
+
+  onMounted(async () => {
+    await fetchUser() // récupère l'utilisateur depuis l'API après F5
+  })
 
   const handleAddPublication = () => {
     if (isAuthenticated.value) {
@@ -514,15 +520,13 @@
   })
 
   const formatPeriod = (period) => {
-  switch(period){
-    case 'month': return 'Mois'
-    case 'week': return 'Semaine'
-    case 'day': return 'Jour'
-    default: return ''
+    switch(period){
+      case 'month': return 'Mois'
+      case 'week': return 'Semaine'
+      case 'day': return 'Jour'
+      default: return ''
+    }
   }
-}
-
-
   // -----------------
   // FETCH OPTIONS
   // -----------------
@@ -786,9 +790,8 @@
           console.log("L’utilisateur a choisi d’être rappelé plus tard.")
         }
       })
-  }, 10000) // ⏳ après 10 secondes
-}
-
+    }, 10000) // ⏳ après 10 secondes
+  }
 
 </script>
 
