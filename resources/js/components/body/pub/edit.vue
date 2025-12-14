@@ -242,7 +242,7 @@ const onNewImageChange = (event, index) => {
   const file = event.target.files[0]; if(!file) return
   const allowed = ['image/jpeg','image/jpg','image/png','image/webp']
   if(!allowed.includes(file.type)){ alert("⚠️ Formats acceptés : JPG, PNG, WebP uniquement"); event.target.value=''; return }
-  if(file.size>2*1024*1024){ alert("⚠️ Chaque image doit être < 2 Mo"); event.target.value=''; return }
+  if(file.size>10*1024*1024){ alert("⚠️ Chaque image doit être < 10 Mo"); event.target.value=''; return }
   newImages.value[index] = { file, previewUrl: URL.createObjectURL(file) }
 }
 

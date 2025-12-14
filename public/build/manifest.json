@@ -109,12 +109,12 @@
     "src": "resources/js/images/web.avif"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-D18QJaas.js",
+    "file": "assets/app2-C6kcLy4I.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-jLeLSkRb.css"
+      "assets/app2-DHYOQI92.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",

@@ -22,9 +22,13 @@ npm install
 npm install vue-select@beta --legacy-peer-deps
 npm install vue-toastification
 npm install swiper
-php artisan storage:link
+
 composer require intervention/image
 php artisan vendor:publish --provider="Intervention\Image\Laravel\ServiceProvider"
+
+php artisan storage:link
+ln -s storage/app/public public/storage (sur prod)
+ls -l public
 
 En prod HTTPS, tu pourras remettre 'secure' => true et 'same_site' => 'lax' ou 'strict' selon ton domaine.
 composer require laravel/sanctum
