@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/PublicationController.php
 namespace App\Http\Controllers;
 
 use App\Models\Publication;
@@ -9,9 +8,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class PublicationController extends Controller
 {
+    protected ImageManager $imageManager;
+
+    public function __construct()
+    {
+        $manager = new ImageManager(new Driver());
+    }
+
     public function index(Request $request)
     {
         $query = Publication::with([
@@ -75,9 +84,6 @@ class PublicationController extends Controller
             $query->where('code', $request->code);
         }
 
-        // Mes publications uniquement
-        // Log::info('Paramètre user_only présent ?', ['user_only' => $request->has('user_only')]);
-
         if ($request->has('user_only')) {
             $query->where('user_id', auth()->id());
         }
@@ -107,7 +113,11 @@ class PublicationController extends Controller
                 'district_name' => $pub->district->name ?? 'Non défini',
                 'town_name' => $pub->town->name ?? 'Non défini',
                 'country_name' => $pub->country->name ?? 'Non défini',
-                'images' => $pub->images->map(fn($img) => '/'.$img->path),
+                // 'images' => $pub->images->map(fn($img) => '/'.$img->path),
+                'images' => $pub->images->map(fn ($img) => [
+                    'list'   => $img->list_url,
+                    'detail' => $img->detail_url,
+                ]),
                 'phone1' => ($pub->phone1 && $pub->phone1 !== 'null') ? $pub->phone1 : null,
                 'phone2' => ($pub->phone2 && $pub->phone2 !== 'null') ? $pub->phone2 : null,
                 'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name]),
@@ -180,7 +190,10 @@ class PublicationController extends Controller
                 'district_name' => $pub->district->name ?? 'Non défini',
                 'town_name' => $pub->town->name ?? 'Non défini',
                 'country_name' => $pub->country->name ?? 'Non défini',
-                'images' => $pub->images->map(fn($img) => '/'.$img->path),
+                'images' => $pub->images->map(fn ($img) => [
+                    'list'   => $img->list_url,
+                    'detail' => $img->detail_url,
+                ]),
                 'phone1' => ($pub->phone1 && $pub->phone1 !== 'null') ? $pub->phone1 : null,
                 'phone2' => ($pub->phone2 && $pub->phone2 !== 'null') ? $pub->phone2 : null,
                 'attributes' => $pub->attributes->map(fn($attr) => ['id' => $attr->id, 'name' => $attr->name]),
@@ -205,6 +218,7 @@ class PublicationController extends Controller
 
         return response()->json($formatted);
     }
+
     public function show($id)
     {
         $publication = Publication::with([
@@ -217,71 +231,90 @@ class PublicationController extends Controller
             'attributes:id,name'
         ])->findOrFail($id);
 
-        return response()->json($publication);
+        // Gestion images (URLs déjà calculées grâce à $appends dans PublicationImage)
+        $images = $publication->images->map(fn($img) => [
+            'id'     => $img->id,
+            'thumb'  => $img->thumb,
+            'medium' => $img->medium,
+            'large'  => $img->large,
+            'list'   => $img->list_url,
+            'detail' => $img->detail_url,
+        ]);
+
+        // Attributs
+        $attributes = $publication->attributes->map(fn($a) => [
+            'id' => $a->id,
+            'name' => $a->name,
+        ]);
+
+        return response()->json([
+            'id' => $publication->id,
+            'country_id' => $publication->country_id,
+            'town_id' => $publication->town_id,
+            'district_id' => $publication->district_id,
+            'category_id' => $publication->category_id,
+            'pub_type_id' => $publication->pub_type_id,
+            'price_period' => $publication->price_period,
+            'price' => $publication->price,
+            'commission' => $publication->commission,
+            'bathroom' => $publication->bathroom,
+            'surface' => $publication->surface,
+            'advance' => $publication->advance,
+            'deposit' => $publication->deposit,
+            'description' => $publication->description,
+            'visit' => $publication->visit,
+            'offer_type' => $publication->offer_type,
+            'is_active' => $publication->is_active,
+            'phone1' => $publication->phone1,
+            'phone2' => $publication->phone2,
+            'images' => $images,
+            'attributes' => $attributes,
+            // Optionnel : infos lisibles côté modal
+            'country_name' => $publication->country->name ?? null,
+            'town_name' => $publication->town->name ?? null,
+            'district_name' => $publication->district->name ?? null,
+            'category_name' => $publication->category->name ?? null,
+            'pub_type_name' => $publication->pubType->name ?? null,
+        ]);
     }
+
+    // 🔹 STORE
     public function store(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'country_id'  => ['required','exists:countries,id'],
-                'town_id'     => ['required','exists:towns,id'],
-                'district_id' => ['required','exists:districts,id'],
-                'category_id' => ['required','exists:categories,id'],
-                'pub_type_id' => ['required','exists:pub_types,id'],
-                'price'       => ['nullable','numeric'],
-                'commission' => ['nullable','numeric'],
-                'bathroom'    => ['nullable','integer'],
-                'surface'     => ['nullable','numeric'],
-                'advance'     => ['nullable','numeric'],
-                'deposit'     => ['nullable','numeric'],
-                'description' => ['nullable','string'],
-                'visit'       => ['nullable','numeric'],
-                'offer_type'  => ['required','in:rent,sale'],
-                'is_active'   => ['boolean'],
-                'attributes'  => ['array'],
-                'attributes.*'=> ['exists:attributes,id'],
-                'images.*' => ['image','mimes:jpg,jpeg,png,webp','max:2048'],
-                'phone1'      => ['nullable','string','max:20'],
-                'phone2'      => ['nullable','string','max:20'],
-                'price_period' => ['required', 'in:day,week,month'],
-            ],
-            [
-                'country_id.required'  => 'Veuillez sélectionner un pays.',
-                'country_id.exists'    => 'Le pays sélectionné est invalide.',
-                'town_id.required'     => 'Veuillez sélectionner une ville.',
-                'town_id.exists'       => 'La ville sélectionnée est invalide.',
-                'district_id.required' => 'Veuillez sélectionner un quartier.',
-                'district_id.exists'   => 'Le quartier sélectionné est invalide.',
-                'category_id.required' => 'Veuillez sélectionner une catégorie.',
-                'category_id.exists'   => 'La catégorie sélectionnée est invalide.',
-                'pub_type_id.required' => 'Veuillez sélectionner un type de publication.',
-                'pub_type_id.exists'   => 'Le type de publication sélectionné est invalide.',
-                'offer_type.required'  => 'Veuillez indiquer si c’est une offre de location ou de vente.',
-                'offer_type.in'        => 'Le type d’offre doit être "rent" ou "sale".',
-                'images.*.image'       => 'Chaque fichier doit être une image.',
-                'images.*.mimes'       => 'Seuls les formats JPG et PNG sont acceptés.',
-                'images.*.max'         => 'Chaque image doit être inférieure à 2 Mo.',
-                'phone1.max'           => 'Le numéro 1 ne peut pas dépasser 20 caractères.',
-                'phone2.max'           => 'Le numéro 2 ne peut pas dépasser 20 caractères.',
-                'price_period.required' => 'Veuillez sélectionner la période de payement.',
-            ]
-        );
+        $validator = Validator::make($request->all(), [
+            'country_id'  => ['required','exists:countries,id'],
+            'town_id'     => ['required','exists:towns,id'],
+            'district_id' => ['required','exists:districts,id'],
+            'category_id' => ['required','exists:categories,id'],
+            'pub_type_id' => ['required','exists:pub_types,id'],
+            'price_period'=> ['required','in:day,week,month'],
+            'price'       => ['nullable','numeric'],
+            'commission'  => ['nullable','numeric'],
+            'bathroom'    => ['nullable','integer'],
+            'surface'     => ['nullable','numeric'],
+            'advance'     => ['nullable','numeric'],
+            'deposit'     => ['nullable','numeric'],
+            'description' => ['nullable','string'],
+            'visit'       => ['nullable','numeric'],
+            'offer_type'  => ['required','in:rent,sale'],
+            'is_active'   => ['boolean'],
+            'attributes'  => ['array'],
+            'attributes.*'=> ['exists:attributes,id'],
+            'images.*'    => ['image','mimes:jpg,jpeg,png,webp','max:10240'],
+            'phone1'      => ['nullable','string','max:20'],
+            'phone2'      => ['nullable','string','max:20'],
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status'  => false,
-                'message' => $validator->errors()->first()
+                'status' => false,
+                'message'=> $validator->errors()->first()
             ], 422);
         }
-        Log::info(Auth::user());
 
         $validated = $validator->validated();
-        $validated['user_id'] = Auth::user()->id;
-
-        if (!isset($validated['is_active'])) {
-            $validated['is_active'] = true;
-        }
+        $validated['user_id'] = Auth::id();
+        $validated['is_active'] = $validated['is_active'] ?? true;
 
         $publication = Publication::create($validated);
 
@@ -290,12 +323,66 @@ class PublicationController extends Controller
         }
 
         if ($request->hasFile('images')) {
+            $manager = new ImageManager(new Driver());
+
             foreach ($request->file('images') as $image) {
-                $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('LaCasa/pub'), $imageName);
+
+                $uuid = Str::uuid()->toString();
+
+                // Taille du fichier en octets
+                $size = $image->getSize();
+
+                // 3 Mo
+                $limit = 3 * 1024 * 1024;
+
+                // Chemins
+                $thumb  = "publications/thumb/$uuid.webp";
+                $medium = "publications/medium/$uuid.webp";
+                $large  = "publications/large/$uuid.webp";
+
+                if ($size <= $limit) {
+
+                    // ✅ PETITE IMAGE → on garde la qualité max
+                    $img = $manager->read($image)->toWebp(90);
+
+                    Storage::disk('public')->put($large, $img);
+
+                    // On pointe tout vers la même image
+                    $thumb  = $large;
+                    $medium = $large;
+                } else {
+
+                    // 🔥 GROSSE IMAGE → optimisation intelligente
+
+                    // THUMB
+                    Storage::disk('public')->put(
+                        $thumb,
+                        $manager->read($image)
+                            ->scale(width: 400)
+                            ->toWebp(70)
+                    );
+
+                    // MEDIUM
+                    Storage::disk('public')->put(
+                        $medium,
+                        $manager->read($image)
+                            ->scale(width: 800)
+                            ->toWebp(80)
+                    );
+
+                    // LARGE
+                    Storage::disk('public')->put(
+                        $large,
+                        $manager->read($image)
+                            ->scale(width: 1200)
+                            ->toWebp(85)
+                    );
+                }
 
                 $publication->images()->create([
-                    'path' => 'LaCasa/pub/' . $imageName
+                    'thumb'  => $thumb,
+                    'medium' => $medium,
+                    'large'  => $large,
                 ]);
             }
         }
@@ -307,121 +394,122 @@ class PublicationController extends Controller
         ]);
     }
 
+    // 🔹 UPDATE
     public function update(Request $request, $id)
-    {
-        Log::info('📩 UPDATE REÇU', [
-            'id' => $id,
-            'payload' => $request->all()
-        ]);
-        $publication = Publication::findOrFail($id);
+{
+    $publication = Publication::findOrFail($id);
 
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'country_id'  => ['required', 'exists:countries,id'],
-                'town_id'     => ['required', 'exists:towns,id'],
-                'district_id' => ['required', 'exists:districts,id'],
-                'category_id' => ['required', 'exists:categories,id'],
-                'pub_type_id' => ['required', 'exists:pub_types,id'],
-                'price_period' => ['required', 'in:month,week,day'],
-                'price'       => ['nullable', 'numeric'],
-                'bathroom'    => ['nullable', 'integer'],
-                'surface'     => ['nullable', 'numeric'],
-                'advance'     => ['nullable', 'numeric'],
-                'deposit'     => ['nullable', 'numeric'],
-                'description' => ['nullable', 'string'],
-                'visit'       => ['nullable', 'numeric'],
-                'offer_type'  => ['required', 'in:rent,sale'],
-                'is_active'   => ['boolean'],
-                'attributes'  => ['array'],
-                'attributes.*'=> ['exists:attributes,id'],
-                'images.*' => ['image','mimes:jpg,jpeg,png,webp','max:2048'],
-                'phone1'      => ['nullable','string','max:20'],
-                'phone2'      => ['nullable','string','max:20'],
-            ],
-            [
-                'country_id.required'  => 'Veuillez sélectionner un pays.',
-                'country_id.exists'    => 'Le pays sélectionné est invalide.',
-                'town_id.required'     => 'Veuillez sélectionner une ville.',
-                'town_id.exists'       => 'La ville sélectionnée est invalide.',
-                'district_id.required' => 'Veuillez sélectionner un quartier.',
-                'district_id.exists'   => 'Le quartier sélectionné est invalide.',
-                'category_id.required' => 'Veuillez sélectionner une catégorie.',
-                'category_id.exists'   => 'La catégorie sélectionnée est invalide.',
-                'pub_type_id.required' => 'Veuillez sélectionner un type de publication.',
-                'pub_type_id.exists'   => 'Le type de publication sélectionné est invalide.',
-                'offer_type.required'  => 'Veuillez indiquer si c’est une offre de location ou de vente.',
-                'offer_type.in'        => 'Le type d’offre doit être "rent" ou "sale".',
-                'images.*.image'       => 'Chaque fichier doit être une image.',
-                'images.*.mimes'       => 'Seuls les formats JPG et PNG sont acceptés.',
-                'images.*.max'         => 'Chaque image doit être inférieure à 2 Mo.',
-                'phone1.max'           => 'Le numéro 1 ne peut pas dépasser 20 caractères.',
-                'phone2.max'           => 'Le numéro 2 ne peut pas dépasser 20 caractères.',
-                'price_period.required' => 'Veuillez choisir une période de paiement.',
-                'price_period.in' => 'La période doit être mois, semaine ou jour.',
-            ]
-        );
+    $validator = Validator::make($request->all(), [
+        'country_id'   => ['required','exists:countries,id'],
+        'town_id'      => ['required','exists:towns,id'],
+        'district_id'  => ['required','exists:districts,id'],
+        'category_id'  => ['required','exists:categories,id'],
+        'pub_type_id'  => ['required','exists:pub_types,id'],
+        'price_period' => ['required','in:day,week,month'],
+        'price'        => ['nullable','numeric'],
+        'commission'   => ['nullable','numeric'],
+        'bathroom'     => ['nullable','integer'],
+        'surface'      => ['nullable','numeric'],
+        'advance'      => ['nullable','numeric'],
+        'deposit'      => ['nullable','numeric'],
+        'description'  => ['nullable','string'],
+        'visit'        => ['nullable','numeric'],
+        'offer_type'   => ['required','in:rent,sale'],
+        'is_active'    => ['boolean'],
+        'attributes'   => ['array'],
+        'attributes.*' => ['exists:attributes,id'],
+        'images.*'     => ['image','mimes:jpg,jpeg,png,webp','max:10240'],
+        'existing_images' => ['array'],
+        'existing_images.*' => ['integer','exists:publication_images,id'],
+        'phone1'       => ['nullable','string','max:20'],
+        'phone2'       => ['nullable','string','max:20'],
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status'  => false,
-                'message' => $validator->errors()->first()
-            ], 422);
-        }
-
-        $validated = $validator->validated();
-
-        // ✅ Mise à jour de la reactivation si is_active passe à true
-        if ($validated['is_active']==1 && $publication->is_active==false) {
-            $publication->reactivated_at = now();
-        }
-
-        // ✅ Mise à jour de la desactivation si is_active passe à false
-        if ($validated['is_active']==0 && $publication->is_active==true) {
-            $publication->deactivated_at = now();
-        }
-
-        // ✅ Mise à jour des champs principaux
-        $publication->update($validated);
-
-        // ✅ Mise à jour des attributs
-        if (isset($validated['attributes'])) {
-            $publication->attributes()->sync($validated['attributes']);
-        }
-
-        // ✅ Suppression et remplacement des images uniquement si de nouvelles images sont envoyées
-        if ($request->hasFile('images')) {
-            foreach ($publication->images as $img) {
-                $imagePath = public_path($img->path);
-                if (file_exists($imagePath)) unlink($imagePath);
-                $img->delete();
-            }
-
-            foreach ($request->file('images') as $image) {
-                $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('LaCasa/pub'), $imageName);
-
-                $publication->images()->create([
-                    'path' => 'LaCasa/pub/' . $imageName
-                ]);
-            }
-        }
-
+    if ($validator->fails()) {
         return response()->json([
-            'status'  => true,
-            'message' => 'Publication mise à jour avec succès ✅',
-            'publication' => $publication->load(['country','town','district','category','pubType','attributes','images'])
-        ]);
+            'status'  => false,
+            'message' => $validator->errors()->first()
+        ], 422);
     }
 
+    $validated = $validator->validated();
+    $validated['is_active'] = $validated['is_active'] ?? true;
+
+    // 🔹 Met à jour les données principales
+    $publication->update($validated);
+
+    // 🔹 Met à jour les attributs
+    if (!empty($validated['attributes'] ?? [])) {
+        $publication->attributes()->sync($validated['attributes']);
+    }
+
+    // 🔹 Gestion des images
+    $manager = new ImageManager(new Driver());
+
+    $existingImages = $validated['existing_images'] ?? [];
+
+    // Supprime les images qui ne sont plus dans existing_images
+    foreach ($publication->images as $img) {
+        if (!in_array($img->id, $existingImages)) {
+            foreach (['thumb','medium','large'] as $size) {
+                if ($img->$size && Storage::disk('public')->exists($img->$size)) {
+                    Storage::disk('public')->delete($img->$size);
+                }
+            }
+            $img->delete();
+        }
+    }
+
+    // Ajoute les nouvelles images
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $uuid = Str::uuid()->toString();
+
+            $sizeFile = $image->getSize();
+            $limit = 3 * 1024 * 1024;
+
+            $thumb  = "publications/thumb/$uuid.webp";
+            $medium = "publications/medium/$uuid.webp";
+            $large  = "publications/large/$uuid.webp";
+
+            if ($sizeFile <= $limit) {
+                $img = $manager->read($image)->toWebp(90);
+                Storage::disk('public')->put($large, $img);
+                $thumb  = $large;
+                $medium = $large;
+            } else {
+                Storage::disk('public')->put($thumb, $manager->read($image)->scale(width: 400)->toWebp(70));
+                Storage::disk('public')->put($medium, $manager->read($image)->scale(width: 800)->toWebp(80));
+                Storage::disk('public')->put($large, $manager->read($image)->scale(width: 1200)->toWebp(85));
+            }
+
+            $publication->images()->create([
+                'thumb'  => $thumb,
+                'medium' => $medium,
+                'large'  => $large,
+            ]);
+        }
+    }
+
+    return response()->json([
+        'status'      => true,
+        'message'     => 'Publication mise à jour avec succès ✅',
+        'publication' => $publication->load(['country','town','district','category','pubType','attributes','images'])
+    ]);
+}
+
+
+    // 🔹 DESTROY
     public function destroy($id)
     {
         $publication = Publication::findOrFail($id);
 
-        // Suppression des images associées
         foreach ($publication->images as $img) {
-            $imagePath = public_path($img->path);
-            if (file_exists($imagePath)) unlink($imagePath);
+            foreach (['thumb','medium','large'] as $size) {
+                if ($img->$size && Storage::exists("public/{$img->$size}")) {
+                    Storage::delete("public/{$img->$size}");
+                }
+            }
             $img->delete();
         }
 
@@ -432,6 +520,4 @@ class PublicationController extends Controller
             'message' => 'Publication supprimée avec succès ✅'
         ]);
     }
-
 }
-

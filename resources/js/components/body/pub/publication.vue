@@ -41,7 +41,7 @@
                   <div v-if="p.images && p.images.length" :id="'carouselList' + i" class="carousel slide" data-bs-ride="carousel" :data-bs-interval="5000">
                     <div class="carousel-inner rounded">
                       <div v-for="(img, index) in p.images" :key="index" class="carousel-item" :class="{ active: index === 0 }">
-                        <img :src="img" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="">
+                        <img :src="img.list" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="">
                       </div>
                     </div>
 
@@ -183,7 +183,7 @@
           <div v-if="selectedPublication?.images?.length" id="carouselImages" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
             <div class="carousel-inner rounded">
               <div v-for="(img, index) in selectedPublication.images" :key="index" class="carousel-item" :class="{ active: index === 0 }">
-                <img :src="img" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Image de la publication">
+                <img :src="img.detail" class="d-block w-100" style=" object-fit: cover;" alt="Image de la publication">
               </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">

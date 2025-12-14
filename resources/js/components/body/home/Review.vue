@@ -39,23 +39,32 @@
             <hr>
 
             <div v-if="isAuthenticated">
-                <div class="mb-3 d-flex align-items-center">
-                <label class="me-3 mb-0">Votre note :</label>
-                <div>
-                    <span
-                    v-for="n in 5"
-                    :key="n"
-                    class="star"
-                    :class="{ active: rating >= n }"
-                    @click="rating = n"
-                    @mouseover="hoverRating = n"
-                    @mouseleave="hoverRating = 0"
-                    >★</span>
-                </div>
+                <div class="mb-1 d-flex align-items-center">
+                    <label class="me-3 mb-0">Votre note :</label>
+                    <div>
+                        <span
+                            v-for="n in 5"
+                            :key="n"
+                            class="star"
+                            :class="{ active: hoverRating ? hoverRating >= n : rating >= n }"
+                            @click="rating = n"
+                            @mouseover="hoverRating = n"
+                            @mouseleave="hoverRating = 0">★
+                        </span>
+                    </div>
                 </div>
 
+                <!-- Texte indiquant le nombre d'étoiles choisies -->
+                    <!-- Zone type textarea pour afficher le choix -->
+                <textarea
+                    class="form-control bg-dark text-warning mb-3"
+                    rows="1"
+                    readonly
+                    :value="rating > 0 ? `Vous avez choisi ${rating} étoile${rating > 1 ? 's' : ''}.` : 'Aucune étoile choisie.'"
+                ></textarea>
+
                 <div class="mb-3">
-                <textarea v-model="comment" class="form-control" placeholder="Votre avis..." rows="3"></textarea>
+                <textarea v-model="comment" class="form-control" placeholder="Votre avis en commentaire..." rows="3"></textarea>
                 </div>
 
                 <button class="btn btn-success btn-shimmer" @click="submitReview" :disabled="loading.submit">
@@ -417,7 +426,7 @@
         transition: transform 0.2s, color 0.2s;
         color: #ccc;
     }
-    .star.active, .star:hover, .star:hover ~ .star {
+    .star.active {
         color: #f4c150;
         transform: scale(1.3);
     }

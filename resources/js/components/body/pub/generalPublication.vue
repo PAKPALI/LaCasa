@@ -179,7 +179,7 @@
                     <div class="carousel-inner rounded">
                       <div v-for="(img, index) in p.images" :key="index" class="carousel-item"
                         :class="{ active: index === 0 }">
-                        <img :src="img" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="">
+                        <img :src="img.list" loading="lazy" class="d-block w-100" style="height: 200px; object-fit: cover;" alt="">
                       </div>
                     </div>
                     <button
@@ -315,7 +315,7 @@
                 <div class="carousel-inner rounded">
                   <div v-for="(img, index) in selectedPublication.images" :key="index" class="carousel-item"
                     :class="{ active: index === 0 }">
-                    <img :src="img" class="d-block w-100" style="max-height: 400px; object-fit: cover;"
+                    <img :src="img.detail" class="d-block w-100" style="max-height: 400px; object-fit: cover;"
                       alt="Image de la publication">
                   </div>
                 </div>
