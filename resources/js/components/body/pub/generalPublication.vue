@@ -98,7 +98,7 @@
       </div>
 
       <!-- EN-TETE + BOUTONS -->
-      <div class="row g-0 gx-5 align-items-end mb-3">
+      <div class="row g-0 gx-5 align-items-end mb-1">
         <div class="col-lg-8">
           <div class="text-start mx-auto mb-3">
             <h1 class="mb-3">Les publications</h1>
@@ -145,8 +145,7 @@
           <strong>Filtrer par offre !....</strong>
         </marquee>
         <div class="col-lg-4 text-start text-lg-end">
-          <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
-            
+          <ul class="nav nav-pills d-inline-flex justify-content-end mb-3">
             <li class="nav-item me-2">
               <button class="btn btn-outline-primary" :class="{ active: activeTab === 'featured' }"
                 @click="activeTab = 'featured'">Tous</button>
@@ -163,11 +162,43 @@
         </div>
       </div>
 
+      <!-- PAGINATION -->
+      <div class="d-flex justify-content-between align-items-center my-3">
+        <small class="text-light bg-dark">
+          Total : <strong>{{ totalPublications }}</strong> publications
+        </small>
+
+        <ul class="pagination mb-0 bg-dark">
+          <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <button class="page-link" @click="changePage(currentPage - 1)">
+              «
+            </button>
+          </li>
+
+          <li
+            v-for="page in lastPage"
+            :key="page"
+            class="page-item"
+            :class="{ active: page === currentPage }"
+          >
+            <button class="page-link" @click="changePage(page)">
+              {{ page }}
+            </button>
+          </li>
+
+          <li class="page-item" :class="{ disabled: currentPage === lastPage }">
+            <button class="page-link" @click="changePage(currentPage + 1)">
+              »
+            </button>
+          </li>
+        </ul>
+      </div>
+
       <!-- LISTE DES PUBLICATIONS -->
       <div class="tab-content">
         <div class="tab-pane fade show p-0 active">
           <div class="row g-4">
-            <div v-for="(p, i) in filteredPublications" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp"
+            <div v-for="(p, i) in publicationsList" :key="p.id || i" class="col-lg-4 col-md-6 wow fadeInUp"
               :data-wow-delay="p.delay || '0.1s'">
               <!-- CARD PROPRIETE -->
               <div class="property-item rounded overflow-hidden shadow">
@@ -284,14 +315,14 @@
               </div>
             </div>
 
-            <div class="col-12 text-center py-5">
+            <div class="col-12 text-center py-3">
               <div v-if="loadingPublications" class="d-flex justify-content-center align-items-center"
                 style="height: 200px;">
                 <div class="spinner-border text-primary" role="status">
                   <span class="visually-hidden">Chargement...</span>
                 </div>
               </div>
-              <div v-else-if="filteredPublications.length === 0">
+              <div v-else-if="publicationsList.length === 0">
                 <img class="img-fluid" :src="gif" alt="À propos LaCasa" style="width: auto;">
                 <p class="text-danger"><strong>Désolée, aucune publication correspondante au filtrage n'a été trouvée!</strong></p>
               </div>
@@ -300,6 +331,35 @@
           </div>
         </div>
       </div>
+
+      <!-- PAGINATION -->
+      <div class="d-flex justify-content-between align-items-center my-0">
+        <small class="text-light bg-dark">
+          Total : <strong>{{ totalPublications }}</strong> publications
+        </small>
+
+        <ul class="pagination mb-0 bg-dark">
+          <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <button class="page-link" @click="changePage(currentPage - 1)"> « </button>
+          </li>
+
+          <li
+            v-for="page in lastPage"
+            :key="page"
+            class="page-item"
+            :class="{ active: page === currentPage }"
+          >
+            <button class="page-link" @click="changePage(page)">
+              {{ page }}
+            </button>
+          </li>
+
+          <li class="page-item" :class="{ disabled: currentPage === lastPage }">
+            <button class="page-link" @click="changePage(currentPage + 1)"> » </button>
+          </li>
+        </ul>
+      </div>
+
       <!-- MODAL -->
       <div class="modal fade mt-5" id="publicationModal" tabindex="-1">
         <div class="modal-dialog mt-2 mt-0 modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -506,18 +566,15 @@
   const loadingDistricts = ref(false)
   const loadingCategories = ref(false)
   const loadingPubTypes = ref(false)
+  const currentPage = ref(1)
+  const lastPage = ref(1)
+  const totalPublications = ref(0)
+  const perPage = 10
 
   // -----------------
   // FILTRAGE FRONT (TAB)
   // -----------------
-  const filteredPublications = computed(() => {
-    let list = [...publicationsList.value]
-
-    if (activeTab.value === 'sell') list = list.filter(p => p.offer_type === 'sale')
-    if (activeTab.value === 'rent') list = list.filter(p => p.offer_type === 'rent')
-
-    return list
-  })
+  
 
   const formatPeriod = (period) => {
     switch(period){
@@ -603,6 +660,10 @@
     } finally { loadingAttributes.value = false }
   })
 
+  watch(activeTab, () => {
+    searchPublications(1)
+  })
+
   // -----------------
   // FETCH PUBLICATIONS
   // -----------------
@@ -618,15 +679,20 @@
   const fetchPublicationsInitial = async () => {
     loadingPublications.value = true
     try {
-      const res = await axios.get('/api/publication', { params: { limit: 150 },  withCredentials: true })
-      publicationsList.value = res.data
+      const res = await axios.get('/api/publication', { params: { limit: 150, page: 1, per_page: perPage },  withCredentials: true })
+
+      publicationsList.value = res.data.data
+      currentPage.value = res.data.current_page
+      lastPage.value = res.data.last_page
+      totalPublications.value = res.data.total
+
       nextTick(initCarousels)
     } catch (err) {
       console.error(err)
     } finally { loadingPublications.value = false }
   }
 
-  const searchPublications = async () => {
+  const searchPublications = async (page = 1) => {
     loadingPublications.value = true
     try {
       const res = await axios.get('/api/publication', {
@@ -640,12 +706,26 @@
           attribute_ids: filters.value.attribute_ids,
           code: code.value,
           price1: price1.value,
-          price2: price2.value
+          price2: price2.value,
+          offer_type: activeTab.value !== 'featured' ? activeTab.value : null,
+          page,
+          per_page: perPage
         }
       })
 
+      publicationsList.value = res.data.data
+      currentPage.value = res.data.current_page
+      lastPage.value = res.data.last_page
+      totalPublications.value = res.data.total
+
+      console.log({
+        total: res.data.total,
+        dataLength: res.data.data.length,
+        activeTab: activeTab.value,
+        filters: filters.value
+      })
+
       console.log('Publications reçues:', res.data)
-      publicationsList.value = res.data
       nextTick(initCarousels)
       if (publicationsList.value.length === 0) {
         // 🔴 Aucune annonce trouvée → toast d’erreur
@@ -706,12 +786,19 @@
     })
   }
 
+  const changePage = (page) => {
+    if (page < 1 || page > lastPage.value) return
+    searchPublications(page)
+  }
+
   // -----------------
   // FORMAT PRIX
   // -----------------
   const formatPrice = (price) => {
     if (!price) return '0 FCFA'
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(price)
+    return new Intl.NumberFormat('fr-FR', {
+      minimumFractionDigits: 0
+    }).format(price) + ' F CFA'
   }
 
   // -----------------

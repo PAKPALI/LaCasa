@@ -38,9 +38,11 @@ class PublicationController extends Controller
         if ($request->filled('country_id')) {
             $query->where('country_id', $request->country_id);
         }
+
         if ($request->filled('town_id')) {
             $query->where('town_id', $request->town_id);
         }
+
         if ($request->filled('district_id')) {
             $districtIds = is_array($request->district_id) 
                 ? $request->district_id 
@@ -73,13 +75,22 @@ class PublicationController extends Controller
             $query->where('price', $request->price2);
         }
 
+        if ($request->filled('offer_type')) {
+            if ($request->offer_type === 'sell') {
+                $query->where('offer_type', 'sale');
+            }
+
+            if ($request->offer_type === 'rent') {
+                $query->where('offer_type', 'rent');
+            }
+        }
+
         // 🔹 LIMITATION AU CHARGEMENT INITIAL
         if ($request->filled('limit')) {
             $query->latest()->take($request->limit);
         }
 
         // log::info('🔍 FILTRAGE DES PUBLICATIONS', $request->all());
-
         if ($request->filled('code')) {
             $query->where('code', $request->code);
         }
@@ -88,9 +99,10 @@ class PublicationController extends Controller
             $query->where('user_id', auth()->id());
         }
 
-        $publications = $query->get();
+        $perPage = $request->per_page ?? 10;
+        $publications = $query->paginate($perPage);
 
-        $formatted = $publications->map(function ($pub) {
+        $formatted = $publications->getCollection()->map(function ($pub) {
             $defaultUserImage = $pub->user && $pub->user->user_type == 2 ?  'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'   // agence
         : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'; 
             return [
@@ -140,7 +152,13 @@ class PublicationController extends Controller
             ];
         });
 
-        return response()->json($formatted);
+        return response()->json([
+            'data' => $formatted,
+            'current_page' => $publications->currentPage(),
+            'last_page' => $publications->lastPage(),
+            'per_page' => $publications->perPage(),
+            'total' => $publications->total(),
+        ]);
     }
 
     public function getMyPublication(Request $request)

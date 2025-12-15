@@ -1,12 +1,12 @@
 <template>
-  <div class="container-fluid text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s" style="background-color: rgba(14, 46, 80, 0.9);">
-    <div class="container py-5">
+  <div class="container-fluid text-light footer mt-2 pt-3 wow fadeIn" data-wow-delay="0.1s" style="background-color: rgba(14, 46, 80, 0.9);">
+    <div class="container py-3">
       <div class="row g-5">
 
         <!-- Section LaCasa -->
         <div class="col-lg-3 col-md-6">
           <!-- <h5 class="text-light mb-4">LaCasa</h5> -->
-          <img :src="logo2" alt="logo2" class="img-fluid w-45 mb-4" />
+          <img :src="logo2" alt="logo2" class="img-fluid w-35 mb-4" />
           <!-- <p>Votre solution simple et fiable pour trouver un logement au Togo.</p> -->
           <div class="d-flex pt-2">
             <a v-for="(icon, i) in socialIcons" :key="i" :href="icon.link" class="btn btn-outline-light btn-social me-1">
@@ -76,10 +76,10 @@ import prop6 from '@images2/property-6.jpg'
 
 // Données pour le footer
 const socialIcons = [
-  { class: 'fab fa-twitter', link: '#' },
+  // { class: 'fab fa-twitter', link: '#' },
   { class: 'fab fa-facebook-f', link: '#' },
   { class: 'fab fa-youtube', link: '#' },
-  { class: 'fab fa-linkedin-in', link: '#' },
+  // { class: 'fab fa-linkedin-in', link: '#' },
 ]
 
 const navLinks = [
