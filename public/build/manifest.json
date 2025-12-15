@@ -1,9 +1,8 @@
 {
   "resources/css/app2.css": {
-    "file": "assets/app2-DJZ8XHo2.css",
+    "file": "assets/app2-RXj6Xs47.css",
     "src": "resources/css/app2.css",
     "isEntry": true,
-    "name": "app2",
     "names": [
       "app2.css"
     ]
@@ -109,12 +108,12 @@
     "src": "resources/js/images/web.avif"
   },
   "resources/js/layouts/app2.js": {
-    "file": "assets/app2-C6kcLy4I.js",
+    "file": "assets/app2-CgTeddcQ.js",
     "name": "app2",
     "src": "resources/js/layouts/app2.js",
     "isEntry": true,
     "css": [
-      "assets/app2-DHYOQI92.css"
+      "assets/app2-1ai2xKjt.css"
     ],
     "assets": [
       "assets/logo2-BjkGqu9a.png",
