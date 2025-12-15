@@ -43,8 +43,6 @@ php artisan install:api
 php artisan migrate
 composer require barryvdh/laravel-dompdf
 
-
-
 👉 Explication :
 
 npm install vue@3 : installe Vue version 3 (la version actuelle de Vue, utilisée avec Vite et plus performante).
