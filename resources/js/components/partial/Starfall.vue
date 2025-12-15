@@ -9,8 +9,8 @@ const canvas = ref(null)
 let ctx, animationId
 let stars = []
 
-const MAX_STARS_DESKTOP = 80
-const MAX_STARS_MOBILE = 50
+const MAX_STARS_DESKTOP = 45
+const MAX_STARS_MOBILE = 15
 
 // Initialisation des étoiles
 function initStars(width, height) {
