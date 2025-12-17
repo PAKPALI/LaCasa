@@ -83,35 +83,78 @@
           </div>
         </div>
 
-        <!-- Attributs -->
+        <!-- Attributs :close-on-select="false" -->
         <div class="mb-3">
           <label class="form-label fw-semibold text-light">Attributs</label>
-          <div class="p-2 border rounded bg-dark">
-            <div v-for="(attr, index) in selectedAttributes" :key="index" class="d-flex mb-1">
-              <v-select
-                v-model="selectedAttributes[index]"
-                :options="attributes"
-                label="name"
-                :reduce="a => a.id"
-                placeholder="Choisissez un attribut"
-                class="flex-grow-1"
-              />
-              <button type="button" class="btn btn-outline-danger ms-2" @click="removeAttribute(index)">🗑</button>
-            </div>
-          </div>
-          <button type="button" class="btn btn-outline-primary btn-sm mt-2" @click="addAttribute">+ Ajouter un attribut</button>
+          <v-select v-model="selectedAttributes"
+            :options="attributes"
+            label="name"
+            :reduce="a => a.id"
+            multiple
+            placeholder="Sélectionnez les attributs"
+            :clearable="true"
+            :close-on-select="false"
+            :loading="loadingAttributes"
+          />
         </div>
 
         <!-- Photos -->
         <div class="mb-3">
-          <label class="form-label fw-semibold text-light">Photos</label>
-          <div class="p-2 border rounded bg-light">
-            <div v-for="(file, index) in form.images" :key="index" class="d-flex align-items-center mb-2">
-              <input type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp"  @change="onSingleFileChange($event, index)" />
-              <img v-if="previewImages[index]" :src="previewImages[index]" class="img-thumbnail ms-2" style="width: 80px; height: 60px;">
-              <button type="button" class="btn btn-outline-danger ms-2" @click="removeImage(index)">🗑</button>
+          <label class="form-label fw-semibold text-light">
+            Photos (max : {{ MAX_IMAGES }})
+          </label>
+
+          <div class="p-3 border rounded bg-light">
+
+            <input
+              type="file"
+              class="form-control mb-2"
+              multiple
+              accept=".jpg,.jpeg,.png,.webp"
+              @change="onMultipleFilesChange"
+              :disabled="form.images.length >= MAX_IMAGES || isSubmitting"
+            />
+
+            <!-- Progress bar -->
+            <div v-if="isUploadingImages" class="mb-2">
+              <div class="progress">
+                <div
+                  class="progress-bar progress-bar-striped progress-bar-animated"
+                  role="progressbar"
+                  :style="{ width: uploadProgress + '%' }"
+                >
+                  {{ uploadProgress }} %
+                </div>
+              </div>
             </div>
-            <button type="button" class="btn btn-outline-primary btn-sm" @click="addImage">+ Ajouter une image</button>
+
+            <!-- Aperçu -->
+            <div class="d-flex flex-wrap gap-2">
+              <div
+                v-for="(img, index) in previewImages"
+                :key="index"
+                class="position-relative"
+              >
+                <img
+                  :src="img"
+                  class="img-thumbnail"
+                  style="width:120px;height:90px;object-fit:cover"
+                />
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                  @click="removeImage(index)"
+                  :disabled="isUploadingImages"
+                >
+                  ✖
+                </button>
+              </div>
+            </div>
+
+            <small class="text-muted d-block mt-2">
+              {{ form.images.length }} / {{ MAX_IMAGES }} images sélectionnées
+            </small>
           </div>
         </div>
 
@@ -220,14 +263,36 @@
       </div>
 
       <div class="text-end">
-        <button v-if="isUserAuth" type="submit" class="btn btn-primary btn-lg px-4" :disabled="isSubmitting">
-          <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+
+        <!-- Progress bar pendant l'enregistrement -->
+        <div v-if="isSubmitting" class="w-100">
+          <div class="progress" style="height: 45px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success fw-bold" role="progressbar"
+              :style="{ width: uploadProgress + '%' }"
+            >
+              Enregistrement en cours à {{ uploadProgress }} %
+            </div>
+          </div>
+        </div>
+
+        <!-- Bouton actif -->
+        <button
+          v-else-if="isUserAuth"
+          type="submit"
+          class="btn btn-primary btn-lg px-4"
+        >
           💾 Enregistrer
         </button>
 
-        <button v-if="!isUserAuth" class="btn btn-dark btn-lg px-4" disabled>
+        <!-- Bouton désactivé (non connecté) -->
+        <button
+          v-else
+          class="btn btn-dark btn-lg px-4"
+          disabled
+        >
           💾 Enregistrer
         </button>
+
       </div>
     </form>
 
@@ -248,8 +313,8 @@ import { user, isAuthenticated } from '../../auth/auth.js'
 const isUserAuth = isAuthenticated.value
 
 const saleOrRentOptions = [
+  { value: 'rent',  label: 'À louer' },
   { value: 'sale', label: 'À vendre' },
-  { value: 'rent',  label: 'À louer' }
 ]
 const statusOptions = [
   { value: 'active',   label: 'Actif' },
@@ -276,6 +341,10 @@ const loadingDistricts = ref(false)
 const loadingCategories = ref(false)
 const loadingPubTypes = ref(false)
 const loadingAttributes = ref(false)
+
+const uploadProgress = ref(0)
+const isUploadingImages = ref(false)
+const MAX_IMAGES = 8
 
 const form = ref({
   price: '', bathroom: '', surface: '', advance: '', deposit: '', 
@@ -368,58 +437,66 @@ watch(selectedPubType, async (newVal) => {
   loadingAttributes.value = false
 })
 
-// Attributs dynamiques
-const addAttribute = () => selectedAttributes.value.push(null)
-const removeAttribute = (i) => selectedAttributes.value.splice(i, 1)
-
 // Images dynamiques
 const addImage = () => {
   form.value.images.push(null)
   previewImages.value.push(null)
 }
-const removeImage = (i) => {
-  form.value.images.splice(i, 1)
-  previewImages.value.splice(i, 1)
-}
-const onSingleFileChange = (event, index) => {
-  const file = event.target.files[0]
-  if (!file) return
 
-  // ✅ Vérification du type
-  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
-  if (!allowedTypes.includes(file.type)) {
-    Swal.fire({
-      toast: true,
-      position: 'top-end',
-      icon: 'error',
-      title: "⚠️ Formats acceptés : JPG, PNG, WebP uniquement",
-      showConfirmButton: false,
-      timer: 3000
-    })
-    event.target.value = '' // reset input
-    return
-  }
+const onMultipleFilesChange = (event) => {
+  const files = Array.from(event.target.files)
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+  const maxSize = 10 * 1024 * 1024 // 10 Mo
 
-  // ✅ Vérification de la taille (2 Mo max)
-  const maxSize = 2 * 1024 * 1024
-  if (file.size > maxSize) {
+  if (form.value.images.length + files.length > MAX_IMAGES) {
     Swal.fire({
-      toast: true,
-      position: 'top-end',
-      icon: 'error',
-      title: "⚠️ Chaque image doit être inférieure à 2 Mo",
-      showConfirmButton: false,
-      timer: 3000
+      toast:true,
+      position:'top-end',
+      icon:'error',
+      title:`Maximum ${MAX_IMAGES} images autorisées`,
+      showConfirmButton:false,
+      timer:3000
     })
     event.target.value = ''
     return
   }
 
-  // ✅ Si tout est bon → on garde le fichier et on affiche l’aperçu
-  form.value.images[index] = file
-  previewImages.value[index] = URL.createObjectURL(file)
+  files.forEach(file => {
+    if (!allowedTypes.includes(file.type)) {
+      Swal.fire({
+        toast:true,
+        position:'top-end',
+        icon:'error',
+        title:'Formats acceptés : JPG, PNG, WebP',
+        showConfirmButton:false,
+        timer:3000
+      })
+      return
+    }
+
+    if (file.size > maxSize) {
+      Swal.fire({
+        toast:true,
+        position:'top-end',
+        icon:'error',
+        title:'Chaque image doit faire moins de 10 Mo',
+        showConfirmButton:false,
+        timer:3000
+      })
+      return
+    }
+
+    form.value.images.push(file)
+    previewImages.value.push(URL.createObjectURL(file))
+  })
+
+  event.target.value = '' // reset input
 }
 
+const removeImage = (index) => {
+  form.value.images.splice(index, 1)
+  previewImages.value.splice(index, 1)
+}
 
 // Submit
 const submitPublication = async () => {
@@ -467,7 +544,21 @@ const submitPublication = async () => {
     if (form.value.phone2) payload.append('phone2', form.value.phone2)
     form.value.images.forEach(file => payload.append('images[]', file))
 
-    const res = await axios.post('publication', payload)
+    isUploadingImages.value = true
+    uploadProgress.value = 0
+
+    const res = await axios.post('publication', payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress: (progressEvent) => {
+        if (progressEvent.total) {
+          uploadProgress.value = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          )
+        }
+      }
+    })
 
     Swal.fire({ toast:true, position:'top-end', icon:'success', title: res.data.message || 'Publication créée ✅', showConfirmButton:false, timer:3000 })
 
@@ -485,7 +576,9 @@ const submitPublication = async () => {
     console.error(err)
     Swal.fire({ toast:true, position:'top-end', icon:'error', title: err.response.data.message, showConfirmButton:false, timer:3000 })
   } finally {
-    isSubmitting.value = false
+      isSubmitting.value = false
+      isUploadingImages.value = false
+      uploadProgress.value = 0
   }
 }
 </script>
@@ -505,8 +598,11 @@ const submitPublication = async () => {
 
 /* Texte sélectionné */
 ::v-deep(.vs__selected) {
+  background-color: #198754;
   color: #ffffff;
-  font-weight: bold;
+  border-radius: 6px;
+
+  font-weight: 600;
 }
 
 /* Fond de toutes les options */
