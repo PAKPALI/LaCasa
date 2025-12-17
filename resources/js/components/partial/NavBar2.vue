@@ -40,8 +40,11 @@
           <li class="nav-item">
             <router-link to="/review" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Vos avis</router-link>
           </li>
+
+          <li v-if="!isAuthenticated" class="nav-item">
+            <router-link to="/register" class="nav-link">Créer un compte</router-link>
+          </li>
           
-          <!-- Si l'utilisateur n'est pas connecté -->
           <li v-if="!isAuthenticated" class="nav-item">
             <router-link to="/login" class="nav-link">Se connecter</router-link>
           </li>
@@ -61,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from "vue"
+import { ref, computed } from "vue"
 import logo2 from "@images/logo2.png"
 import { user, isAuthenticated, logout as authLogout } from "../auth/auth.js"
 

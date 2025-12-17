@@ -108,27 +108,29 @@
       </div>
     </div>
   </div>
-
-  
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import { useRouter } from 'vue-router'
-import { setUser } from './auth.js'
-import { Modal } from 'bootstrap';
+  import { ref,onMounted} from 'vue'
+  import axios from 'axios'
+  import Swal from 'sweetalert2'
+  import { useRouter } from 'vue-router'
+  import { setUser,isAuthenticated } from './auth.js'
+  import { Modal } from 'bootstrap';
 
-
-axios.defaults.withCredentials = true
+  axios.defaults.withCredentials = true
   const router = useRouter()
+  const isAuthResp = isAuthenticated.value
+  onMounted(() => {
+    if (isAuthResp) {
+      router.push('/home') // ou '/admin' selon ton besoin
+    }
+  })
 
   const form = ref({ email: '', password: '', remember: false })
   const isSubmitting = ref(false)
   const showPassword = ref(false)
   const loadingButton = ref("");
-
 
   const forgotEmail = ref("");
     function openForgotPasswordModal() {
@@ -209,124 +211,124 @@ axios.defaults.withCredentials = true
 </script>
 
 <style scoped>
-/* @import "bootstrap-icons/font/bootstrap-icons.css"; */
+  /* @import "bootstrap-icons/font/bootstrap-icons.css"; */
 
-.login-page {
-  background: url('https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  color: #fff;
-}
+  .login-page {
+    background: url('https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #fff;
+  }
 
-/* ======= Overlay ======= */
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(14, 46, 80, 0.7);
-  z-index: 1;
-  backdrop-filter: blur(1.5px);
-}
+  /* ======= Overlay ======= */
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(14, 46, 80, 0.7);
+    z-index: 1;
+    backdrop-filter: blur(1.5px);
+  }
 
-/* ======= Glass Card ======= */
-.glass-card {
-  background: rgba(5, 1, 27, 0.65);
-  border: 2px solid rgba(0, 185, 142, 0.5);
-  border-radius: 25px;
-  padding: 2rem;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 10px 40px rgba(0, 185, 142, 0.5);
-  z-index: 2;
-  transition: all 0.35s ease;
-}
-.glass-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 30px rgba(0, 185, 142, 0.4), 0 0 60px rgba(0, 185, 142, 0.25);
-}
+  /* ======= Glass Card ======= */
+  .glass-card {
+    background: rgba(5, 1, 27, 0.65);
+    border: 2px solid rgba(0, 185, 142, 0.5);
+    border-radius: 25px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 185, 142, 0.5);
+    z-index: 2;
+    transition: all 0.35s ease;
+  }
+  .glass-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(0, 185, 142, 0.4), 0 0 60px rgba(0, 185, 142, 0.25);
+  }
 
-/* ======= Inputs ======= */
-.neon-input {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 185, 142, 0.4);
-  color: #fdfdfd;
-  border-radius: 10px;
-  transition: 0.3s ease;
-}
-.neon-input::placeholder {
-  color: rgba(169, 228, 214, 0.4);
-}
-.neon-input:focus {
-  border-color: #00b98e;
-  box-shadow: 0 0 8px rgba(0, 185, 142, 0.5);
-  outline: none;
-}
+  /* ======= Inputs ======= */
+  .neon-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 185, 142, 0.4);
+    color: #fdfdfd;
+    border-radius: 10px;
+    transition: 0.3s ease;
+  }
+  .neon-input::placeholder {
+    color: rgba(169, 228, 214, 0.4);
+  }
+  .neon-input:focus {
+    border-color: #00b98e;
+    box-shadow: 0 0 8px rgba(0, 185, 142, 0.5);
+    outline: none;
+  }
 
-.neon-input-prepend {
-  background: rgba(240, 245, 244, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-right: none;
-  color: #ffffff;
-}
+  .neon-input-prepend {
+    background: rgba(240, 245, 244, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: none;
+    color: #ffffff;
+  }
 
-/* ======= Bouton ======= */
-.glow-btn-green {
-  background: linear-gradient(90deg, #00b98e, #009b79);
-  border: none;
-  color: #fff;
-  transition: 0.3s ease;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 185, 142, 0.5);
-}
-.glow-btn-green:hover {
-  background: linear-gradient(90deg, #009b79, #00b98e);
-  transform: scale(1.02);
-  box-shadow: 0 0 20px rgba(0, 185, 142, 0.6);
-}
+  /* ======= Bouton ======= */
+  .glow-btn-green {
+    background: linear-gradient(90deg, #00b98e, #009b79);
+    border: none;
+    color: #fff;
+    transition: 0.3s ease;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 185, 142, 0.5);
+  }
+  .glow-btn-green:hover {
+    background: linear-gradient(90deg, #009b79, #00b98e);
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 185, 142, 0.6);
+  }
 
-/* ======= Textes ======= */
-.neon-text {
-  color: #00b98e;
-  text-shadow: 0 0 5px rgba(0, 185, 142, 0.5);
-}
+  /* ======= Textes ======= */
+  .neon-text {
+    color: #00b98e;
+    text-shadow: 0 0 5px rgba(0, 185, 142, 0.5);
+  }
 
-/* ======= Logo avec halo ======= */
-.profile-logo {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  /* ======= Logo avec halo ======= */
+  .profile-logo {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.user-icon {
-  border-radius: 50%;
-  z-index: 2;
-}
+  .user-icon {
+    border-radius: 50%;
+    z-index: 2;
+  }
 
-.glow-ring {
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  right: -8px;
-  bottom: -8px;
-  border: 2px solid rgba(0, 185, 142, 0.4);
-  border-radius: 50%;
-  box-shadow: 0 0 15px rgba(0, 185, 142, 0.4);
-  animation: pulse 2s infinite ease-in-out;
-}
+  .glow-ring {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 2px solid rgba(0, 185, 142, 0.4);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 185, 142, 0.4);
+    animation: pulse 2s infinite ease-in-out;
+  }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-}
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+  }
 
-.input-group-text[role="button"] {
-  cursor: pointer;
-}
+  .input-group-text[role="button"] {
+    cursor: pointer;
+  }
 
 </style>
