@@ -11,7 +11,7 @@ class AttributController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Attribut::with('pubType.category.country');
+        $query = Attribut::with('pubType.category.country')->orderBy('name', 'ASC');
 
         if ($request->has('pub_type_id')) {
             $query->where('pub_type_id', $request->pub_type_id);
