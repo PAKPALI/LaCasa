@@ -42,9 +42,18 @@ class PubTypeController extends Controller
             ]);
         }
 
+        $categorySelected = Category::find($request->category_id);
+        if ($categorySelected->name == 'Terrain') {
+            $pubType = PubType::create($validator->validated()); 
+            return response()->json([
+                "status"  => true,
+                "message" => "Type de pub « ".$pubType->name." » ajouté avec succès",
+                "data"    => $pubType
+            ]);
+        }
+
         $pubType = PubType::create($validator->validated());
         // Répliquer vers toutes les autres catégories
-        // $syncService->replicatePubType($pubType);
 
         // Copier les attributs depuis le type source "Maison" si existant
         $sourceCategory = Category::where('name', 'Maison')->first();

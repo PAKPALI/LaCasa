@@ -42,6 +42,15 @@ class CategoryController extends Controller
             ]);
         }
 
+        if ($request->name =='Terrain') {
+            $category = Category::create($validator->validated());
+            return response()->json([
+                "status"  => true,
+                "message" => "Catégorie « ".$category->name." » ajoutée avec succès",
+                "data"    => $category
+            ]);
+        }
+
         $category = Category::create($validator->validated());
 
          // Synchroniser les types depuis "Maison"

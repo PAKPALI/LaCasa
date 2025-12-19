@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PubType;
 use App\Models\Attribut;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Services\SyncService;
 use Illuminate\Support\Facades\Validator;
@@ -36,6 +38,17 @@ class AttributController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => $validator->errors()->first(),
+            ]);
+        }
+
+        $PubTypeSelected = PubType::find($request->pub_type_id);
+        $categorySelected = $PubTypeSelected->category;
+        if ($categorySelected->name == 'Terrain') {
+            $attribute = Attribut::create($validator->validated());
+            return response()->json([
+                'status'  => true,
+                'message' => "Attribut « ".$attribute->name." » ajouté avec succès",
+                'data'    => $attribute
             ]);
         }
 
