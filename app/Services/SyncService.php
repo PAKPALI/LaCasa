@@ -12,12 +12,13 @@ class SyncService
     // Copier un PubType vers toutes les autres catégories
     public function replicatePubType(PubType $pubType): void
     {
-        $categories = Category::where('id', '!=', $pubType->category_id)->get();
+        if ($pubType->category->name == 'Terrain') {
+            return;
+        }
 
+        $categories = Category::where('id', '!=', $pubType->category_id)->get();
         foreach ($categories as $category) {
-            $exists = PubType::where('category_id', $category->id)
-                             ->where('name', $pubType->name)
-                             ->exists();
+            $exists = PubType::where('category_id', $category->id)->where('name', $pubType->name)->exists();
 
             if (!$exists) {
                 $newType = PubType::create([
@@ -39,10 +40,22 @@ class SyncService
     // Copier les attributs d'un type source vers un type cible
     public function replicateAttributes(PubType $source, PubType $target): void
     {
+        $categorySelected = Category::find($target->category_id);
+        if ($categorySelected->name == 'Terrain') {
+            foreach ($target->Attribut ?? [] as $attribute) {
+                $exists = Attribut::where('pub_type_id', $target->id)->where('name', $attribute->name)->exists();
+
+                if (!$exists) {
+                    Attribut::create([
+                        'name' => $attribute->name,
+                        'pub_type_id' => $target->id,
+                    ]);
+                }
+            }
+        }
+
         foreach ($source->Attribut ?? [] as $attribute) {
-            $exists = Attribut::where('pub_type_id', $target->id)
-                              ->where('name', $attribute->name)
-                              ->exists();
+            $exists = Attribut::where('pub_type_id', $target->id)->where('name', $attribute->name)->exists();
 
             if (!$exists) {
                 Attribut::create([
@@ -56,10 +69,16 @@ class SyncService
     // Copier un attribut vers tous les types de la même catégorie
     public function replicateAttribute(Attribut $attribute): void
     {
-        $pubTypes = PubType::where('id', '!=', $attribute->pub_type_id)
-                        //    ->where('category_id', $attribute->pubType->category_id)
+        $categorySelected = Category::find($attribute->pubType->category_id);
+        if ($categorySelected->name == 'Terrain') {
+            $pubTypes = PubType::where('id', '==', $attribute->pub_type_id)->get();
+            return;
+        }else{
+            $pubTypes = PubType::where('id', '!=', $attribute->pub_type_id)
+                        //->where('category_id', $attribute->pubType->category_id)
                            ->get();
-
+        }
+        
         foreach ($pubTypes as $pubType) {
             $exists = Attribut::where('pub_type_id', $pubType->id)
                               ->where('name', $attribute->name)
