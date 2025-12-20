@@ -41,17 +41,6 @@ class AttributController extends Controller
             ]);
         }
 
-        $PubTypeSelected = PubType::find($request->pub_type_id);
-        $categorySelected = $PubTypeSelected->category;
-        if ($categorySelected->name == 'Terrain') {
-            $attribute = Attribut::create($validator->validated());
-            return response()->json([
-                'status'  => true,
-                'message' => "Attribut « ".$attribute->name." » ajouté avec succès",
-                'data'    => $attribute
-            ]);
-        }
-
         $attribute = Attribut::create($validator->validated());
         $syncService->replicateAttribute($attribute);
 

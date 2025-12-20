@@ -6,6 +6,7 @@ use App\Models\PubType;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Services\SyncService;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -42,27 +43,25 @@ class PubTypeController extends Controller
             ]);
         }
 
-        $categorySelected = Category::find($request->category_id);
-        if ($categorySelected->name == 'Terrain') {
-            $pubType = PubType::create($validator->validated()); 
-            return response()->json([
-                "status"  => true,
-                "message" => "Type de pub « ".$pubType->name." » ajouté avec succès",
-                "data"    => $pubType
-            ]);
-        }
-
         $pubType = PubType::create($validator->validated());
         // Répliquer vers toutes les autres catégories
+        $category = $pubType->category;
 
-        // Copier les attributs depuis le type source "Maison" si existant
-        $sourceCategory = Category::where('name', 'Maison')->first();
-        if ($sourceCategory) {
-            $sourceType = $sourceCategory->PubType()->where('name', 'Piece')->first();
-            if ($sourceType) {
-                // Copier les attributs vers le PubType principal
-                $syncService->replicateAttributes($sourceType, $pubType);
-            }
+        // 🔁 Définir le type source selon la catégorie
+        if ($category->name === 'Terrain') {
+            $sourceType = PubType::where('category_id', $category->id)
+                ->where('name', '1/4 lot')
+                ->first();
+        } else {
+            $sourceCategory = Category::where('name', 'Maison')->first();
+            $sourceType = $sourceCategory?->PubType()
+                ->where('name', 'Piece')
+                ->first();
+        }
+
+        // Copier les attributs depuis le type source
+        if ($sourceType) {
+            $syncService->replicateAttributes($sourceType, $pubType);
         }
 
         // 2️⃣ Répliquer le PubType principal avec ses attributs vers toutes les autres catégories

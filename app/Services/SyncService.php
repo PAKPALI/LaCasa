@@ -12,13 +12,13 @@ class SyncService
     // Copier un PubType vers toutes les autres catégories
     public function replicatePubType(PubType $pubType): void
     {
-        if ($pubType->category->name == 'Terrain') {
-            return;
-        }
+        $isTerrain = $pubType->category->name === 'Terrain';
+        $categories = Category::where('id', '!=', $pubType->category_id)->where('name', $isTerrain ? 'Terrain' : '!=', 'Terrain')->get();
 
-        $categories = Category::where('id', '!=', $pubType->category_id)->get();
         foreach ($categories as $category) {
-            $exists = PubType::where('category_id', $category->id)->where('name', $pubType->name)->exists();
+            $exists = PubType::where('category_id', $category->id)
+                             ->where('name', $pubType->name)
+                             ->exists();
 
             if (!$exists) {
                 $newType = PubType::create([
@@ -40,22 +40,12 @@ class SyncService
     // Copier les attributs d'un type source vers un type cible
     public function replicateAttributes(PubType $source, PubType $target): void
     {
-        $categorySelected = Category::find($target->category_id);
-        if ($categorySelected->name == 'Terrain') {
-            foreach ($target->Attribut ?? [] as $attribute) {
-                $exists = Attribut::where('pub_type_id', $target->id)->where('name', $attribute->name)->exists();
+        $isTerrain = $target->category->name === 'Terrain';
 
-                if (!$exists) {
-                    Attribut::create([
-                        'name' => $attribute->name,
-                        'pub_type_id' => $target->id,
-                    ]);
-                }
-            }
-        }
-
-        foreach ($source->Attribut ?? [] as $attribute) {
-            $exists = Attribut::where('pub_type_id', $target->id)->where('name', $attribute->name)->exists();
+        foreach ($source->attributes as $attribute) {
+            $exists = Attribut::where('pub_type_id', $target->id)
+                ->where('name', $attribute->name)
+                ->exists();
 
             if (!$exists) {
                 Attribut::create([
@@ -66,23 +56,23 @@ class SyncService
         }
     }
 
+
     // Copier un attribut vers tous les types de la même catégorie
     public function replicateAttribute(Attribut $attribute): void
     {
-        $categorySelected = Category::find($attribute->pubType->category_id);
-        if ($categorySelected->name == 'Terrain') {
-            $pubTypes = PubType::where('id', '==', $attribute->pub_type_id)->get();
-            return;
-        }else{
-            $pubTypes = PubType::where('id', '!=', $attribute->pub_type_id)
-                        //->where('category_id', $attribute->pubType->category_id)
-                           ->get();
-        }
-        
+        $category = $attribute->pubType->category;
+        $isTerrain = $category->name === 'Terrain';
+
+        $pubTypes = PubType::where('id', '!=', $attribute->pub_type_id)
+            ->whereHas('category', function ($q) use ($isTerrain) {
+                $isTerrain ? $q->where('name', 'Terrain') : $q->where('name', '!=', 'Terrain');
+            })
+            ->get();
+
         foreach ($pubTypes as $pubType) {
             $exists = Attribut::where('pub_type_id', $pubType->id)
-                              ->where('name', $attribute->name)
-                              ->exists();
+                ->where('name', $attribute->name)
+                ->exists();
 
             if (!$exists) {
                 Attribut::create([
@@ -96,10 +86,11 @@ class SyncService
     // Copier tous les PubTypes d'une catégorie source vers une catégorie cible
     public function syncPubTypesFromCategory(Category $source, Category $target): void
     {
+        if ($target->name === 'Terrain') {
+            return;
+        }
         foreach ($source->PubType ?? [] as $sourceType) {
-            $exists = PubType::where('category_id', $target->id)
-                            ->where('name', $sourceType->name)
-                            ->exists();
+            $exists = PubType::where('category_id', $target->id)->where('name', $sourceType->name)->exists();
 
             if (!$exists) {
                 $newType = PubType::create([

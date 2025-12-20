@@ -358,4 +358,3 @@ onMounted(async ()=>{
   await getDistricts()
 })
 </script>
-
