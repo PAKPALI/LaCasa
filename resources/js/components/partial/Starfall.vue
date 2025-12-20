@@ -1,5 +1,5 @@
 <template>
-  <!-- <canvas ref="canvas" class="starfall-canvas"></canvas> -->
+  <canvas ref="canvas" class="starfall-canvas"></canvas>
 </template>
 
 <script setup>
