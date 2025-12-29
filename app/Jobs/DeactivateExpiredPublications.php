@@ -17,10 +17,7 @@ class DeactivateExpiredPublications implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info('Début du job de désactivation à : ' . now());
-
         $publications = Publication::where('is_active', true)->get();
-        Log::info('counts: ' . $publications->count());
 
         foreach ($publications as $publication) {
             if ($publication->shouldBeDeactivated()) {
