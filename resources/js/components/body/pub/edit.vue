@@ -115,7 +115,7 @@
 
           <!-- Infos complémentaires -->
           <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-md-6" v-if="categories.find(c => c.id === selectedCategory)?.name !== 'Terrain'">
               <label>Période de paiement</label>
               <v-select
                 v-model="form.price_period"
@@ -125,15 +125,15 @@
                 placeholder="Sélectionnez une période"
               />
             </div>
-            <div class="col-md-6"><label>Prix (FCFA)</label><input type="number" v-model.number="form.price" class="form-control" /></div>
-            <div class="col-md-6"><label>Chambres</label><input type="number" v-model.number="form.bathroom" class="form-control" /></div>
-            <div class="col-md-6"><label>Ménage</label><input type="number" v-model.number="form.surface" class="form-control" /></div>
+            <div class="col-md-6 col-md-12"><label>Prix (FCFA)</label><input type="number" v-model.number="form.price" class="form-control" /></div>
+            <div class="col-md-6" v-if="categories.find(c => c.id === selectedCategory)?.name !== 'Terrain'"><label>Chambres</label><input type="number" v-model.number="form.bathroom" class="form-control" /></div>
+            <div class="col-md-6" v-if="categories.find(c => c.id === selectedCategory)?.name !== 'Terrain'"><label>Ménage</label><input type="number" v-model.number="form.surface" class="form-control" /></div>
           </div>
 
           <div class="row mb-3">
-            <div class="col-md-4"><label>Avance (Mois/F CFA)</label><input type="number" v-model.number="form.advance" class="form-control" /></div>
-            <div class="col-md-4"><label>Caution (Mois/F CFA)</label><input type="number" v-model.number="form.deposit" class="form-control" /></div>
-            <div class="col-md-4"><label>Prix de visite (FCFA)</label><input type="number" v-model.number="form.visit" class="form-control" /></div>
+            <div class="col-md-4" v-if="categories.find(c => c.id === selectedCategory)?.name !== 'Terrain'"><label>Avance (Mois/F CFA)</label><input type="number" v-model.number="form.advance" class="form-control" /></div>
+            <div class="col-md-4" v-if="categories.find(c => c.id === selectedCategory)?.name !== 'Terrain'"><label>Caution (Mois/F CFA)</label><input type="number" v-model.number="form.deposit" class="form-control" /></div>
+            <div class="col-md-4" v-if="categories.find(c => c.id === selectedCategory)?.name !== 'Terrain'"><label>Prix de visite (FCFA)</label><input type="number" v-model.number="form.visit" class="form-control" /></div>
           </div>
 
           <div class="mb-3">
@@ -342,11 +342,27 @@ const submitPublication = async () => {
     payload.append('category_id', selectedCategory.value)
     payload.append('pub_type_id', selectedPubType.value)
     selectedAttributes.value.forEach(a=>payload.append('attributes[]',a))
-    for(const key in form.value){
-      if(key==='sale_or_rent') payload.append('offer_type', form.value[key])
-      else if(key==='status') payload.append('is_active', form.value[key]==='active'?1:0)
-      else payload.append(key, form.value[key])
+    const isTerrain = categories.value.find(c => c.id === selectedCategory.value)?.name === 'Terrain'
+
+    for (const key in form.value) {
+
+      // ⛔ ignorer ces champs si Terrain
+      if (
+        isTerrain &&
+        ['price_period','bathroom','surface','advance','deposit','visit'].includes(key)
+      ) {
+        continue
+      }
+
+      if (key === 'sale_or_rent') {
+        payload.append('offer_type', form.value[key])
+      } else if (key === 'status') {
+        payload.append('is_active', form.value[key] === 'active' ? 1 : 0)
+      } else if (form.value[key] !== null && form.value[key] !== '') {
+        payload.append(key, form.value[key])
+      }
     }
+
     newImages.value.forEach(img=>payload.append('images[]', img.file))
     existingImages.value.forEach(img=>payload.append('existing_images[]', img.id))
 

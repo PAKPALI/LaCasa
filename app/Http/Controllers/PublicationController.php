@@ -414,107 +414,107 @@ class PublicationController extends Controller
 
     // 🔹 UPDATE
     public function update(Request $request, $id)
-{
-    $publication = Publication::findOrFail($id);
+    {
+        $publication = Publication::findOrFail($id);
 
-    $validator = Validator::make($request->all(), [
-        'country_id'   => ['required','exists:countries,id'],
-        'town_id'      => ['required','exists:towns,id'],
-        'district_id'  => ['required','exists:districts,id'],
-        'category_id'  => ['required','exists:categories,id'],
-        'pub_type_id'  => ['required','exists:pub_types,id'],
-        'price_period' => ['required','in:day,week,month'],
-        'price'        => ['nullable','numeric'],
-        'commission'   => ['nullable','numeric'],
-        'bathroom'     => ['nullable','integer'],
-        'surface'      => ['nullable','numeric'],
-        'advance'      => ['nullable','numeric'],
-        'deposit'      => ['nullable','numeric'],
-        'description'  => ['nullable','string'],
-        'visit'        => ['nullable','numeric'],
-        'offer_type'   => ['required','in:rent,sale'],
-        'is_active'    => ['boolean'],
-        'attributes'   => ['array'],
-        'attributes.*' => ['exists:attributes,id'],
-        'images.*'     => ['image','mimes:jpg,jpeg,png,webp','max:10240'],
-        'existing_images' => ['array'],
-        'existing_images.*' => ['integer','exists:publication_images,id'],
-        'phone1'       => ['nullable','string','max:20'],
-        'phone2'       => ['nullable','string','max:20'],
-    ]);
+        $validator = Validator::make($request->all(), [
+            'country_id'   => ['required','exists:countries,id'],
+            'town_id'      => ['required','exists:towns,id'],
+            'district_id'  => ['required','exists:districts,id'],
+            'category_id'  => ['required','exists:categories,id'],
+            'pub_type_id'  => ['required','exists:pub_types,id'],
+            'price_period' => ['nullable','in:day,week,month'],
+            'price'        => ['nullable','numeric'],
+            'commission'   => ['nullable','numeric'],
+            'bathroom'     => ['nullable','integer'],
+            'surface'      => ['nullable','numeric'],
+            'advance'      => ['nullable','numeric'],
+            'deposit'      => ['nullable','numeric'],
+            'description'  => ['nullable','string'],
+            'visit'        => ['nullable','numeric'],
+            'offer_type'   => ['required','in:rent,sale'],
+            'is_active'    => ['boolean'],
+            'attributes'   => ['array'],
+            'attributes.*' => ['exists:attributes,id'],
+            'images.*'     => ['image','mimes:jpg,jpeg,png,webp','max:10240'],
+            'existing_images' => ['array'],
+            'existing_images.*' => ['integer','exists:publication_images,id'],
+            'phone1'       => ['nullable','string','max:20'],
+            'phone2'       => ['nullable','string','max:20'],
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json([
-            'status'  => false,
-            'message' => $validator->errors()->first()
-        ], 422);
-    }
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
 
-    $validated = $validator->validated();
-    $validated['is_active'] = $validated['is_active'] ?? true;
+        $validated = $validator->validated();
+        $validated['is_active'] = $validated['is_active'] ?? true;
 
-    // 🔹 Met à jour les données principales
-    $publication->update($validated);
+        // 🔹 Met à jour les données principales
+        $publication->update($validated);
 
-    // 🔹 Met à jour les attributs
-    if (!empty($validated['attributes'] ?? [])) {
-        $publication->attributes()->sync($validated['attributes']);
-    }
+        // 🔹 Met à jour les attributs
+        if (!empty($validated['attributes'] ?? [])) {
+            $publication->attributes()->sync($validated['attributes']);
+        }
 
-    // 🔹 Gestion des images
-    $manager = new ImageManager(new Driver());
+        // 🔹 Gestion des images
+        $manager = new ImageManager(new Driver());
 
-    $existingImages = $validated['existing_images'] ?? [];
+        $existingImages = $validated['existing_images'] ?? [];
 
-    // Supprime les images qui ne sont plus dans existing_images
-    foreach ($publication->images as $img) {
-        if (!in_array($img->id, $existingImages)) {
-            foreach (['thumb','medium','large'] as $size) {
-                if ($img->$size && Storage::disk('public')->exists($img->$size)) {
-                    Storage::disk('public')->delete($img->$size);
+        // Supprime les images qui ne sont plus dans existing_images
+        foreach ($publication->images as $img) {
+            if (!in_array($img->id, $existingImages)) {
+                foreach (['thumb','medium','large'] as $size) {
+                    if ($img->$size && Storage::disk('public')->exists($img->$size)) {
+                        Storage::disk('public')->delete($img->$size);
+                    }
                 }
+                $img->delete();
             }
-            $img->delete();
         }
-    }
 
-    // Ajoute les nouvelles images
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $uuid = Str::uuid()->toString();
+        // Ajoute les nouvelles images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $uuid = Str::uuid()->toString();
 
-            $sizeFile = $image->getSize();
-            $limit = 3 * 1024 * 1024;
+                $sizeFile = $image->getSize();
+                $limit = 3 * 1024 * 1024;
 
-            $thumb  = "publications/thumb/$uuid.webp";
-            $medium = "publications/medium/$uuid.webp";
-            $large  = "publications/large/$uuid.webp";
+                $thumb  = "publications/thumb/$uuid.webp";
+                $medium = "publications/medium/$uuid.webp";
+                $large  = "publications/large/$uuid.webp";
 
-            if ($sizeFile <= $limit) {
-                $img = $manager->read($image)->toWebp(90);
-                Storage::disk('public')->put($large, $img);
-                $thumb  = $large;
-                $medium = $large;
-            } else {
-                Storage::disk('public')->put($thumb, $manager->read($image)->scale(width: 400)->toWebp(70));
-                Storage::disk('public')->put($medium, $manager->read($image)->scale(width: 800)->toWebp(80));
-                Storage::disk('public')->put($large, $manager->read($image)->scale(width: 1200)->toWebp(85));
+                if ($sizeFile <= $limit) {
+                    $img = $manager->read($image)->toWebp(90);
+                    Storage::disk('public')->put($large, $img);
+                    $thumb  = $large;
+                    $medium = $large;
+                } else {
+                    Storage::disk('public')->put($thumb, $manager->read($image)->scale(width: 400)->toWebp(70));
+                    Storage::disk('public')->put($medium, $manager->read($image)->scale(width: 800)->toWebp(80));
+                    Storage::disk('public')->put($large, $manager->read($image)->scale(width: 1200)->toWebp(85));
+                }
+
+                $publication->images()->create([
+                    'thumb'  => $thumb,
+                    'medium' => $medium,
+                    'large'  => $large,
+                ]);
             }
-
-            $publication->images()->create([
-                'thumb'  => $thumb,
-                'medium' => $medium,
-                'large'  => $large,
-            ]);
         }
-    }
 
-    return response()->json([
-        'status'      => true,
-        'message'     => 'Publication mise à jour avec succès ✅',
-        'publication' => $publication->load(['country','town','district','category','pubType','attributes','images'])
-    ]);
-}
+        return response()->json([
+            'status'      => true,
+            'message'     => 'Publication mise à jour avec succès ✅',
+            'publication' => $publication->load(['country','town','district','category','pubType','attributes','images'])
+        ]);
+    }
 
 
     // 🔹 DESTROY

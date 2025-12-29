@@ -170,7 +170,7 @@
   </div>
 
   <!-- 📌 Modal de détails de la publication -->
-  <div class="modal fade mt-5" id="publicationModal" tabindex="-1" aria-hidden="true" ref="modal">
+  <div class="modal fade mt-5 mb-5" id="publicationModal" tabindex="-1" aria-hidden="true" ref="modal">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-dark">
@@ -211,14 +211,20 @@
                     </div>
                   </td>
                 </tr>
-                <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }} / {{ formatPeriod(selectedPublication?.price_period) }}</td></tr>
-                <tr><th>Caution</th><td>{{ selectedPublication?.deposit }} {{ selectedPublication?.deposit>12?'F CFA':'Mois' }}</td></tr>
-                <tr><th>Avance</th><td>{{ selectedPublication?.advance }} {{ selectedPublication?.advance>12?'F CFA':'Mois' }}</td></tr>
-                <tr><th>Commission</th><td>{{ selectedPublication?.commission || '-'}} F CFA</td></tr>
-                <tr><th>Visite</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
-                <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
-                <tr><th>Ménage</th><td>{{ selectedPublication?.surface || '-'}} </td></tr>
-                <tr><th>Chambres</th><td>{{ selectedPublication?.bathroom || '-' }}</td></tr>
+                <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }}<strong v-if="selectedPublication?.category_name !== 'Terrain'"> / {{ formatPeriod(selectedPublication?.price_period) }}</strong></td></tr>
+                <tr v-if="selectedPublication?.category_name !== 'Terrain'">
+                  <th>Caution</th><td>{{ selectedPublication?.deposit }} {{ selectedPublication?.deposit>12?'F CFA':'Mois' }}</td>
+                </tr>
+                <tr v-if="selectedPublication?.category_name !== 'Terrain'">
+                  <th>Avance</th><td>{{ selectedPublication?.advance }} {{ selectedPublication?.advance>12?'F CFA':'Mois' }}</td>
+                </tr>
+                <tr v-if="selectedPublication?.category_name !== 'Terrain'"><th>Commission</th><td>{{ selectedPublication?.commission || '-'}} F CFA</td></tr>
+                <tr v-if="selectedPublication?.category_name !== 'Terrain'"><th>Visite</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
+                <tr>
+                  <th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td>
+                </tr>
+                <tr v-if="selectedPublication?.category_name !== 'Terrain'"><th>Ménage</th><td>{{ selectedPublication?.surface || '-'}} </td></tr>
+                <tr v-if="selectedPublication?.category_name !== 'Terrain'"><th>Chambres</th><td>{{ selectedPublication?.bathroom || '-' }}</td></tr>
                 <tr><th>Description</th><td>{{ selectedPublication?.description || 'Aucune description disponible' }}</td></tr>
                 <tr>
                   <th>Téléphones</th>

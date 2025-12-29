@@ -174,7 +174,7 @@
       <div class="p-3 mb-4 rounded shadow-sm text-light border" style="background-color: rgba(14, 46, 80, 0.85);">
         <h5 class="fw-bold text-light border-bottom mb-3">Informations complémentaires</h5>
         <div class="row">
-          <div class="col-md-6 mb-3">
+          <div class="col-md-6 mb-3" v-if="!isTerrain">
             <label class="form-label">Payable par</label>
             <v-select
               v-model="form.price_period"
@@ -190,12 +190,12 @@
 
           </div>
 
-          <div class="col-md-6 mb-3">
+          <div class="col-md-6 col-md-12 mb-3">
             <label class="form-label">Prix (FCFA)</label>
             <input type="number" class="form-control" v-model="form.price" />
           </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="!isTerrain">
           <div class="col-md-6 mb-3">
             <label class="form-label">Chambres</label>
             <input type="number" class="form-control" v-model="form.bathroom" />
@@ -206,7 +206,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" v-if="!isTerrain">
           <div class="col-md-6 mb-3">
             <label class="form-label">Avance (Mois/F CFA)</label>
             <input type="number" class="form-control" v-model="form.advance" />
@@ -217,7 +217,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" v-if="!isTerrain">
           <div class="col-md-6 mb-3">
             <label class="form-label">Prix de la visite (FCFA)</label>
             <input type="number" class="form-control" v-model="form.visit" />
@@ -302,7 +302,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import axios from 'axios'
 import vSelect from "vue-select"
 import "vue-select/dist/vue-select.css"
@@ -352,6 +352,11 @@ const form = ref({
   phone1: '', phone2: '',price_period: 'month',
 })
 
+const isTerrain = computed(() => {
+  const category = categories.value.find(c => c.id === selectedCategory.value)
+  return category?.name?.toLowerCase() === 'terrain'
+})
+
   // form.value.phone1 = user.value.is_active
 
 // Sinon attendre le chargement
@@ -361,7 +366,6 @@ watch(user, (newVal) => {
   }
 })
 
-console.log(user.value.tiktok_link)
 const previewImages = ref([])
 const publicationsList = ref([])
 const isSubmitting = ref(false)
@@ -510,12 +514,15 @@ const submitPublication = async () => {
   if (!selectedPubType.value) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner un type de publication', showConfirmButton:false, timer:3000 })
   if (selectedAttributes.value.length === 0 || selectedAttributes.value.includes(null)) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner au moins un attribut', showConfirmButton:false, timer:3000 })
   if (form.value.images.length === 0 || form.value.images.includes(null)) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez ajouter au moins une photo', showConfirmButton:false, timer:3000 })
-   if (!form.value.price_period) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner une période de paiement', showConfirmButton:false, timer:3000 })
-  if (!form.value.price) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le prix', showConfirmButton:false, timer:3000 })
-  if (!form.value.bathroom) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le nombre de chambres', showConfirmButton:false, timer:3000 })
+
+  if (!isTerrain.value) {
+    if (!form.value.price_period) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner une période de paiement', showConfirmButton:false, timer:3000 })
+    if (!form.value.price) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le prix', showConfirmButton:false, timer:3000 })
+  }
+  // if (!form.value.bathroom) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le nombre de chambres', showConfirmButton:false, timer:3000 })
   // if (!form.value.surface) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner la surface', showConfirmButton:false, timer:3000 })
-  if (!form.value.advance) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner l\'avance', showConfirmButton:false, timer:3000 })
-  if (!form.value.deposit) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner la caution', showConfirmButton:false, timer:3000 })
+  // if (!form.value.advance) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner l\'avance', showConfirmButton:false, timer:3000 })
+  // if (!form.value.deposit) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner la caution', showConfirmButton:false, timer:3000 })
   if (!form.value.sale_or_rent) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner si c\'est à vendre ou à louer', showConfirmButton:false, timer:3000 })
   if (!form.value.status) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez sélectionner le statut', showConfirmButton:false, timer:3000 })
   if (!form.value.phone1) return Swal.fire({ toast:true, position:'top-end', icon:'error', title:'Veuillez renseigner le numéro 1', showConfirmButton:false, timer:3000 })
@@ -529,7 +536,9 @@ const submitPublication = async () => {
     payload.append('district_id', selectedDistrict.value)
     payload.append('category_id', selectedCategory.value)
     payload.append('pub_type_id', selectedPubType.value)
-    payload.append('price_period', form.value.price_period)
+    if (!isTerrain.value && form.value.price_period) {
+      payload.append('price_period', form.value.price_period)
+    }
     
     selectedAttributes.value.forEach(attr => payload.append('attributes[]', attr))
     
