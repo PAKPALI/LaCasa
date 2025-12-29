@@ -52,6 +52,7 @@ class SendUserRegistrationNotifications implements ShouldQueue
 
             // 3️⃣ Notification aux admins
             $admins = User::where('role', '!=', 3)->get();
+            $clients = User::where('role', '==', 3)->get();
 
             $stats = [
                 'total_users'    => User::count(),
@@ -59,6 +60,7 @@ class SendUserRegistrationNotifications implements ShouldQueue
                 'total_persons'  => User::where('user_type', 1)->count(),
             ];
 
+            // send to admins
             foreach ($admins as $admin) {
                 Mail::send('emails.admin.registerAlert', [
                     'user'  => $this->user,
@@ -66,6 +68,17 @@ class SendUserRegistrationNotifications implements ShouldQueue
                 ], function($message) use ($admin) {
                     $message->to($admin->email);
                     $message->subject('Nouveau utilisateur enregistré');
+                });
+            }
+
+            // send to clients
+            foreach ($clients as $client) {
+                Mail::send('emails.user.registerAlert', [
+                    'user'  => $this->user,
+                    'stats' => $stats,
+                ], function($message) use ($client) {
+                    $message->to($client->email);
+                    $message->subject('Nouvelle agence enregistrée');
                 });
             }
 

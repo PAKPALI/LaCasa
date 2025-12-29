@@ -30,7 +30,7 @@ class DeactivateExpiredPublications implements ShouldQueue
                 }
             }
         }
-        Log::info('Fin du job de désactivation à : ' . now());
+        Log::info($publications->count().' pub trouvées ; fin du job de désactivation à : ' . now());
     }
 
     public function sendEmailMargin($user_name, $email, $code)

@@ -20,13 +20,13 @@ class WarningDeleteInactivePublications implements ShouldQueue
         $publications = Publication::where('is_active', false)->get();
 
         foreach ($publications as $publication) {
-
             // 🔹 1. Envoi d’un avertissement 5 jours avant suppression
             if ($publication->shouldSendDeletionWarning()) {
                 $this->sendEmailMargin($publication->user->name, $publication->user->email, $publication->code);
-                Log::info("Alert de suppression envoyer pour la publication {$publication->code}.");
+                // Log::success("Alert de suppression envoyer pour la publication {$publication->code}.");
             }
         }
+        Log::info($publications->count().' pub trouvées ; Fin du job de prevention de suppression de pub inactive à : ' . now());
     }
     public function sendEmailMargin($user_name, $email, $code)
     {

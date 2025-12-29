@@ -22,7 +22,7 @@ return [
         'sender_id' => env('KPRIME_SMS_SENDER_ID'),
         'response_url' => env('KPRIME_SMS_RESPONSE_URL'),
     ],
-    // KPRIME_SMS_BASE_URL=https:https://api.kprimesms.com/v1 
+    // KPRIME_SMS_BASE_URL=https:https://api.kprimesms.com/v1
     // KPRIME_SMS_TOKEN=5mNk3ivYwF4dcnWyLqUeucfvDlWefayI
     // KPRIME_SMS_KEY=51b001f55cec3e0db82773d2dd429eb3
     // KPRIME_SMS_SENDER= LaCasa

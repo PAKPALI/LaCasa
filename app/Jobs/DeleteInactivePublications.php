@@ -35,9 +35,10 @@ class DeleteInactivePublications implements ShouldQueue
 
                 $publication->delete();
 
-                Log::info("Publication {$publication->code} supprimée après 30 jours d'inactivité.");
+                // Log::info("Publication {$publication->code} supprimée après 30 jours d'inactivité.");
             }
         }
+        Log::info($publications->count().' pub trouvées ; Fin du job  de suppression de pub inactive à : ' . now());
     }
     public function sendEmailMargin($user_name, $email, $code)
     {
