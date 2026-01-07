@@ -52,7 +52,7 @@ class SendUserRegistrationNotifications implements ShouldQueue
 
             // 3️⃣ Notification aux admins
             $admins = User::where('role', '!=', 3)->get();
-            $clients = User::where('role', '==', 3)->get();
+            $clients = User::where('role', 3)->get();
 
             $stats = [
                 'total_users'    => User::count(),

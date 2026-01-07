@@ -516,7 +516,6 @@ class PublicationController extends Controller
         ]);
     }
 
-
     // 🔹 DESTROY
     public function destroy($id)
     {
