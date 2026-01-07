@@ -1,5 +1,7 @@
 <?php
 
+use App\Jobs\SendWeeklyUserStats;
+use App\Jobs\SendMonthlyUserStats;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use App\Jobs\DeleteInactivePublications;
@@ -20,6 +22,16 @@ Schedule::job(new DeactivateExpiredPublications())->everyMinute();
 // Schedule::job(new WarningDeleteInactivePublications())->dailyAt('01:00');
 Schedule::job(new WarningDeleteInactivePublications())->everyMinute();
 
- // Suppression quotidienne à 01h
+// Suppression quotidienne à 01h
 // Schedule::job(new DeleteInactivePublications())->dailyAt('01:00');
 Schedule::job(new DeleteInactivePublications())->everyMinute();
+
+
+
+// Scheduler pour le rapport hebdomadaire
+// $schedule::job(new SendWeeklyUserStats)->sundays()->at('23:59');
+$schedule::job(new SendWeeklyUserStats)->everyMinute();
+
+// Rapport mensuel : dernier jour du mois, à 23h59
+// $schedule::job(new SendMonthlyUserStats)->monthlyOn(date('t'), '23:59');
+ $schedule::job(new SendMonthlyUserStats)->everyMinute();

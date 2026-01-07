@@ -85,6 +85,7 @@ class SendWeeklyUserStats implements ShouldQueue
                     $message->subject('📊 Rapport Hebdomadaire - Statistiques Utilisateurs');
                 });
             }
+            Log::info('Rapport hebdomadaire des utilisateurs envoyé aux admins à : ' . now());
 
         } catch (\Exception $e) {
             Log::error("Erreur Weekly Stats: ".$e->getMessage());

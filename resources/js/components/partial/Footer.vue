@@ -66,8 +66,8 @@
 
 <script setup>
 // Import des images de galerie
-// import logo2 from '@images/logo2.png'
-import logo2 from "@images/logo_noel2.png"
+import logo2 from '@images/logo2.png'
+// import logo2 from "@images/logo_noel2.png"
 import prop1 from '@images2/property-1.jpg'
 import prop2 from '@images2/property-2.jpg'
 import prop3 from '@images2/property-3.jpg'

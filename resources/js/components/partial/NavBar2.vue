@@ -65,8 +65,8 @@
 
 <script setup>
 import { ref, computed } from "vue"
-// import logo2 from "@images/logo2.png"
-import logo2 from "@images/logo_noel2.png"
+import logo2 from "@images/logo2.png"
+// import logo2 from "@images/logo_noel2.png"
 
 import { user, isAuthenticated, logout as authLogout } from "../auth/auth.js"
 

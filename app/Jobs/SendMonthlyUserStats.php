@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -70,5 +71,6 @@ class SendMonthlyUserStats implements ShouldQueue
                 $message->subject('📅 Rapport Mensuel - Statistiques Utilisateurs');
             });
         }
+        Log::info('Rapport mensuel des utilisateurs envoyé aux admins à : ' . now());
     }
 }
