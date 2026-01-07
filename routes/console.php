@@ -15,23 +15,23 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 // 🔔 Planification du job de désactivation automatique
-// Schedule::job(new DeactivateExpiredPublications())->dailyAt('00:00');
-Schedule::job(new DeactivateExpiredPublications())->everyMinute();
+Schedule::job(new DeactivateExpiredPublications())->dailyAt('00:00');
+// Schedule::job(new DeactivateExpiredPublications())->everyMinute();
 
 // Rappel de Suppression quotidienne à 01h
-// Schedule::job(new WarningDeleteInactivePublications())->dailyAt('01:00');
-Schedule::job(new WarningDeleteInactivePublications())->everyMinute();
+Schedule::job(new WarningDeleteInactivePublications())->dailyAt('01:00');
+// Schedule::job(new WarningDeleteInactivePublications())->everyMinute();
 
 // Suppression quotidienne à 01h
-// Schedule::job(new DeleteInactivePublications())->dailyAt('01:00');
-Schedule::job(new DeleteInactivePublications())->everyMinute();
+Schedule::job(new DeleteInactivePublications())->dailyAt('01:00');
+// Schedule::job(new DeleteInactivePublications())->everyMinute();
 
 
 
 // Scheduler pour le rapport hebdomadaire
+Schedule::job(new SendWeeklyUserStats)->sundays()->at('23:59');
 // Schedule::job(new SendWeeklyUserStats)->everyMinute();
-Schedule::job(new SendWeeklyUserStats)->everyMinute();
 
 // Rapport mensuel : dernier jour du mois, à 23h59
-// Schedule::job(new SendWeeklyUserStats)->everyMinute();
- Schedule::job(new SendMonthlyUserStats)->everyMinute();
+Schedule::job(new SendWeeklyUserStats)->monthlyOn(date('t'), '23:59');
+//  Schedule::job(new SendMonthlyUserStats)->everyMinute();
