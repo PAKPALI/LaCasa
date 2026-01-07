@@ -48,7 +48,7 @@ class SendUserRegistrationNotifications implements ShouldQueue
             $message = "Bienvenue " . $this->user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance!";
             $number = $this->user->phone1 ? $this->user->phone1 : $this->user->phone2;
 
-            $this->sendSms($number, $message);
+            // $this->sendSms($number, $message);
 
             // 3️⃣ Notification aux admins
             $admins = User::where('role', '!=', 3)->get();
