@@ -1,7 +1,7 @@
 <template>
   <!-- <ParticleJs /> -->
   <Header />
-  <!-- <SearchBar /> -->
+  <UserStats />
   <About />
   <Agent/>
   <Category />
@@ -16,6 +16,7 @@
   // const ParticleJs = defineAsyncComponent(() => import('../../partial/Particles.vue'))
   // import ParticleJs from '@/components/partial/Particles.vue'
   import Header from '@/components/body/home/Header.vue'
+  import UserStats from '@/components/body/home/UserStats.vue'
   import SearchBar from '@/components/body/home/SearchForm.vue'
   import Category from '@/components/body/home/Category.vue'
   import About from '@/components/body/home/About.vue'

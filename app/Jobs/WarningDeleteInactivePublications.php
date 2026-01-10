@@ -30,11 +30,19 @@ class WarningDeleteInactivePublications implements ShouldQueue
     }
     public function sendEmailMargin($user_name, $email, $code)
     {
-        // Envoyez l'e-mail avec le code généré
-        Mail::send('emails.publication.warningDeleted', ['user_name' => $user_name, 'code' => $code], function($message) use ($email){
-            $message->to($email);
-            $message->subject(config('app.name') . ' - Publication supprimée');
-        });
+        try {
+            // Envoyez l'e-mail avec le code généré
+            Mail::send('emails.publication.warningDeleted', ['user_name' => $user_name, 'code' => $code,], function($message) use ($email){
+                $message->to($email);
+                $message->subject(config('app.name') . ' - Publication supprimée');
+            });
+            log::info("Envoi de l'email de prevention de suppression de pub inactive à : " . $email);
+        } catch (\Throwable $e) {
+            Log::error('Erreur mail prod', [
+                'email' => $email,
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }
 

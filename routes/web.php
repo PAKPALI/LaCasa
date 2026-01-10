@@ -98,6 +98,10 @@ Route::middleware('auth')->controller(ReviewController::class)->group(function (
 //     Route::resource('users', UserController::class);
 // });
 Route::get('/categories', [CategoryController::class, 'index']);
+// routes/api.php
+Route::get('/users/stats', [UserController::class, 'stats']);
+
+
 Route::get('/{any}', function () {
     return view('index');
     // return view('index2');

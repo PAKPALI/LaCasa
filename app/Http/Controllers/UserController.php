@@ -276,6 +276,16 @@ class UserController extends Controller
         }
     }
 
+    public function stats()
+    {
+        return response()->json([
+            'total_users' => User::count(),
+            'persons' => User::where('user_type', 1)->count(),
+            'agencies' => User::where('user_type', 2)->count(),
+            'verified_agencies' => User::where('user_type', 2)->where('is_verified', true)->count(),
+        ]);
+    }
+
     public function destroy($id)
     {
         $user = User::findOrFail($id);

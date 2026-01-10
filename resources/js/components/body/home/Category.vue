@@ -10,7 +10,7 @@
 
       <div class="row g-4">
         <div class="col-lg-4 col-md-6 col-sm-6" v-for="(item, index) in categories" :key="index">
-          <router-link to='/publication' class="nav-link neon-text">
+          <router-link to='/publications' class="nav-link neon-text">
             <div class="cat-card  text-center rounded-4 shadow-sm p-4 position-relative" style="background-color: rgba(255, 255, 255, 0.7);">
               <div class="floating-icon">
                 <img class="img-fluid" :src="getIcon(item.name)" :alt="item.name" />
