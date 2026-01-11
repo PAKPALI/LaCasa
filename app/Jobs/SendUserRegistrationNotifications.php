@@ -71,15 +71,17 @@ class SendUserRegistrationNotifications implements ShouldQueue
                 });
             }
 
-            // send to clients
-            foreach ($clients as $client) {
-                Mail::send('emails.user.registerAlert', [
-                    'user'  => $this->user,
-                    'stats' => $stats,
-                ], function($message) use ($client) {
-                    $message->to($client->email);
-                    $message->subject('Nouvelle agence enregistrée');
-                });
+            if($this->user->user_type==2){
+                // send to clients
+                foreach ($clients as $client) {
+                    Mail::send('emails.user.registerAlert', [
+                        'user'  => $this->user,
+                        'stats' => $stats,
+                    ], function($message) use ($client) {
+                        $message->to($client->email);
+                        $message->subject('Nouvelle agence enregistrée');
+                    });
+                }
             }
 
         } catch (\Exception $e) {

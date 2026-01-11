@@ -121,7 +121,7 @@
           </div>
 
         </div>
-        <div class="alert alert-warning border border-warning rounded p-3" role="alert">
+        <!-- <div class="alert alert-warning border border-warning rounded p-3" role="alert">
           <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Sécurité des transactions</h5>
           
           <p>
@@ -139,6 +139,26 @@
           <p>
             À ce jour, toutes les agences enregistrées — certifiées ou non — sont autorisées à publier des annonces. Nous encourageons vivement les agences non certifiées à entamer leur processus de certification (Voir partie accueil, section partenaire) afin d’améliorer la <strong>transparence</strong>, la <strong>crédibilité</strong> et la <strong>confiance</strong> auprès des utilisateurs.
           </p>
+        </div> -->
+
+        <div class="alert alert-info border border-info rounded p-3" role="alert">
+          <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Info</h5>
+          
+          <!-- <p>
+            Pour votre sécurité, prenez le temps de vérifier la crédibilité des agences non certifiées avant tout engagement ou paiement.
+          </p> -->
+          
+          <p>
+            Les agences <strong>certifiées</strong> sont clairement identifiables grâce à une <i class="bi bi-patch-check-fill text-success"></i> icône de certification affichée à côté de leur nom sur leurs publications .
+          </p>
+          
+          <p>
+            <strong>NB:</strong> L'icône de certification des agences éligibles  est visible , quand vous êtes connecté.
+          </p>
+          
+          <!-- <p>
+            À ce jour, toutes les agences enregistrées — certifiées ou non — sont autorisées à publier des annonces. Nous encourageons vivement les agences non certifiées à entamer leur processus de certification (Voir partie accueil, section partenaire) afin d’améliorer la <strong>transparence</strong>, la <strong>crédibilité</strong> et la <strong>confiance</strong> auprès des utilisateurs.
+          </p> -->
         </div>
         
         <marquee class="bg-dark text-light mb-2" behavior="scroll" direction="left" scrollamount="6">
