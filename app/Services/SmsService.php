@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class SmsService
@@ -25,19 +26,37 @@ class SmsService
 
     public function send($phoneNumber, $message)
     {
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'token' => $this->token,
-            'key' => $this->key,
-        ])->post($this->baseUrl, [
-            'sender' => $this->sender,
-            'sender_id' => $this->sender_id,
-            'country' => 'TG',
-            'phone_number' => $phoneNumber,
-            'message' => $message,
-            'response_url' => $this->responseUrl,
-        ]);
-
-        return $response->json();
+        try {
+            log::info("Envoi SMS2 à " . $phoneNumber . " : " . $message);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'token' => $this->token,
+                'key' => $this->key,
+            ])->post($this->baseUrl, [
+                'sender' => $this->sender,
+                'sender_id' => $this->sender_id,
+                'country' => 'TG',
+                'phone_number' => $phoneNumber,
+                'message' => $message,
+                'response_url' => $this->responseUrl,
+            ]);
+            if ($response->failed()) {
+                Log::error("Erreur SMS API", [
+                    'status' => $response->status(),
+                    'body'   => $response->body(),
+                ]);
+            } else {
+                Log::info("SMS envoyé", $response->json());
+            }
+            Log::error("Erreur SMS API", 
+                [
+                    'status' => $response->status(),
+                    'body'   => $response->body(),
+                ]
+            );
+            // return $response->json();
+        } catch (\Exception $e) {
+            Log::error("Erreur envoi sms inscription: ".$e->getMessage());
+        }
     }
 }

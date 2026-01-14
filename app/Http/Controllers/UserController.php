@@ -117,6 +117,7 @@ class UserController extends Controller
                 // Si tu as une relation images (optionnel)
                 // $user->images()->create(['path' => 'LaCasa/pub/' . $imageName]);
             }
+            
             // php artisan make:job SendUserRegistrationNotifications
             SendUserRegistrationNotifications::dispatch($user, $request->password);
 

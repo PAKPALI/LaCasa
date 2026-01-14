@@ -47,7 +47,6 @@ class SendUserRegistrationNotifications implements ShouldQueue
             // 2️⃣ Envoi du SMS
             $message = "Bienvenue " . $this->user->name . " sur LaCasa. Votre compte a été créé avec succès. Merci de nous faire confiance!";
             $number = $this->user->phone1 ? $this->user->phone1 : $this->user->phone2;
-
             $this->sendSms($number, $message);
 
             // 3️⃣ Notification aux admins
@@ -90,7 +89,17 @@ class SendUserRegistrationNotifications implements ShouldQueue
     }
     public function sendSms($number, $message)
     {
-        $smsService = new SmsService ();
-        $smsService->send($number, $message);
+        try {
+            if (empty($number)) {
+                Log::warning("Numéro de téléphone vide pour l'envoi du SMS d'inscription.");
+                return;
+            }
+
+            $smsService = new SmsService ();
+            $smsService->send($number, $message);
+        } catch (\Exception $e) {
+            Log::error("Erreur vérification numéro sms inscription: ".$e->getMessage());
+            return;
+        }
     }
 }

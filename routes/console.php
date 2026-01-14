@@ -29,9 +29,9 @@ Schedule::job(new DeleteInactivePublications())->dailyAt('01:00');
 
 
 // Scheduler pour le rapport hebdomadaire
-Schedule::job(new SendWeeklyUserStats)->sundays()->at('23:59');
+Schedule::job(new SendWeeklyUserStats)->sundays()->at('23:55');
 // Schedule::job(new SendWeeklyUserStats)->everyMinute();
 
 // Rapport mensuel : dernier jour du mois, à 23h59
-Schedule::job(new SendWeeklyUserStats)->monthlyOn(date('t'), '23:59');
+Schedule::job(new SendWeeklyUserStats)->monthlyOn(date('t'), '23:55');
 //  Schedule::job(new SendMonthlyUserStats)->everyMinute();
