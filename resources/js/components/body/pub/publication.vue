@@ -94,8 +94,17 @@
                   </div>
                 </div>
 
+                <!-- Date de publication -->
+                <div class="d-flex">
+                  <small class="flex-fill text-center py-2">
+                    <marquee class="" behavior="scroll" direction="left" scrollamount="6">
+                      <strong>Publiée {{ formatRelativeDate(p.created_at) }} .</strong>
+                    </marquee>
+                  </small>
+                </div>
+
                 <!-- Boutons Modifier -->
-                <div class="d-flex border-top">
+                <div class="d-flex border">
                   <small class="flex-fill text-center py-2">
                     <button title="Modifier"
                       @click="openEditModal(p.id)" 
@@ -264,177 +273,206 @@
 </template>
 
 <script setup>
-import gif from '@images2/empty.gif'
-import { ref, computed, watch, nextTick } from 'vue'
-import { Modal, Carousel } from 'bootstrap'
-import EditPublication from './edit.vue'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-import { user, isAuthenticated } from '../../auth/auth.js'
-import { useRouter } from 'vue-router'
-const router = useRouter()
-const codeFilter = ref('')
+  import gif from '@images2/empty.gif'
+  import { ref, computed, watch, nextTick } from 'vue'
+  import { Modal, Carousel } from 'bootstrap'
+  import EditPublication from './edit.vue'
+  import axios from 'axios'
+  import Swal from 'sweetalert2'
+  import { user, isAuthenticated } from '../../auth/auth.js'
+  import { useRouter } from 'vue-router'
+  const router = useRouter()
+  const codeFilter = ref('')
 
-const goToLogin = () => {
-  router.push('/login')
-}
-
-const formatPeriod = (period) => {
-  switch(period){
-    case 'month': return 'Mois'
-    case 'week': return 'Semaine'
-    case 'day': return 'Jour'
-    default: return ''
+  const goToLogin = () => {
+    router.push('/login')
   }
-}
 
-const showEditModal = ref(false)
-const editingPubId = ref(null)
-const publicationsList = ref([])
-const selectedPublication = ref(null)
-const modalInstance = ref(null)
-const placeholderImage = '/images2/property-placeholder.jpg'
-const loadingEdit = ref(null)
-const loadingPublications = ref(false)
-
-const props = defineProps({
-  publications: { type: Array, required: true }
-})
-
-// Copier les publications du parent
-watch(() => props.publications, (newList) => {
-  publicationsList.value = [...newList]
-}, { immediate: true })
-
-// Initialiser tous les carrousels des publications
-const initCarousels = () => {
-  nextTick(() => {
-    publicationsList.value.forEach((p, i) => {
-      const el = document.getElementById('carouselList' + i)
-      if (el) new Carousel(el)
-    })
-  })
-}
-
-if (!isAuthenticated.value) {
-  console.warn("Page accessible uniquement aux utilisateurs connectés.")
-  Swal.fire({
-    toast: true,
-    position: 'top-end',
-    icon: 'error',
-    title: 'Page accessible uniquement aux utilisateurs connectés.',
-    showConfirmButton: false,
-    timer: 3000
-  })
-}
-
-// Charger les publications
-const fetchPublications = async () => {
-  loadingPublications.value = true
-  try {
-    const res = await axios.get('/getMyPublication')
-    publicationsList.value = res.data
-    initCarousels()
-  } catch (err) {
-    console.error('Erreur lors du chargement des publications', err)
-  } finally {
-    loadingPublications.value = false
-  }
-}
-
-// Filtrage par onglet
-const activeTab = ref('featured')
-// const filteredPublications = computed(() => {
-//   if (!publicationsList.value) return []
-//   if (activeTab.value === 'featured') return publicationsList.value
-//   if (activeTab.value === 'sell') return publicationsList.value.filter(p => p.offer_type === 'sale')
-//   if (activeTab.value === 'rent') return publicationsList.value.filter(p => p.offer_type === 'rent')
-//   return publicationsList.value
-// })
-
-// Ouvrir le modal et initialiser le carrousel
-const openModal = (pub) => {
-   console.log('Publication sélectionnée:', pub); 
-  selectedPublication.value = pub
-  nextTick(() => {
-    if (!modalInstance.value) modalInstance.value = new Modal(document.getElementById('publicationModal'))
-    modalInstance.value.show()
-
-    // Initialiser carrousel du modal
-    const carouselEl = document.getElementById('carouselImages')
-    if (carouselEl) new Carousel(carouselEl)
-  })
-}
-
-// Modal d'édition
-const openEditModal = async (id) => {
-  editingPubId.value = id
-  loadingEdit.value = id
-  showEditModal.value = true
-  setTimeout(() => loadingEdit.value = null, 8000)
-}
-
-// Formatage du prix
-const formatPrice = (price) => {
-  if (!price) return '0 FCFA'
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(price)
-}
-
-// Supprimer une publication
-const deletePublication = async (id) => {
-  const result = await Swal.fire({
-    title: 'Êtes-vous sûr ?',
-    text: "Cette action est irréversible !",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Oui, supprimer',
-    cancelButtonText: 'Annuler'
-  })
-
-  if (result.isConfirmed) {
-    try {
-      await axios.delete(`/api/publication/${id}`)
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: 'Publication supprimée ✅',
-        showConfirmButton: false,
-        timer: 3000
-      })
-      fetchPublications()
-    } catch (err) {
-      console.error('Erreur lors de la suppression', err)
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'error',
-        title: 'Impossible de supprimer la publication',
-        showConfirmButton: false,
-        timer: 3000
-      })
+  const formatPeriod = (period) => {
+    switch(period){
+      case 'month': return 'Mois'
+      case 'week': return 'Semaine'
+      case 'day': return 'Jour'
+      default: return ''
     }
   }
-}
 
-const filteredPublications = computed(() => {
-  if (!publicationsList.value) return []
+  const showEditModal = ref(false)
+  const editingPubId = ref(null)
+  const publicationsList = ref([])
+  const selectedPublication = ref(null)
+  const modalInstance = ref(null)
+  const placeholderImage = '/images2/property-placeholder.jpg'
+  const loadingEdit = ref(null)
+  const loadingPublications = ref(false)
 
-  let list = publicationsList.value
+  const props = defineProps({
+    publications: { type: Array, required: true }
+  })
 
-  // Filtre par onglet
-  if (activeTab.value === 'sell') list = list.filter(p => p.offer_type === 'sale')
-  else if (activeTab.value === 'rent') list = list.filter(p => p.offer_type === 'rent')
+  // Copier les publications du parent
+  watch(() => props.publications, (newList) => {
+    publicationsList.value = [...newList]
+  }, { immediate: true })
 
-  // Filtre par code uniquement si longueur > 5
-  if (codeFilter.value.trim().length > 5) {
-    list = list.filter(p => p.code?.toLowerCase() === codeFilter.value.trim().toLowerCase())
+  // Initialiser tous les carrousels des publications
+  const initCarousels = () => {
+    nextTick(() => {
+      publicationsList.value.forEach((p, i) => {
+        const el = document.getElementById('carouselList' + i)
+        if (el) new Carousel(el)
+      })
+    })
   }
 
-  return list
-})
+  if (!isAuthenticated.value) {
+    console.warn("Page accessible uniquement aux utilisateurs connectés.")
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'error',
+      title: 'Page accessible uniquement aux utilisateurs connectés.',
+      showConfirmButton: false,
+      timer: 3000
+    })
+  }
+
+  // Charger les publications
+  const fetchPublications = async () => {
+    loadingPublications.value = true
+    try {
+      const res = await axios.get('/getMyPublication')
+      publicationsList.value = res.data
+      initCarousels()
+    } catch (err) {
+      console.error('Erreur lors du chargement des publications', err)
+    } finally {
+      loadingPublications.value = false
+    }
+  }
+
+  // Filtrage par onglet
+  const activeTab = ref('featured')
+  // const filteredPublications = computed(() => {
+  //   if (!publicationsList.value) return []
+  //   if (activeTab.value === 'featured') return publicationsList.value
+  //   if (activeTab.value === 'sell') return publicationsList.value.filter(p => p.offer_type === 'sale')
+  //   if (activeTab.value === 'rent') return publicationsList.value.filter(p => p.offer_type === 'rent')
+  //   return publicationsList.value
+  // })
+
+  // Ouvrir le modal et initialiser le carrousel
+  const openModal = (pub) => {
+    console.log('Publication sélectionnée:', pub); 
+    selectedPublication.value = pub
+    nextTick(() => {
+      if (!modalInstance.value) modalInstance.value = new Modal(document.getElementById('publicationModal'))
+      modalInstance.value.show()
+
+      // Initialiser carrousel du modal
+      const carouselEl = document.getElementById('carouselImages')
+      if (carouselEl) new Carousel(carouselEl)
+    })
+  }
+
+  // Modal d'édition
+  const openEditModal = async (id) => {
+    editingPubId.value = id
+    loadingEdit.value = id
+    showEditModal.value = true
+    setTimeout(() => loadingEdit.value = null, 8000)
+  }
+
+  // Formatage du prix
+  const formatPrice = (price) => {
+    if (!price) return '0 FCFA'
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(price)
+  }
+
+  // Supprimer une publication
+  const deletePublication = async (id) => {
+    const result = await Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: "Cette action est irréversible !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    })
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`/api/publication/${id}`)
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Publication supprimée ✅',
+          showConfirmButton: false,
+          timer: 3000
+        })
+        fetchPublications()
+      } catch (err) {
+        console.error('Erreur lors de la suppression', err)
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Impossible de supprimer la publication',
+          showConfirmButton: false,
+          timer: 3000
+        })
+      }
+    }
+  }
+
+  const filteredPublications = computed(() => {
+    if (!publicationsList.value) return []
+
+    let list = publicationsList.value
+
+    // Filtre par onglet
+    if (activeTab.value === 'sell') list = list.filter(p => p.offer_type === 'sale')
+    else if (activeTab.value === 'rent') list = list.filter(p => p.offer_type === 'rent')
+
+    // Filtre par code uniquement si longueur > 3
+    if (codeFilter.value.trim().length > 3) {
+      list = list.filter(p => p.code?.toLowerCase() === codeFilter.value.trim().toLowerCase())
+    }
+
+    return list
+  })
+
+  const formatRelativeDate = (date) => {
+    const now = new Date();
+    const published = new Date(date);
+    
+    const diff = now - published; // différence en ms
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours   = Math.floor(minutes / 60);
+    const days    = Math.floor(hours / 24);
+    const months  = Math.floor(days / 30);
+    const years   = Math.floor(days / 365);
+
+    if (years > 0) {
+      const remainingMonths = Math.floor((days % 365) / 30);
+      return `il y a ${years} an${years > 1 ? 's' : ''}${remainingMonths > 0 ? ` ${remainingMonths} mois` : ''}`;
+    }
+
+    if (months > 0) {
+      const remainingDays = days % 30;
+      return `il y a ${months} mois${remainingDays > 0 ? ` ${remainingDays} jour${remainingDays > 1 ? 's' : ''}` : ''}`;
+    }
+
+    if (days > 0) return `il y a ${days} jour${days > 1 ? 's' : ''}`;
+    if (hours > 0) return `il y a ${hours} heure${hours > 1 ? 's' : ''}`;
+    if (minutes > 0) return `il y a ${minutes} minute${minutes > 1 ? 's' : ''}`;
+    return `il y a quelques secondes`;
+  };
 
 </script>
 

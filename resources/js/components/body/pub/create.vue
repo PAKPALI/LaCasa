@@ -190,7 +190,7 @@
 
           </div>
 
-          <div class="col-md-6 col-md-12 mb-3">
+          <div class="col-md-6 mb-3">
             <label class="form-label">Prix (FCFA)</label>
             <input type="number" class="form-control" v-model="form.price" />
           </div>

@@ -126,5 +126,4 @@ class SyncService
                 'name' => $attribute->name
             ]);
     }
-
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container-xxl py-5">
+  <div class="container-xxl py-5 border border-1 border-primary mb-5">
     <div class="container">
       <div class="text-center mx-auto mb-5" style="max-width: 600px;">
         <h1 class="mb-3 fw-bold text-dark">Types de logements</h1>

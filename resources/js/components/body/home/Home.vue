@@ -7,7 +7,7 @@
   <Category />
   <Partners />
   <Team />
-  <Testimonials />
+  <!-- <Testimonials /> -->
   <!-- <Footer /> -->
 </template>
 

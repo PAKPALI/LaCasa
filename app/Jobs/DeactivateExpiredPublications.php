@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use App\Models\Publication;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -22,8 +23,17 @@ class DeactivateExpiredPublications implements ShouldQueue
         foreach ($publications as $publication) {
             if ($publication->shouldBeDeactivated()) {
                 $publication->update(['is_active' => false, 'deactivated_at' => now()] );
+                // verifier si l'utilisateur existe avant d'envoyer l'email
                 if ($publication->user && $publication->user->email) {
-                    $this->sendEmailMargin($publication->user->name, $publication->user->email, $publication->code);
+                    // verifier le role de l'utilisateur pour envoyer l'email aux admins si c'est un admin
+                    if($publication->user->role == 1 || $publication->user->role == 2){
+                        $admins = User::where('role', '!=', 3)->get();
+                        foreach ($admins as $admin) {
+                            $this->sendEmailMargin($admin->name, $admin->email, $publication->code);
+                        }
+                    }else{
+                        $this->sendEmailMargin($publication->user->name, $publication->user->email, $publication->code);
+                    }
                 }
             }
         }

@@ -1,9 +1,9 @@
 <template>
   <!-- Team Start -->
-  <div class="container-xxl py-5 team-section mb-5">
+  <div class="container-xxl py-5 team-section mb-5 border border-1 border-primary">
     <div class="container">
       <!-- Titre -->
-      <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+      <div class="text-center mx-auto mb-3" style="max-width: 600px;">
         <h1 class="mb-3 fw-bold text-gradient">L’Équipe LaCasa</h1>
         <h6 class="text-dark">
           <strong>
@@ -26,9 +26,11 @@
               <img class="img-fluid w-100" :src="m.img" :alt="m.name" />
               <div class="overlay d-flex align-items-center justify-content-center">
                 <div class="social-links d-flex">
-                  <a class="btn btn-square mx-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                  <!-- <a class="btn btn-square mx-2" href="#"><i class="fab fa-facebook-f"></i></a>
                   <a class="btn btn-square mx-2" href="#"><i class="fab fa-twitter"></i></a>
-                  <a class="btn btn-square mx-2" href="#"><i class="fab fa-instagram"></i></a>
+                  <a class="btn btn-square mx-2" href="#"><i class="fab fa-instagram"></i></a> -->
+                  <a class="btn btn-square mx-2" href="#"><i class="fab fa-whatsapp"></i></a>
+                  <a class="btn btn-square mx-2" href="#"><i class="fab fa-linkedin"></i></a>
                 </div>
               </div>
             </div>
@@ -52,7 +54,7 @@ import icon2 from '@images/web.avif'
 import icon3 from '@images/agent.avif'
 
 const members = [
-  { name: 'KONDJI Arafat', role: 'Analyste technicien', img: icon1 },
+  { name: 'KONDI Arafat', role: 'Analyste technicien/QA/Devops', img: icon1 },
   { name: 'PAKPALI Essolissam Didier (CEO)', role: 'Développeur web', img: icon2 },
   // { name: 'ATTIGANE Samuel', role: 'Agent immobilier', img: icon3 },
 ]

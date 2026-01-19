@@ -3,16 +3,26 @@
     <div class="container">
 
       <!-- FILTRAGE -->
-      <div class="container-fluid mb-5 p-3" style="background-color: rgba(14, 46, 80, 0.9);">
+      <div class="container-fluid mb-5 mt-4 p-1" style="background-color: rgba(14, 46, 80, 0.9);">
         <div class="container">
           <div class="row g-2">
             <div class="col-md-12">
               <div class="row text-light g-2">
                 <label class="form-label mb-3 text-light">
                   <marquee class="border" behavior="scroll" direction="left" scrollamount="6">
-                    <strong>Veuillez remplir les champs pour affiner votre recherche.</strong>
-                    <i class="fa fa-search me-2"></i>
+                    <strong>La liste des publications ou annonces se trouve plus bas après le formulaire de recherche.</strong>
+                    <!-- <i class="fa fa-search me-2"></i> -->
                   </marquee>
+                  <div class="alert alert-info border border-info rounded p-1" role="alert">
+                    <strong class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Info</strong>
+                    <p>
+                      Nous tenons à rappeler qu'il n'est pas obligé de remplir tous les champs pour effectuer une recherche. Vous pouvez simplement sélectionner un pays, une ville, une catégorie, etc., selon vos préférences.
+                    </p>
+                    
+                    <p>
+                      <strong>NB:</strong> Plus vous remplissez de champs, plus votre recherche sera précise.
+                    </p>
+                  </div>
                 </label>
 
                 <!-- Pays -->
@@ -141,7 +151,7 @@
           </p>
         </div> -->
 
-        <div class="alert alert-info border border-info rounded p-3" role="alert">
+        <div class="alert alert-info border border-info rounded p-1" role="alert">
           <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Info</h5>
           
           <!-- <p>

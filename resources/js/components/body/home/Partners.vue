@@ -1,5 +1,5 @@
 <template>
-  <div class="container-xxl py-5 partenaires-section mt-5 mb-5">
+  <div class="container-xxl py-2 partenaires-section mt-1 mb-5 border border-1 border-primary">
     <div class="container text-center">
       <div class="mb-5">
         <h1 class="fw-bold mb-3 text-gradient">Nos Partenaires</h1>

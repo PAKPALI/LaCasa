@@ -5,25 +5,31 @@
         <img src="https://img.icons8.com/3d-fluency/94/user-shield.png" alt="User" class="logo" />
         <h2 class="title">Créer un compte</h2>
         <p class="subtitle">Rejoignez LaCasa et bougez simplement🚀</p>
+        <div class="alert alert-info border border-info rounded p-1" role="alert">
+          <strong class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Info</strong>
+          <p>
+             (*) sert a reconnaitre les champs obligatoires.
+          </p>
+        </div>
       </div>
 
       <form @submit.prevent="registerUser" class="fade-in">
         <div class="row">
           <!-- Nom complet -->
           <div class="col-md-6 mb-3">
-            <label class="form-label">Nom complet</label>
-            <input type="text" v-model="form.name" class="form-control" placeholder="Ex : Didier Pakpali" />
+            <label class="form-label">Nom complet*</label>
+            <input type="text" v-model="form.name" class="form-control" placeholder="Personne/Agence" />
           </div>
 
           <!-- Email -->
           <div class="col-md-6 mb-3">
-            <label class="form-label">Adresse email</label>
+            <label class="form-label">Adresse email*</label>
             <input type="email" v-model="form.email" class="form-control" placeholder="Ex : exemple@mail.com" />
           </div>
 
           <!-- Mot de passe -->
           <div class="col-md-6 mb-3">
-            <label class="form-label">Mot de passe</label>
+            <label class="form-label">Mot de passe*</label>
             <div class="input-group">
               <input
                 :type="showPassword ? 'text' : 'password'"
@@ -39,7 +45,7 @@
 
           <!-- Confirmation -->
           <div class="col-md-6 mb-3">
-            <label class="form-label">Confirmer le mot de passe</label>
+            <label class="form-label">Confirmer le mot de passe*</label>
             <div class="input-group">
               <input
                 :type="showPasswordConfirm ? 'text' : 'password'"
@@ -55,7 +61,7 @@
 
           <!-- Type d'utilisateur -->
           <div class="col-md-12 mb-3">
-            <label class="form-label">Vous êtes :</label>
+            <label class="form-label">Vous êtes : *</label>
             <div class="d-flex gap-3 justify-content-center flex-wrap">
               <div
                 class="user-type-card"
@@ -91,11 +97,11 @@
           </div>
 
           <div class="col-md-4 mb-3">
-            <v-select v-model="selectedCountry" :options="countries" label="name" :reduce="c => c.id" placeholder="Pays" />
+            <v-select v-model="selectedCountry" :options="countries" label="name" :reduce="c => c.id" placeholder="Pays *" />
           </div>
 
           <div class="col-md-4 mb-3">
-            <v-select v-model="selectedTown" :options="towns" label="name" :reduce="t => t.id" placeholder="Ville" :disabled="!selectedCountry" />
+            <v-select v-model="selectedTown" :options="towns" label="name" :reduce="t => t.id" placeholder="Ville *" :disabled="!selectedCountry" />
           </div>
 
           <div class="col-md-4 mb-3">
@@ -104,7 +110,7 @@
 
           <!-- Téléphone -->
           <div class="col-md-6 mb-3">
-            <label class="form-label">Téléphone principal</label>
+            <label class="form-label">Téléphone principal *</label>
             <input type="number" v-model="form.phone1" class="form-control" placeholder="Ex : 90 85 94 88" />
           </div>
           <div class="col-md-6 mb-3">

@@ -1,7 +1,7 @@
 <template>
-  <div class="container-xxl py-5">
+  <div class="container-xxl py-2">
     <div class="container">
-      <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+      <div class="text-center mx-auto mb-3" style="max-width: 600px;">
         <h1 class="mb-3 fw-bold text-dark">Statistiques utilisateurs</h1>
         <h5 class="text-muted">
             Aperçu global des utilisateurs et agences présentes sur <strong class="text-success">LaCasa
