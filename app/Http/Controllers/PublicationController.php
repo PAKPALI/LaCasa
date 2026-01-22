@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Publication;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Drivers\Gd\Driver;
 
 class PublicationController extends Controller
@@ -452,6 +453,17 @@ class PublicationController extends Controller
 
         $validated = $validator->validated();
         $validated['is_active'] = $validated['is_active'] ?? true;
+
+        // Ancien état
+        $wasInactive = ! $publication->is_active;
+
+        // Nouvel état (par défaut true si non envoyé)
+        $newIsActive = $validated['is_active'] ?? true;
+
+        // Si la publication était inactive et devient active → date de réactivation
+        if ($wasInactive && $newIsActive) {
+            $validated['reactivated_at'] = Carbon::now();
+        }
 
         // 🔹 Met à jour les données principales
         $publication->update($validated);
