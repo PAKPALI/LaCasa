@@ -290,6 +290,7 @@
 
   const formatPeriod = (period) => {
     switch(period){
+      case 'hour': return 'Heure'
       case 'month': return 'Mois'
       case 'week': return 'Semaine'
       case 'day': return 'Jour'

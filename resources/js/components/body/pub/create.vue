@@ -161,7 +161,7 @@
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label text-light">Numéro 1</label>
-            <input type="number" value="{{ user.phone1 }}" class="form-control" v-model="form.phone1" placeholder="Ex: 90 00 00 00" />
+            <input type="number" class="form-control" v-model="form.phone1" placeholder="Ex: 90 00 00 00" />
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label text-light">Numéro 2</label>
@@ -179,6 +179,7 @@
             <v-select
               v-model="form.price_period"
               :options="[
+                { value: 'hour',  label: 'Heure' },
                 { value: 'month', label: 'Mois' },
                 { value: 'week', label: 'Semaine' },
                 { value: 'day', label: 'Jour' }
@@ -356,6 +357,14 @@ const isTerrain = computed(() => {
   const category = categories.value.find(c => c.id === selectedCategory.value)
   return category?.name?.toLowerCase() === 'terrain'
 })
+
+watch(isTerrain, (val) => {
+  if (val) {
+    form.value.price_period = null
+    form.value.price = null
+  }
+})
+
 
   // form.value.phone1 = user.value.is_active
 

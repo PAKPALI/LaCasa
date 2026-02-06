@@ -29,6 +29,10 @@
             <router-link to="/publications" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Publications</router-link>
           </li>
 
+          <li v-if="isAuthenticated" class="nav-item">
+            <router-link to="/createPub" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Ajouter publication</router-link>
+          </li>
+
           <li v-if="isAuthenticated && (user.role == 1 || user.role == 2)" class="nav-item">
             <router-link to="/admin" class="nav-link" @mouseenter="hoverLink" @mouseleave="leaveLink">Admin</router-link>
           </li>

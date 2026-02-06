@@ -71,11 +71,24 @@
                     placeholder="Sélectionner des attributs" :multiple="true" :filterable="true"
                     :loading="loadingAttributes" :disabled="!filters.pub_type_id || attributes.length === 0"></v-select>
                 </div>
-                <!-- code -->
-                <div class="col-md-12 mb-2">
-                  <label class="form-label fw-semibold text-light"><strong>Code</strong></label>
-                  <input type="text" class="form-control" placeholder="Code" v-model.code="code" />
+
+                <!-- Période de paiement -->
+                <div class="col-md-12 mb-2" v-if="!isTerrainFilter">
+                  <label class="form-label fw-semibold text-light">
+                    <strong>Période de paiement</strong>
+                  </label>
+
+                  <v-select
+                    v-model="filters.price_period"
+                    :options="pricePeriods"
+                    label="label"
+                    :reduce="p => p.value"
+                    placeholder="Jour / Semaine / Mois"
+                    :clearable="true"
+                     :disabled="filters.category_id && selectedCategoryName === 'Terrain'"
+                  />
                 </div>
+
                 <!-- Prix 1 -->
                 <div class="col-md-6 mb-2">
                   <label class="form-label fw-semibold text-light"><strong>Prix 1 (FCFA)</strong></label>
@@ -88,6 +101,12 @@
                   <label class="form-label fw-semibold text-light"><strong>Prix 2 (FCFA)</strong></label>
                   <!-- <input type="number" class="form-control" placeholder="Saisissez votre deuxième prix" v-model="price2" /> -->
                   <input type="number" class="form-control" placeholder="Prix 2" v-model.number="price2" />
+                </div>
+
+                <!-- code -->
+                <div class="col-md-12 mb-2">
+                  <label class="form-label fw-semibold text-light"><strong>Code</strong></label>
+                  <input type="text" class="form-control" placeholder="Code" v-model.code="code" />
                 </div>
               </div>
             </div>
@@ -206,14 +225,20 @@
           </li>
 
           <li
-            v-for="page in lastPage"
-            :key="page"
+            v-for="(page, index) in visiblePages"
+            :key="index"
             class="page-item"
-            :class="{ active: page === currentPage }"
+            :class="{ active: page === currentPage, disabled: page === '...' }"
           >
-            <button class="page-link" @click="changePage(page)">
+            <button
+              class="page-link"
+              v-if="page !== '...'"
+              @click="changePage(page)"
+            >
               {{ page }}
             </button>
+
+            <span v-else class="page-link">…</span>
           </li>
 
           <li class="page-item" :class="{ disabled: currentPage === lastPage }">
@@ -284,7 +309,11 @@
                     <div class="col-12 col-md-12 text-center">
                       
                       <u class="d-block h4 text-light mb-2" href="#">{{ p.title || 'Titre non défini' }}</u>
-                      <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }} / {{ formatPeriod(p.price_period) }}</h5>
+                      <h5 class="text-light text-center mb-3">{{ formatPrice(p.price) }}
+                        <span v-if="p.category_name !== 'Terrain'">/ {{ formatPeriod(p.price_period) }}
+                        </span>
+                      </h5>
+
                       <p class="mb-3"><i class="fa fa-map-marker-alt text-primary me-2"></i>{{ p.district_name }} || {{p.town_name }}</p>
                       
                     </div>
@@ -492,6 +521,13 @@
   import { useRouter } from 'vue-router'
   const router = useRouter()
 
+  const pricePeriods = [
+    { value: 'hour',  label: 'Par heure' },
+    { value: 'day',   label: 'Par jour' },
+    { value: 'week',  label: 'Par semaine' },
+    { value: 'month', label: 'Par mois' },
+  ]
+
   // const isAuthResp = isAuthenticated.value
 
   const isAuthResp = computed(() => isAuthenticated.value)
@@ -572,6 +608,7 @@
     category_id: null,
     pub_type_id: null,
     attribute_ids: [],
+    price_period: null,
   })
   const price1 = ref(null)
   const price2 = ref(null)
@@ -599,7 +636,7 @@
   const currentPage = ref(1)
   const lastPage = ref(1)
   const totalPublications = ref(0)
-  const perPage = 10
+  const perPage = 20
 
   // -----------------
   // FILTRAGE FRONT (TAB)
@@ -608,6 +645,7 @@
 
   const formatPeriod = (period) => {
     switch(period){
+      case 'hour': return 'Heure'
       case 'month': return 'Mois'
       case 'week': return 'Semaine'
       case 'day': return 'Jour'
@@ -665,6 +703,23 @@
       loadingCategories.value = false;
     }
   };
+
+  const isTerrainFilter = computed(() => {
+    const category = categories.value.find(
+      c => c.id === filters.value.category_id
+    )
+
+    return category?.name?.toLowerCase() === 'terrain'
+  })
+
+  watch(
+    () => filters.value.category_id,
+    () => {
+      if (isTerrainFilter.value) {
+        filters.value.price_period = null
+      }
+    }
+  )
 
   const fetchPubTypes = async () => {
     if (!filters.value.category_id) { pubTypes.value = []; filters.value.pub_type_id = null; return }
@@ -734,6 +789,7 @@
           category_id: filters.value.category_id,
           pub_type_id: filters.value.pub_type_id,
           attribute_ids: filters.value.attribute_ids,
+          price_period: filters.value.price_period,
           code: code.value,
           price1: price1.value,
           price2: price2.value,
@@ -910,6 +966,38 @@
     }, 10000) // ⏳ après 10 secondes
   }
 
+  const visiblePages = computed(() => {
+    const pages = []
+    const delta = 2 // nombre de pages autour de la page courante
+
+    const left = Math.max(2, currentPage.value - delta)
+    const right = Math.min(lastPage.value - 1, currentPage.value + delta)
+
+    // Page 1 toujours
+    pages.push(1)
+
+    // "..."
+    if (left > 2) {
+      pages.push('...')
+    }
+
+    // Pages autour de la page courante
+    for (let i = left; i <= right; i++) {
+      pages.push(i)
+    }
+
+    // "..."
+    if (right < lastPage.value - 1) {
+      pages.push('...')
+    }
+
+    // Dernière page
+    if (lastPage.value > 1) {
+      pages.push(lastPage.value)
+    }
+
+    return pages
+  })
 </script>
 
 <style scoped>

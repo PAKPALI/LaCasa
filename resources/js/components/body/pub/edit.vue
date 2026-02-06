@@ -199,7 +199,7 @@ const closeModal = () => { if(modalInstance.value) modalInstance.value.hide(); e
 // ----- Options
 const saleOrRentOptions = [{ value:'sale', label:'À vendre' }, { value:'rent', label:'À louer' }]
 const statusOptions = [{ value:'active', label:'Actif' }, { value:'inactive', label:'Inactif' }]
-const pricePeriodOptions = [{ value:'month', label:'Mois' }, { value:'week', label:'Semaine' }, { value:'day', label:'Jour' }]
+const pricePeriodOptions = [{ value:'hour', label:'Heure' },{ value:'month', label:'Mois' }, { value:'week', label:'Semaine' }, { value:'day', label:'Jour' }]
 
 // ----- Selects
 const countries = ref([]), towns = ref([]), districts = ref([]), categories = ref([]), pubTypes = ref([]), attributes = ref([])

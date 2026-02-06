@@ -68,6 +68,10 @@ class PublicationController extends Controller
             }, '=', count($attributeIds));
         }
 
+        if ($request->filled('price_period')) {
+            $query->where('price_period', $request->price_period);
+        }
+
         if ($request->filled('price1') && $request->filled('price2')) {
             $query->whereBetween('price', [$request->price1, $request->price2]);
         } elseif ($request->filled('price1')) {
@@ -100,7 +104,7 @@ class PublicationController extends Controller
             $query->where('user_id', auth()->id());
         }
 
-        $perPage = $request->per_page ?? 10;
+        $perPage = $request->per_page ?? 20;
         $publications = $query->paginate($perPage);
 
         $formatted = $publications->getCollection()->map(function ($pub) {
@@ -306,7 +310,7 @@ class PublicationController extends Controller
             'district_id' => ['required','exists:districts,id'],
             'category_id' => ['required','exists:categories,id'],
             'pub_type_id' => ['required','exists:pub_types,id'],
-            'price_period'=> ['required','in:day,week,month'],
+           'price_period' => ['nullable','in:hour,day,week,month'],
             'price'       => ['nullable','numeric'],
             'commission'  => ['nullable','numeric'],
             'bathroom'    => ['nullable','integer'],
