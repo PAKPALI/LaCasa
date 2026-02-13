@@ -274,7 +274,7 @@
 
 <script setup>
   import gif from '@images2/empty.gif'
-  import { ref, computed, watch, nextTick } from 'vue'
+  import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
   import { Modal, Carousel } from 'bootstrap'
   import EditPublication from './edit.vue'
   import axios from 'axios'
@@ -362,19 +362,61 @@
   //   return publicationsList.value
   // })
 
-  // Ouvrir le modal et initialiser le carrousel
-  const openModal = (pub) => {
-    console.log('Publication sélectionnée:', pub); 
-    selectedPublication.value = pub
-    nextTick(() => {
-      if (!modalInstance.value) modalInstance.value = new Modal(document.getElementById('publicationModal'))
-      modalInstance.value.show()
 
-      // Initialiser carrousel du modal
-      const carouselEl = document.getElementById('carouselImages')
-      if (carouselEl) new Carousel(carouselEl)
-    })
+
+// Fonction pour supprimer le backdrop si nécessaire
+const removeBackdrop = () => {
+  const backdrop = document.querySelector('.modal-backdrop')
+  if (backdrop) backdrop.remove()
+  document.body.classList.remove('modal-open')
+}
+
+// Gestion du bouton retour mobile / navigateur
+const handleBack = () => {
+  if (modalInstance.value && modalInstance.value._isShown) {
+    modalInstance.value.hide()
+    removeBackdrop()
   }
+}
+
+onMounted(() => {
+  window.addEventListener('popstate', handleBack)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('popstate', handleBack)
+})
+
+// Fonction pour ouvrir le modal correctement
+const openModal = (pub) => {
+  selectedPublication.value = pub
+
+  nextTick(() => {
+    // Initialiser le modal si pas déjà fait
+    if (!modalInstance.value) {
+      modalInstance.value = new Modal(document.getElementById('publicationModal'), {
+        backdrop: true,
+        keyboard: true
+      })
+
+      // Quand le modal se ferme normalement, nettoyer l'historique
+      document.getElementById('publicationModal').addEventListener('hidden.bs.modal', () => {
+        removeBackdrop()
+        // Retirer l'état history si on avait poussé
+        if (history.state && history.state.modalOpen) history.back()
+      })
+    }
+
+    modalInstance.value.show()
+
+    // Pousser un état dans l'historique pour gérer le retour mobile
+    history.pushState({ modalOpen: true }, '')
+
+    // Initialiser le carrousel du modal
+    const carouselEl = document.getElementById('carouselImages')
+    if (carouselEl) new Carousel(carouselEl)
+  })
+}
 
   // Modal d'édition
   const openEditModal = async (id) => {

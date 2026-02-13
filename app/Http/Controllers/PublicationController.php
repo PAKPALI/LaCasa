@@ -310,7 +310,7 @@ class PublicationController extends Controller
             'district_id' => ['required','exists:districts,id'],
             'category_id' => ['required','exists:categories,id'],
             'pub_type_id' => ['required','exists:pub_types,id'],
-           'price_period' => ['nullable','in:hour,day,week,month'],
+            'price_period' => ['nullable','in:hour,day,week,month'],
             'price'       => ['nullable','numeric'],
             'commission'  => ['nullable','numeric'],
             'bathroom'    => ['nullable','integer'],

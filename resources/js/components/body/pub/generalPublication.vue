@@ -847,7 +847,32 @@
   watch(() => filters.value.category_id, fetchPubTypes)
 
   // --- MODAL ---
+  import { onBeforeUnmount } from 'vue'
+
   const modalInstance = ref(null)
+
+  // 🔹 Nettoyage propre du backdrop
+  const removeBackdrop = () => {
+    const backdrop = document.querySelector('.modal-backdrop')
+    if (backdrop) backdrop.remove()
+    document.body.classList.remove('modal-open')
+  }
+
+  // 🔹 Gestion bouton retour mobile
+  const handleBack = () => {
+    if (modalInstance.value && modalInstance.value._isShown) {
+      modalInstance.value.hide()
+      removeBackdrop()
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('popstate', handleBack)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('popstate', handleBack)
+  })
 
   const openModal = (pub) => {
     selectedPublication.value = pub
@@ -855,20 +880,34 @@
     nextTick(() => {
       const modalEl = document.getElementById('publicationModal')
 
-      // Création du modal s'il n'existe pas encore
       if (!modalInstance.value) {
-        modalInstance.value = new Modal(modalEl)
+        modalInstance.value = new Modal(modalEl, {
+          backdrop: true,
+          keyboard: true
+        })
+
+        // Quand le modal se ferme normalement
+        modalEl.addEventListener('hidden.bs.modal', () => {
+          removeBackdrop()
+
+          // Nettoyer l'état history si on l'avait ajouté
+          if (history.state && history.state.modalOpen) {
+            history.back()
+          }
+        })
       }
 
-      // Toujours s'assurer de réinitialiser le carousel dans le modal
+      // Initialiser proprement le carousel du modal
       const carouselEl = document.getElementById('carouselImages')
       if (carouselEl) {
         if (carouselEl._bs_carousel) carouselEl._bs_carousel.dispose()
         new Carousel(carouselEl)
       }
 
-      // Ouvre le modal
       modalInstance.value.show()
+
+      // 🔹 Important : pousser un état dans l'historique
+      history.pushState({ modalOpen: true }, '')
     })
   }
 

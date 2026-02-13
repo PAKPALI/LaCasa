@@ -186,7 +186,7 @@
               ]"
               label="label"
               :reduce="option => option.value"
-              placeholder="Sélectionner une période"
+              placeholder="Heure, jour, semaine, mois"
             ></v-select>
 
           </div>
@@ -360,10 +360,17 @@ const isTerrain = computed(() => {
 
 watch(isTerrain, (val) => {
   if (val) {
-    form.value.price_period = null
+    // C'est un terrain → pas de prix ni période
+    form.value.price_period = 'month'; // on peut garder le mois par défaut même pour terrain si tu veux l'envoyer
     form.value.price = null
+  } else {
+    // Ce n'est plus un terrain → remettre le mois par défaut si vide
+    if (!form.value.price_period) {
+      form.value.price_period = 'month'
+    }
   }
 })
+
 
 
   // form.value.phone1 = user.value.is_active
