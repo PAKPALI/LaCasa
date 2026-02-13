@@ -464,8 +464,23 @@
                     </td>
                   </tr>
                   <tr><th>Prix</th><td>{{ formatPrice(selectedPublication?.price) }} <strong v-if="selectedPublication?.category_name !== 'Terrain'"> / {{ formatPeriod(selectedPublication?.price_period) }}</strong></td></tr>
-                  <tr v-if="selectedPublication?.category_name !== 'Terrain'"><th>Caution</th><td>{{ selectedPublication?.deposit }} {{ selectedPublication?.deposit>12?'F CFA':'Mois' }}</td></tr>
-                  <tr v-if="selectedPublication?.category_name !== 'Terrain'"><th>Avance</th><td>{{ selectedPublication?.advance }} {{ selectedPublication?.advance>12?'F CFA':'Mois' }}</td></tr>
+                  <tr v-if="selectedPublication?.category_name !== 'Terrain' && selectedPublication?.deposit != null">
+                    <th>Caution</th>
+                    <td>
+                      {{ selectedPublication?.deposit}}
+                      {{ selectedPublication?.deposit > 12 ? 'F CFA' : selectedPublication?.deposit > 0 ? 'Mois' : '' }}
+
+                    </td>
+                  </tr>
+
+                  <tr v-if="selectedPublication?.category_name !== 'Terrain' && selectedPublication?.advance != null">
+                    <th>Avance</th>
+                    <td>
+                      {{ selectedPublication.advance }}
+                      {{ selectedPublication?.advance > 12 ? 'F CFA' : selectedPublication?.advance > 0 ? 'Mois' : '' }}
+                    </td>
+                  </tr>
+
                   <tr v-if="selectedPublication?.category_name !== 'Terrain'"><th>Commission</th><td>{{ formatPrice(selectedPublication?.commission || '-')}}</td></tr>
                   <tr v-if="selectedPublication?.category_name !== 'Terrain'"><th>Visite</th><td>{{ formatPrice(selectedPublication?.visit) }}</td></tr>
                   <tr><th>Localisation</th><td>{{ selectedPublication?.district_name || selectedPublication?.town_name || selectedPublication?.country_name || 'Non définie' }}</td></tr>
